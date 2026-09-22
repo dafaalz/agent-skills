@@ -124,7 +124,7 @@ Warm + cool. Amber-gold against slate-blue. 1950s journalism, print shop, broads
 
 ### Drop rotation rule
 
-The diversification log (`/.hallmark/log.json`) records the drop alongside the theme: `"theme": "carnival", "drop": "studio-night"`. **A new Carnival build picks a drop that hasn't appeared in the last 3 entries.** If only Cold Snap is in the log, any of the other five is valid. If the brief contains a strong drop signal (see "when to pick" above), honour the signal even if it tightens diversification.
+The diversification log (`.hallmark/log.json`) records the drop alongside the theme: `"theme": "carnival", "drop": "studio-night"`. **A new Carnival build picks a drop that hasn't appeared in the last 3 entries.** If only Cold Snap is in the log, any of the other five is valid. If the brief contains a strong drop signal (see "when to pick" above), honour the signal even if it tightens diversification.
 
 ### Pick the drop by domain first
 
