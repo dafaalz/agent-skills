@@ -1,0 +1,29 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Archives and binaries
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# Environment and secrets
+.env
+.env.*
+*.key
+*.pem
+
+# Editor and IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python cache
+__pycache__/
+*.py[cod]

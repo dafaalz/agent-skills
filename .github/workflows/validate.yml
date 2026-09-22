@@ -1,0 +1,104 @@
+name: Validate Skills
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run skills integrity checks
+        run: |
+          python3 - << 'EOF'
+          import os
+          import sys
+
+          skills_dir = "skills"
+          if not os.path.isdir(skills_dir):
+              print(f"Error: {skills_dir} directory not found.")
+              sys.exit(1)
+
+          errors = []
+          skill_folders = sorted([d for d in os.listdir(skills_dir) if os.path.isdir(os.path.join(skills_dir, d))])
+
+          if not skill_folders:
+              print("Error: No skill folders found in skills/.")
+              sys.exit(1)
+
+          print(f"Auditing {len(skill_folders)} skills in {skills_dir}/...")
+
+          for folder in skill_folders:
+              folder_path = os.path.join(skills_dir, folder)
+              skill_file = os.path.join(folder_path, "SKILL.md")
+
+              if not os.path.isfile(skill_file):
+                  errors.append(f"[{folder}] Missing SKILL.md")
+                  continue
+
+              with open(skill_file, "r", encoding="utf-8") as f:
+                  content = f.read()
+
+              # Check frontmatter delimiters
+              if not content.startswith("---"):
+                  errors.append(f"[{folder}] SKILL.md does not start with YAML frontmatter delimiter (---)")
+                  continue
+
+              parts = content.split("---", 2)
+              if len(parts) < 3:
+                  errors.append(f"[{folder}] SKILL.md missing closing frontmatter delimiter (---)")
+                  continue
+
+              frontmatter = parts[1]
+              has_name = False
+              has_description = False
+
+              for line in frontmatter.strip().split("\n"):
+                  stripped = line.strip()
+                  if stripped.startswith("name:"):
+                      has_name = True
+                  elif stripped.startswith("description:"):
+                      has_description = True
+
+              if not has_name:
+                  errors.append(f"[{folder}] YAML frontmatter missing 'name' field")
+              if not has_description:
+                  errors.append(f"[{folder}] YAML frontmatter missing 'description' field")
+
+              # Scan for forbidden local absolute paths in all files within the skill
+              for root, _, files in os.walk(folder_path):
+                  for file in files:
+                      file_path = os.path.join(root, file)
+                      if file.endswith((".md", ".txt", ".sh", ".py", ".json")):
+                          try:
+                              with open(file_path, "r", encoding="utf-8", errors="ignore") as tf:
+                                  for line_no, line in enumerate(tf, start=1):
+                                      if "/Users/" in line or "/home/" in line:
+                                          errors.append(f"[{folder}] Local absolute path found in {file}:{line_no}")
+                          except Exception as e:
+                              errors.append(f"[{folder}] Could not read file {file_path}: {e}")
+
+          # Scan for forbidden file extensions
+          for root, _, files in os.walk(skills_dir):
+              for file in files:
+                  if file == ".DS_Store" or file.endswith(".zip"):
+                      errors.append(f"Forbidden file found: {os.path.join(root, file)}")
+
+          if errors:
+              print("\nValidation failed with errors:")
+              for err in errors:
+                  print(f"  - {err}")
+              sys.exit(1)
+
+          print(f"\nSuccess: All {len(skill_folders)} skills passed validation with zero errors.")
+          EOF
