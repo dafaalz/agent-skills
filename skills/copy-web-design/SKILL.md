@@ -3,11 +3,11 @@ name: copy-web-design
 description: Use when reverse-engineering, deconstructing, benchmarking, or replicating web designs, design tokens, layout structures, animations, or components from URLs or screenshots.
 ---
 
-# Copy Web Design
+# Copy web design
 
 Deterministic runbook for reverse-engineering and replicating web designs while preserving legal boundaries, extracting design tokens, deconstructing layouts, profiling animations, and synthesizing production code.
 
-## Progressive Disclosure
+## Progressive disclosure
 
 This runbook defines sequential execution steps. Read detailed reference manuals when executing specific phases:
 - Legal doctrines, AFC test, trade dress, and clean-room protocol: `references/legal-and-ethics.md`
@@ -21,7 +21,7 @@ This runbook defines sequential execution steps. Read detailed reference manuals
 
 Follow these five phases in sequence:
 
-### Phase 1. Legal and Ethical Triage
+### Phase 1. Legal and ethical triage
 
 Verify target eligibility and establish intellectual property boundaries before inspecting code:
 
@@ -32,7 +32,7 @@ Verify target eligibility and establish intellectual property boundaries before 
 
 Completion criterion. An abstract specification listing wireframe regions, user flows, and placeholder asset requirements with zero vendor text or trade dress elements.
 
-### Phase 2. Visual Tokens and Typography Ingestion
+### Phase 2. Visual tokens and typography ingestion
 
 Extract design tokens and typography metrics from the live page:
 
@@ -44,7 +44,7 @@ Extract design tokens and typography metrics from the live page:
 
 Completion criterion. A written design token catalog defining OKLCH colors, variable font rules, fluid clamp formulas, spatial scales, and shadow tiers.
 
-### Phase 3. Structural Layout Decomposition
+### Phase 3. Structural layout decomposition
 
 Deconstruct the DOM tree into semantic landmarks and modern CSS layout primitives:
 
@@ -56,7 +56,7 @@ Deconstruct the DOM tree into semantic landmarks and modern CSS layout primitive
 
 Completion criterion. A semantic HTML5 component skeleton verified in the browser Accessibility Tree with zero layout shift during rendering.
 
-### Phase 4. Motion and Physics Deconstruction
+### Phase 4. Motion and physics deconstruction
 
 Deconstruct animations, micro-interactions, and scroll dynamics:
 
@@ -68,20 +68,20 @@ Deconstruct animations, micro-interactions, and scroll dynamics:
 
 Completion criterion. Recorded cubic-bezier values, confirmed compositor-only execution with zero paint flashes, and verified reduced-motion fallbacks.
 
-### Phase 5. Code Synthesis and Quality Gates
+### Phase 5. Code synthesis and quality gates
 
 Synthesize the final production code into the target framework:
 
 1. Select synthesis target.
-   - For Modern React: synthesize to Next.js or React 19, Tailwind CSS v4 `@theme` tokens, Radix UI headless primitives, and `next/image`.
-   - For Pure Web: synthesize to semantic HTML5, modern CSS with custom properties and CSS Grid, native `<picture>` tags, and vanilla ES modules.
+   - For Modern React, synthesize to Next.js or React 19, Tailwind CSS v4 `@theme` tokens, Radix UI headless primitives, and `next/image`.
+   - For pure web, synthesize to semantic HTML5, modern CSS with custom properties and CSS Grid, native `<picture>` tags, and vanilla ES modules.
 2. Sanitize vector assets. Process all inline SVGs through DOMPurify and SVGO, replacing fixed fills with `currentColor`.
 3. Audit accessibility. Run Axe-core checks. Verify keyboard tab order, modal focus traps, and visible focus rings (`:focus-visible`).
 4. Validate performance. Run automated Lighthouse audits. Confirm zero Cumulative Layout Shift, passing Largest Contentful Paint, and low Interaction to Next Paint.
 
 Completion criterion. Working production components passing all Axe-core accessibility checks and Core Web Vitals performance gates.
 
-## Quick Audit Checklist
+## Quick audit checklist
 
 Run this check before completing any replication task:
 

@@ -11,9 +11,9 @@ Construct high-quality frontend interfaces, correct default AI layout biases, an
 
 Apply these baseline dial values unless the user explicitly requests different settings in chat prompts:
 
-- `DESIGN_VARIANCE`: 8 (scale 1 to 10: 1 = symmetrical grid, 10 = asymmetric layout)
-- `MOTION_INTENSITY`: 6 (scale 1 to 10: 1 = static CSS, 10 = spring physics)
-- `VISUAL_DENSITY`: 4 (scale 1 to 10: 1 = airy gallery, 10 = compact dashboard)
+- `DESIGN_VARIANCE`: 8 (on a 1 to 10 scale, where 1 is symmetrical grid and 10 is asymmetric layout)
+- `MOTION_INTENSITY`: 6 (on a 1 to 10 scale, where 1 is static CSS and 10 is spring physics)
+- `VISUAL_DENSITY`: 4 (on a 1 to 10 scale, where 1 is airy gallery and 10 is compact dashboard)
 
 ## Workflow
 

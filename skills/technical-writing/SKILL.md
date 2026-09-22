@@ -21,12 +21,12 @@ Follow these four steps in sequence:
 
 ### Step 1. Mode selection
 
-Classify the document into exactly one Diátaxis mode before writing. Answer two questions: does the document serve action or understanding, and does it address learning or work?
+Classify the document into exactly one Diátaxis mode before writing. Answer two questions regarding whether the document serves action or understanding, and whether it addresses learning or work:
 
-- Action and learning: Tutorial.
-- Action and work: How-to guide.
-- Understanding and work: Reference.
-- Understanding and learning: Explanation.
+- Action and learning yields a tutorial.
+- Action and work yields a how-to guide.
+- Understanding and work yields reference.
+- Understanding and learning yields an explanation.
 
 Never blend multiple modes in a single document. Link out to related modes instead of nesting them.
 
@@ -102,11 +102,11 @@ Pick one mode for each document:
 
 ## Worked example
 
-Before:
+### Draft before revision
 
 > Configuration of the proto import ratchet budget script parameters is performed via budget.json. Note that it is important to remember that running with --write, which updates the committed budget to reflect the current count, should only be done when lowering it. If exceeded, CI fails.
 
-After:
+### Revision after applying standards
 
 > `budget.mjs` reads the committed budget from `budget.json` and counts the files that import protos. If the count exceeds the budget, CI fails. Run `budget.mjs --write` only to lower the budget.
 

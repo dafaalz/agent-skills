@@ -25,7 +25,7 @@ Follow these six steps in sequence:
 
 ### Step 1. Scope and brief definition
 
-Isolate a single high-leverage UI component from the user request.
+Isolate a single high-impact UI component from the user request.
 
 - If the request targets a complex screen or multi-component flow, select the single component that carries the highest interaction risk or design ambiguity.
 - State the brief in one declarative sentence defining the component, its target surface, and its primary job.

@@ -1,6 +1,6 @@
 ---
 name: ui-motion
-description: Master skill for UI animations, micro-interactions, CSS transitions, Apple gesture physics, codebase motion audits, and 60fps performance optimization.
+description: Use when authoring UI animations, micro-interactions, spring physics, or auditing codebase motion performance.
 ---
 
 # UI motion engineering
