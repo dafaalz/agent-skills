@@ -13,10 +13,10 @@ Follow these four steps in sequence:
 
 ### Step 1. Pattern scan
 
-Inspect text against the reference rules below. Catalog every occurrence across four categories:
-1. Banned vocabulary and abstract metaphors.
+Inspect text against the reference rules below. For Indonesian text, consult the dedicated patterns in `references/indonesian-patterns.md`. Catalog every occurrence across four categories:
+1. Banned vocabulary and abstract metaphors in both English and Indonesian.
 2. Structural puffery, hollow transitions, and formulaic openings or endings.
-3. Syntactic tells, passive voice, and weak adverbs.
+3. Syntactic tells, calque structures (such as relative "di mana" or "yang mana"), passive voice, and weak adverbs.
 4. Punctuation defects, including em dashes, mid-sentence colons, and decorative styling.
 
 Completion criterion. A written catalog listing each matched pattern, line location, and target category.
@@ -64,7 +64,9 @@ Keep code syntax, database schemas, API parameters, variable names, terminal com
 
 ### Plain vocabulary and substitutions
 
-Use plain words and direct verbs. Consult this substitution table for banned AI vocabulary:
+Use plain words and direct verbs. Consult these substitution tables for banned AI vocabulary:
+
+#### English substitution table
 
 | Banned term | Concrete replacement |
 |---|---|
@@ -84,6 +86,38 @@ Use plain words and direct verbs. Consult this substitution table for banned AI 
 | facilitate | help, enable |
 | seamless / holistic | direct, unified, integrated |
 
+#### Indonesian substitution table
+
+| Banned Indonesian term | Concrete replacement |
+|---|---|
+| dalam lanskap / menavigasi lanskap | pada industri, di pasar, dalam sistem, di codebase |
+| memainkan peran penting dalam | menentukan, menjadi kunci, mempercepat |
+| di mana / yang mana (relatif klausa) | buat kalimat baru atau sambung langsung ke nomina |
+| tidak hanya X, tetapi juga Y | sebut aksi X dan aksi Y dalam kalimat mandiri terpisah |
+| sebuah bukti nyata dari | membuktikan, menunjukkan, memvalidasi |
+| menyelami lebih dalam | memeriksa, menganalisis, menguji |
+| merupakan salah satu dari | salah satu, atau pasang predikat langsung |
+| krusial / vital / esensial | wajib, dibutuhkan, atau sebut dampak bila gagal |
+| membuka potensi penuh / merangkul | meningkatkan kapasitas, menyesuaikan sistem |
+| permadani yang rumit (tapestry) | kombinasi, susunan, arsitektur |
+| secara keseluruhan / sebagai kesimpulan | hapus, tutup dengan aksi konkret berikutnya |
+| di era digital yang serba cepat ini | hapus total, sebut subjek dan waktu riil |
+| tidak dapat dipungkiri bahwa | hapus total, nyatakan fakta langsung |
+| perlu diingat bahwa / penting untuk dicatat | hapus total, nyatakan aturan langsung |
+| melakukan [verba] (eksekusi, validasi) | eksekusi, validasi (gunakan kata kerja aktif) |
+| memiliki kemampuan untuk | bisa, dapat, mampu |
+| adalah merupakan / merupakan sebuah | adalah, atau jadikan kata benda sebagai predikat |
+| alat yang ampuh / senjata ampuh | sebut nama perkakas atau fungsi teknis spesifik |
+| hadir untuk / berada di garis depan | berfungsi untuk, memimpin, merintis |
+| tidak kalah pentingnya | hapus pengantar, sebut poin langsung |
+| pedang bermata dua | sebutkan konsekuensi teknis secara eksplisit |
+| perlu digarisbawahi bahwa | hapus, tulis aturan langsung |
+| guna untuk / demi untuk / disebabkan karena | untuk, karena (hapus pleonasme) |
+| berpotensi untuk dapat / diharapkan dapat | dapat, mampu (potong rantai hedging) |
+| berdampak signifikan / solusi cerdas | sebut angka metrik atau algoritma spesifik |
+
+For the full catalog of Indonesian calque patterns, editorial guidelines, and academic citations, see `references/indonesian-patterns.md`.
+
 Translate abstract metaphors into concrete system components:
 - "API surface" becomes "endpoints" or "exported functions"
 - "vector" becomes "method" or "direction"
@@ -100,11 +134,11 @@ Translate abstract metaphors into concrete system components:
 
 ### Communication artifacts and filler
 
-- **Strip chatbot filler.** Delete "Certainly!", "Of course!", "I hope this helps!", and "Great question!". Open directly with the answer, code block, or file path.
-- **Cut filler transitions.** Replace "in order to" with "to". Replace "due to the fact that" with "because". Delete "it is important to remember that" and state the fact directly.
-- **Eliminate hedging chains.** Replace "could potentially possibly be" with "may".
-- **Use active voice.** Place the actor before the action. Change "the file is loaded by the runner" to "the runner loads the file".
-- **Cut bolstering adverbs.** Delete adverbs that prop up weak verbs. Replace "runs very quickly" with "completes in under 5ms". Replace "significantly improves" with the measured metric.
+- **Strip chatbot filler.** Delete "Certainly!", "Of course!", "I hope this helps!", "Great question!", "Tentu saja!", "Tentu!", "Dengan senang hati!", and "Semoga membantu!". Open directly with the answer, code block, or file path.
+- **Cut filler transitions.** Replace "in order to" with "to". Replace "due to the fact that" with "because". In Indonesian, replace "guna untuk" or "demi untuk" with "untuk", and replace "disebabkan oleh karena" with "karena". Delete "it is important to remember that", "di era digital saat ini", and "tidak dapat dipungkiri bahwa". State the fact directly.
+- **Eliminate hedging chains.** Replace "could potentially possibly be" with "may". In Indonesian, replace "berpotensi untuk dapat" with "dapat" or "bisa".
+- **Use active voice.** Place the actor before the action. Change "the file is loaded by the runner" to "the runner loads the file". In Indonesian, change "file dimuat oleh runner" to "runner memuat file".
+- **Cut bolstering adverbs.** Delete adverbs that prop up weak verbs. Replace "runs very quickly" with "completes in under 5ms". Replace "significantly improves" with the measured metric. In Indonesian, replace "sangat krusial" with "wajib" or state the exact failure condition, and replace "berkembang sangat pesat" with the measured metric.
 
 ## Quick audit checklist
 
@@ -112,10 +146,12 @@ Run this check before finishing any writing task:
 
 | Check | Passing condition |
 |---|---|
-| AI vocabulary | Zero occurrences of banned words from the substitution table |
+| AI vocabulary | Zero occurrences of banned words from English and Indonesian substitution tables |
+| Calque syntax | Zero occurrences of relative "di mana" or "yang mana" connecting clauses |
+| Pleonasms | Zero redundant pairs such as "guna untuk", "demi untuk", "disebabkan karena", or "adalah merupakan" |
 | Dash punctuation | Zero em dashes, en dashes, or hyphen substitutes |
 | Colon usage | Colons appear only before lists, tables, or code blocks |
-| Pseudo-labels | Zero connector labels like Note or Summary |
+| Pseudo-labels | Zero connector labels like Note, Summary, Catatan, or Ringkasan |
 | Voice | Every action sentence names the active subject |
 | Adverbs | Zero adverbs bolstering weak verbs |
 | Headings | Sentence case without decorative emojis |
