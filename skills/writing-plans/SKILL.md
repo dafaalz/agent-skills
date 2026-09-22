@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: Write phased implementation plans with test-first tasks from a spec or design before touching code
+description: Use when creating phased implementation plans with test-first tasks from a design specification before writing code.
 ---
 
 # Writing implementation plans
@@ -27,7 +27,7 @@ Inspect the specification and repository structure before creating tasks:
 - Co-locate related logic. Group files by functional responsibility rather than technical layer. Files that change together belong together.
 - Follow repository conventions. Match existing file and directory patterns. If an existing file is already unwieldy, include a planned split into smaller modules.
 
-Completion criterion: A complete inventory of target files mapped to clear responsibilities, confirmed to belong to a single cohesive subsystem.
+Completion criterion. A complete inventory of target files mapped to clear responsibilities, confirmed to belong to a single cohesive subsystem.
 
 ### Step 2. Task decomposition and plan drafting
 
@@ -44,7 +44,7 @@ Draft the implementation plan using the templates in the reference section below
 - Specify exact execution commands with expected outputs for every test step.
 - Ensure tasks remain self-contained. Repeat shared code rather than referencing previous tasks, because tasks may be executed in isolation.
 
-Completion criterion: A drafted plan document containing the mandatory header, granular test-driven tasks, complete code blocks, and exact verification commands.
+Completion criterion. A drafted plan document containing the mandatory header, granular test-driven tasks, complete code blocks, and exact verification commands.
 
 ### Step 3. Plan self-review and validation
 
@@ -54,7 +54,7 @@ Audit the drafted plan against the source specification:
 - Verify signature consistency. Confirm that function names, argument lists, and types match across all tasks.
 - Optional reviewer subagent. For automated validation, dispatch a subagent using the prompt in `plan-document-reviewer-prompt.md`. Fix all identified defects directly in the plan file.
 
-Completion criterion: The plan document contains zero placeholders, covers all specification requirements, and maintains consistent method signatures throughout.
+Completion criterion. The plan document contains zero placeholders, covers all specification requirements, and maintains consistent method signatures throughout.
 
 ### Step 4. Execution handoff
 
@@ -65,7 +65,7 @@ Save the plan to disk and present execution options to the user:
   2. Inline execution. Executes tasks batch-by-batch within the current session with review checkpoints. Requires `executing-plans`.
 - Wait for the user to choose an execution option before executing any tasks.
 
-Completion criterion: The plan file is written to disk and the user is prompted with the execution options.
+Completion criterion. The plan file is written to disk and the user is prompted with the execution options.
 
 ## Reference templates and rules
 

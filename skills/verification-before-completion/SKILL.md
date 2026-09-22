@@ -1,19 +1,19 @@
 ---
 name: verification-before-completion
-description: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always
+description: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs, requiring fresh verification command output before making assertions.
 ---
 
-# Verification Before Completion
+# Verification before completion
 
 ## Overview
 
 Claiming work is complete without verification is dishonesty, not efficiency.
 
-**Core principle:** Evidence before claims, always.
+**Core principle.** Evidence before claims, always.
 
 **Violating the letter of this rule is violating the spirit of this rule.**
 
-## The Iron Law
+## The iron law
 
 ```
 NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
@@ -21,7 +21,7 @@ NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
 
 If you haven't run the verification command in this message, you cannot claim it passes.
 
-## The Gate Function
+## The gate function
 
 ```
 BEFORE claiming any status or expressing satisfaction:
@@ -37,10 +37,10 @@ BEFORE claiming any status or expressing satisfaction:
 Skip any step = lying, not verifying
 ```
 
-## Common Failures
+## Common failures
 
 | Claim | Requires | Not Sufficient |
-|-------|----------|----------------|
+|---|---|---|
 | Tests pass | Test command output: 0 failures | Previous run, "should pass" |
 | Linter clean | Linter output: 0 errors | Partial check, extrapolation |
 | Build succeeds | Build command: exit 0 | Linter passing, logs look good |
@@ -49,21 +49,21 @@ Skip any step = lying, not verifying
 | Agent completed | VCS diff shows changes | Agent reports "success" |
 | Requirements met | Line-by-line checklist | Tests passing |
 
-## Red Flags - STOP
+## Red flags
 
 - Using "should", "probably", "seems to"
 - Expressing satisfaction before verification ("Great!", "Perfect!", "Done!", etc.)
-- About to commit/push/PR without verification
+- About to commit, push, or open a PR without verification
 - Trusting agent success reports
 - Relying on partial verification
 - Thinking "just this once"
 - Tired and wanting work over
 - **ANY wording implying success without having run verification**
 
-## Rationalization Prevention
+## Rationalization prevention
 
 | Excuse | Reality |
-|--------|---------|
+|---|---|
 | "Should work now" | RUN the verification |
 | "I'm confident" | Confidence ≠ evidence |
 | "Just this once" | No exceptions |
@@ -73,7 +73,7 @@ Skip any step = lying, not verifying
 | "Partial check is enough" | Partial proves nothing |
 | "Different words so rule doesn't apply" | Spirit over letter |
 
-## Key Patterns
+## Key patterns
 
 **Tests:**
 ```
@@ -105,19 +105,19 @@ Skip any step = lying, not verifying
 ❌ Trust agent report
 ```
 
-## Why This Matters
+## Why this matters
 
 From 24 failure memories:
-- your human partner said "I don't believe you" - trust broken
-- Undefined functions shipped - would crash
-- Missing requirements shipped - incomplete features
-- Time wasted on false completion → redirect → rework
-- Violates: "Honesty is a core value. If you lie, you'll be replaced."
+- your human partner said "I don't believe you", which broke trust
+- Undefined functions shipped and crashed in production
+- Missing requirements shipped with incomplete features
+- Time wasted on false completion, redirect, and rework
+- Violates the rule that honesty is a core value
 
-## When To Apply
+## When to apply
 
 **ALWAYS before:**
-- ANY variation of success/completion claims
+- ANY variation of success or completion claims
 - ANY expression of satisfaction
 - ANY positive statement about work state
 - Committing, PR creation, task completion
@@ -128,9 +128,9 @@ From 24 failure memories:
 - Exact phrases
 - Paraphrases and synonyms
 - Implications of success
-- ANY communication suggesting completion/correctness
+- ANY communication suggesting completion or correctness
 
-## The Bottom Line
+## The bottom line
 
 **No shortcuts for verification.**
 

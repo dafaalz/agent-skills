@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: Test-first development using red, green, and vertical slices. Use on /tdd or when building features and fixing bugs test-first.
+description: Use when building features or fixing bugs test-first via red-green cycles and vertical slices.
 ---
 
 # Test-driven development
@@ -19,17 +19,17 @@ A seam is the public boundary of a component. Tests observe behavior at this bou
 2. Identify candidate public methods, endpoints, or function boundaries.
 3. Confirm the target seam with the user if the boundary is ambiguous.
 
-Completion criterion: Target seam matches the public contract.
+Completion criterion. Target seam matches the public contract.
 
 ## The loop
 
 Work one vertical slice at a time. Each slice pairs one behavior test with its minimal implementation.
 
 1. **Red.** Write one minimal test for the target behavior. Run the test suite. Confirm the test fails because the feature is missing, not due to syntax or test configuration errors.
-   Completion criterion: Test runner reports a clean failure matching the expected assertion.
+   Completion criterion. Test runner reports a clean failure matching the expected assertion.
 
 2. **Green.** Write only the minimal production code needed to make the test pass. Run the test suite. Confirm all tests pass.
-   Completion criterion: Test runner reports zero failures and clean test output.
+   Completion criterion. Test runner reports zero failures and clean test output.
 
 3. **Repeat.** Proceed to the next slice or seam.
 

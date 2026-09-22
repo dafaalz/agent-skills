@@ -96,9 +96,9 @@ Frontmatter rules:
 ## Progressive disclosure and information hierarchy
 
 Divide skill content into three tiers:
-1. Primary tier: In-file execution steps in `SKILL.md`. Keep this document concise, ideally under 250 lines.
-2. Secondary tier: In-file rules and lookup tables consulted on demand.
-3. Tertiary tier: Separate files in `references/` or `scripts/`, reached by context pointers and loaded only when needed.
+1. Primary tier. In-file execution steps in `SKILL.md`. Keep this document concise, ideally under 250 lines.
+2. Secondary tier. In-file rules and lookup tables consulted on demand.
+3. Tertiary tier. Separate files in `references/` or `scripts/`, reached by context pointers and loaded only when needed.
 
 Move heavy documentation (exceeding 100 lines) out of `SKILL.md` into `references/` to preserve context window tokens.
 
