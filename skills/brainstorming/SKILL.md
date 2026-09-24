@@ -101,6 +101,7 @@ Completion criterion. All ambiguities and decision branches resolved through exp
 
 Propose 2 to 3 approaches with tradeoffs, lead with a recommendation, and obtain user confirmation before writing detailed specifications. Evaluate data scaling and reload persistence against `references/architecture-scalability.md`.
 - Protect Single Responsibility Principle and modular boundaries: If a user proposal merges unrelated domains or causes lifecycle regressions, run a targeted web search via `search_web` to verify industry conventions, present a grounded counter-argument citing the reference, and propose a clean decoupled alternative.
+- Propose contrasting design directions for open-ended UI tasks. When user requests for frontend or visual design lack defined aesthetic direction, avoid open-ended taste questions. Present three differentiated directions chosen from contrasting design schools: Information Architecture (rational, data-dense, e.g. Pentagram or Vignelli), Editorial Minimalist (whitespace, refined typography, e.g. Dieter Rams or MUJI), Modern Tool (hairline details, dark mode, single accent, e.g. Linear or Raycast), Motion Experimental (generative, kinetic, e.g. Active Theory), Brutalist (raw, unpolished high contrast, e.g. Are.na), or Warm Humanist (approachable, organic, e.g. Stripe Press). Never recommend three options from the same design school.
 
 Completion criterion. The user selects a preferred approach.
 

@@ -28,7 +28,7 @@ Verify target eligibility and establish intellectual property boundaries before 
 1. Confirm public access. Never inspect pages behind authentication walls, paywalls, or encrypted client sessions.
 2. Filter protected content. Strip all narrative marketing copy, brand logos, trademarks, and client photography. Replicate only uncopyrightable functional layout wireframes and user interaction flows.
 3. Establish clean-room isolation. Document target behavior as an abstract specification. Build implementation code without copying vendor minified bundles.
-4. Verify trade dress differentiation. Ensure the target brand identity, unique color trademarks, and logos are replaced with distinct project assets.
+4. Verify trade dress differentiation and asset protocol. Ensure the target brand identity, unique color trademarks, and logos are replaced with authentic project SVG or PNG assets. Never substitute hand-drawn CSS silhouettes or colored rectangles for required product imagery.
 
 Completion criterion. An abstract specification listing wireframe regions, user flows, and placeholder asset requirements with zero vendor text or trade dress elements.
 
@@ -41,6 +41,7 @@ Extract design tokens and typography metrics from the live page:
 3. Ingest typography scales. Inspect `@font-face` declarations for variable font axes (`wght`, `wdth`, `slnt`, `opsz`). Measure heading font sizes across mobile (320px) and desktop (1280px) viewports to extract modular scale ratios and fluid `clamp()` formulas.
 4. Measure spatial rhythm. Determine the base grid multiplier (4px or 8px). Classify padding and gaps into Inset, Squish, Stack, and Inline patterns.
 5. Deconstruct elevation shadows. Identify layered umbra and penumbra tiers, applying chromatic tinting from the background color.
+6. Code over screenshots. When both source code and screenshots are available, inspect source stylesheets and DOM structures directly rather than estimating token values from visual imagery. Source code provides verified token values, while visual estimation introduces lossy discrepancies.
 
 Completion criterion. A written design token catalog defining OKLCH colors, variable font rules, fluid clamp formulas, spatial scales, and shadow tiers.
 

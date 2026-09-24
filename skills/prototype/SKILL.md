@@ -17,6 +17,7 @@ This skill builds distinct, production-ready variants for a single UI component 
 - **Build functional interactions.** Every variant must handle state, transitions, and realistic domain copy. Placeholder text and dead buttons are prohibited.
 - **Follow motion standards.** Keep interaction transitions under 300ms. Animate transform and opacity exclusively. Use ease-out curves on entrances, and respect reduced-motion user preferences.
 - **Preserve picker chrome.** Render the picker component exactly as defined in [PICKER.md](PICKER.md). Do not restyle the picker with project tokens or theme colors.
+- **Deliver early v0 drafts.** Avoid the big reveal trap. Emit a viewable v0 draft containing layout skeletons, design tokens, and explicit module placeholders (such as `[image]` or `[icon]`) to confirm direction with the user before investing in complex interaction choreography or fine-tuned micro-motion.
 - **Clean up on promotion.** Delete the prototype harness and unselected variants once the user confirms a winning direction.
 
 ## Workflow

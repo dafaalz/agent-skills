@@ -80,6 +80,16 @@ Consolidate findings into a structured report following the format in `reference
 
 Completion criterion. A formatted report containing categorized findings, exact line references, Before-After-Why evidence tables, and a final verdict.
 
+## Five-dimension design critique scorecard
+
+When evaluating visual polish and aesthetics beyond mechanical accessibility, apply these five dimensions:
+
+1. **Philosophy alignment.** Verify whether every visual detail traces directly back to the declared design system or brand anchor, rather than drifting into generic AI defaults.
+2. **Visual hierarchy.** Conduct a squint test. Verify that the primary focal point catches the eye first and that the display title to body text size ratio is at least 2.5 to 1.
+3. **Craft quality.** Verify consistent spatial rhythm, border-radius harmony, and constraint discipline (limit palettes to at most 4 deliberate colors and at most 2 font families).
+4. **Functionality and deletion test.** Apply the deletion test: if an element, decorative divider, or card badge is removed, does the interface become worse or clearer? If clearer, remove the element.
+5. **Originality and cliché elimination.** Eliminate formulaic AI templates, unprompted purple gradients, left-border accent stripes, and arbitrary floating shapes.
+
 ## Never ship UI checklist
 
 Audit implementations against this checklist. Every item represents an automatic rejection:

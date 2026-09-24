@@ -39,6 +39,7 @@ Establish typography scales, geometric layout structures, and color bounds.
 - When `DESIGN_VARIANCE` exceeds 4, collapse asymmetric desktop grids into a single-column layout (`w-full px-4`) on viewports under 768px.
 - Limit accents to at most one color with saturation below 80%. Use neutral bases (Zinc or Slate). Avoid purple or neon gradient glow buttons. Maintain consistent color temperature across the entire interface.
 - Render icons using Phosphor or Radix SVG components with standardized stroke widths (such as 1.5 or 2.0). Do not render unicode emojis in code, markup, or text.
+- Calibrate dial values using four positioning checks before locking Tailwind utility classes: Narrative role (hero, transition, data, pull-quote, closing), viewing distance (phone, monitor, projector), visual temperature (quiet, energized, authoritative, warm, playful), and capacity check (evaluate whether content density fills the layout naturally without artificial padding).
 
 Completion criterion. Layout and color variables adhere to viewport stability rules, single-accent constraints, and font pairing requirements.
 

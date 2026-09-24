@@ -25,7 +25,7 @@ Safety invariant. Never delete production files or route trees without explicit 
 
 ## Core design disciplines
 
-Apply these six disciplines across all verbs:
+Apply these seven disciplines across all verbs:
 
 1. **Pre-emit self-critique.** Score output 1 to 5 on Philosophy, Hierarchy, Execution, Specificity, Restraint, and Variety. Scores under 3 require revision. Stamp scores at the artifact header. Consult `references/slop-test.md`.
 2. **Honest copy without fabricated content.** Never invent metrics, testimonials, customer counts, or speed multipliers. Use verified numbers, explicit placeholders, or alternative layouts. Consult `references/anti-patterns.md`.
@@ -33,6 +33,7 @@ Apply these six disciplines across all verbs:
 4. **No fake browser or device chrome.** Do not hand-build faux URL bars, traffic-light window dots, or simulated phone frames. Present content cleanly on its own.
 5. **Verified mobile responsiveness.** Test layouts at 320px, 375px, 414px, and 768px. Ensure horizontal scroll is clipped, text wraps cleanly, and click targets never break across two lines. Consult `references/responsive.md`.
 6. **Typography purity without italic headers.** Keep headings upright and roman. Emphasize heading words using font weight, color, or underlines, never italics. Reserve italics for running body prose.
+7. **Real brand assets over synthetic placeholders.** Brand identity lives in authentic assets, not arbitrary hex codes or CSS shapes. Source authentic SVG or PNG logos, real device photography for hardware, and verified UI screenshots for software. Never substitute hand-drawn CSS silhouettes or colored rectangles for real product imagery.
 
 ## Design flow
 
@@ -43,6 +44,7 @@ Follow these eight steps in sequence:
 Inspect existing project configurations before proposing design changes:
 - Read `package.json`, `tailwind.config.*`, or active CSS files to extract existing typography and color variables.
 - Detect existing design tokens and framework constraints to avoid stomping on current brand rules.
+- Answer four positioning checks before declaring tokens: Narrative role (hero, transition, data, pull-quote, closing), viewing distance (phone, monitor, projector), visual temperature (quiet, energized, authoritative, warm, playful), and capacity check (evaluate whether content density fills the layout naturally without artificial padding).
 
 Completion criterion. Existing repository styles, tokens, and frameworks documented with zero unverified assumptions.
 
