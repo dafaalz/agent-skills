@@ -1,32 +1,34 @@
 # Skill usage guide
 
-Orchestrate the 36 specialized skills in this repository across the complete software delivery lifecycle.
+Orchestrate the 37 specialized skills in this repository across the complete software delivery lifecycle.
 
 ## Overview
 
 Each skill defines operational procedures, hard gates, and completion criteria for a specific engineering task. Combine skills intentionally to eliminate unverified assumptions, prevent context window compaction, and deliver verified production changes.
 
 ```
-Session init -> Design & explore -> Implementation planning -> TDD execution -> Quality audit -> Finalization
+Codebase docs -> Session init -> Design & explore -> Implementation planning -> TDD execution -> Quality audit -> Finalization
 ```
 
 ---
 
-## 1. Session initialization and workspace setup
+## 1. Codebase documentation and session initialization
 
-Start every new conversation or unfamiliar workspace with initialization skills to lock runtime stacks, database engines, and governing rules.
+Start every new conversation or project by bootstrapping high-signal documentation, locking runtime stacks, and setting direct execution rules.
 
 | Skill | Directory | Primary purpose | Command invocation |
 |---|---|---|---|
+| `upsert-codebase-docs` | `skills/upsert-codebase-docs` | Bootstrap or synchronize `AGENTS.md` and `CODEBASE.md` docs | `$upsert-codebase-docs` |
 | `workspace-onboarding` | `skills/workspace-onboarding` | Detect runtime stack, database drivers, and governing rules | `$workspace-onboarding $unslop` |
 | `unslop` | `skills/unslop` | Eliminate AI conversational filler and enforce direct developer tone | `$unslop` |
 | `using-superpowers` | `skills/using-superpowers` | Automatically select and sequence skills for ambiguous tasks | `$using-superpowers` |
 | `using-git-worktrees` | `skills/using-git-worktrees` | Create isolated git worktrees and safety-checked branches | `$using-git-worktrees` |
 
 ### Recommended workflow
-1. Begin turn 1 with `$workspace-onboarding $unslop`.
-2. Let the agent inspect project manifests (`composer.json`, `package.json`, `.env`) and print the single status verification bracket.
-3. If beginning a multi-task feature, invoke `$using-git-worktrees` to establish a dedicated worktree before modifying repository files.
+1. Run `$upsert-codebase-docs` to bootstrap or synchronize `AGENTS.md` and `CODEBASE.md`.
+2. Once documentation exists on disk, launch feature discovery with `$unslop $brainstorming @AGENTS.md @CODEBASE.md` so the agent grounds design decisions in repository architecture.
+3. Use `$workspace-onboarding $unslop` when entering unfamiliar repos to verify active runtime stacks and manifests.
+4. If beginning a multi-task feature, invoke `$using-git-worktrees` to establish a dedicated worktree before modifying repository files.
 
 ---
 
@@ -143,11 +145,11 @@ Conduct final safety checks, clean up temporary branches, and write human docume
 Follow this end-to-end command progression when delivering a full feature:
 
 ```bash
-# Step 1. Initialize session and discover environment
-$workspace-onboarding $unslop kita mau bikin sistem export invoice ke PDF dan Excel
+# Step 1. Bootstrap or audit codebase documentation
+$upsert-codebase-docs bootstrap atau audit dokumentasi AGENTS.md dan CODEBASE.md
 
-# Step 2. Explore architecture and database schema
-$brainstorming $codebase-design gimana arsitektur worker queue dan skema tabel invoice export?
+# Step 2. Explore architecture and brainstorm feature grounded in docs
+$unslop $brainstorming @AGENTS.md @CODEBASE.md kita mau bikin sistem export invoice ke PDF dan Excel
 
 # Step 3. Write structured implementation plan
 $writing-plans buat plan implementasi bertahap untuk worker dan controller export
