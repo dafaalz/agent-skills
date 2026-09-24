@@ -91,6 +91,7 @@ Clarify requirements through focused dialogue and verify assumptions before desi
 
 - Find facts autonomously. Never ask the user for information discoverable via files, configs, git logs, or documentation.
 - For simple features, ask questions one at a time with concrete options and a recommended answer.
+- Surface multiple interpretations. If a user request allows two or more distinct architectural interpretations, present them explicitly with concrete tradeoffs instead of picking one silently. If requirements contain contradictory constraints or unclear logic, stop immediately and name what is confusing before designing.
 - For complex requirements, ambiguous scopes, or explicit stress-testing requests, follow `references/grilling.md`. Map choices to a design tree, ask frontier questions in structured rounds, and resolve every dependency until the frontier is empty.
 - Focus on concrete constraints, including inputs, outputs, error handling, storage, and user roles.
 

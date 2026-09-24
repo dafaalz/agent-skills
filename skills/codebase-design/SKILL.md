@@ -45,7 +45,8 @@ Formulate the interface and identify module boundaries using deep module princip
 2. Minimize interface surface. Reduce public methods, simplify parameters, and hide implementation details internally.
 3. Classify dependencies across seams. Consult `references/deepening.md` to classify external touchpoints into in-process, local-substitutable, remote owned, or true external.
 4. Enforce seam discipline. Follow the rule that one adapter represents a hypothetical seam, while two adapters represent a real seam. Do not introduce interface ports unless at least two concrete adapters exist.
-5. Align interface with test surface. Ensure callers and automated tests cross the same external seam. Do not leak internal test hooks into the public interface.
+5. Simplicity first and YAGNI discipline. Never introduce abstractions, generics, or configurability layers for single-use code. Build the minimum interface that solves the confirmed problem. If an interface introduces more boilerplate than the implementation logic it wraps, inline or simplify it.
+6. Align interface with test surface. Ensure callers and automated tests cross the same external seam. Do not leak internal test hooks into the public interface.
 
 Completion criterion. A written interface specification defining inputs, outputs, error states, and concrete seam placement.
 

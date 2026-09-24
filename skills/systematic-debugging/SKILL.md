@@ -83,8 +83,12 @@ Apply the targeted fix at the source.
 1. **Failing regression test.** Write the simplest reproducible automated test case that exposes the root cause before changing implementation code. If testing frameworks are unavailable, create a standalone test script. Follow the `test-driven-development` skill.
    - Completion criterion. Automated test fails with the expected error against unfixed code.
 
-2. **Single root cause fix.** Modify the code at the identified source. Keep the change minimal. Do not bundle refactoring, cleanup, or unrelated edits into the fix.
-   - Completion criterion. Code edit confined strictly to the root cause.
+2. **Surgical root cause fix.** Modify code strictly at the identified root cause.
+   - Touch only what must be changed to fix the defect. Match existing indentation and conventions.
+   - Never reformat, "improve", or refactor adjacent unbroken code or comments.
+   - Do not delete pre-existing dead code unless explicitly requested.
+   - Clean up only orphan variables, imports, or functions created by the fix.
+   - Completion criterion. Code edit confined strictly to the root cause with zero unrelated diff lines.
 
 3. **Verification.** Run the reproduction test and the broader test suite to confirm the fix works without regressions. Follow the `verification-before-completion` skill.
    - Completion criterion. New test passes, all existing tests pass, and diagnostic logs confirm clean execution.

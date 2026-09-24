@@ -140,3 +140,9 @@ Every step must provide the complete implementation details:
 - Define exact test commands with expected failure messages and passing output.
 - Repeat code in full rather than referencing previous tasks. Tasks must remain self-contained for agents reading them independently.
 - Define all imported symbols, functions, and types within the plan.
+
+### Goal-driven execution standards
+
+Transform abstract requirements into concrete, verifiable test goals:
+- Convert open-ended instructions into testable gates. For example, "add input validation" becomes "write tests asserting failure on invalid inputs, then make them pass".
+- Pair every multi-step action with an explicit verification check (`1. [Step] -> verify: [command or check]`). Strong success criteria enable autonomous verification loops without constant clarification.

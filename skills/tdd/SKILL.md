@@ -28,7 +28,7 @@ Work one vertical slice at a time. Each slice pairs one behavior test with its m
 1. **Red.** Write one minimal test for the target behavior. Run the test suite. Confirm the test fails because the feature is missing, not due to syntax or test configuration errors.
    Completion criterion. Test runner reports a clean failure matching the expected assertion.
 
-2. **Green.** Write only the minimal production code needed to make the test pass. Run the test suite. Confirm all tests pass.
+2. **Green.** Write only the minimal production code needed to make the test pass. Do not add speculative properties, future-proofing methods, or defensive error handling for impossible scenarios. Run the test suite. Confirm all tests pass.
    Completion criterion. Test runner reports zero failures and clean test output.
 
 3. **Repeat.** Proceed to the next slice or seam.
