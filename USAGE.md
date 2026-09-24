@@ -1,16 +1,14 @@
 # Skill usage guide
 
-Orchestrate the 37 specialized skills in this repository across the complete software delivery lifecycle.
+Orchestrate the 34 specialized skills in this repository across the complete software delivery lifecycle.
 
 ## Overview
 
-Each skill defines operational procedures, hard gates, and completion criteria for a specific engineering task. Combine skills intentionally to eliminate unverified assumptions, prevent context window compaction, and deliver verified production changes.
+Each skill defines operational procedures, hard gates, and completion criteria for a specific engineering task. Combine skills to eliminate unverified assumptions, prevent context compaction, and deliver verified production changes.
 
 ```
-Codebase docs -> Session init -> Design & explore -> Implementation planning -> TDD execution -> Quality audit -> Finalization
+Codebase docs -> Session init -> Technical design -> Implementation planning -> TDD execution -> Quality audit -> Finalization
 ```
-
----
 
 ## 1. Codebase documentation and session initialization
 
@@ -21,16 +19,11 @@ Start every new conversation or project by bootstrapping high-signal documentati
 | `upsert-codebase-docs` | `skills/upsert-codebase-docs` | Bootstrap or synchronize `AGENTS.md` and `CODEBASE.md` docs | `$upsert-codebase-docs` |
 | `workspace-onboarding` | `skills/workspace-onboarding` | Detect runtime stack, database drivers, and governing rules | `$workspace-onboarding $unslop` |
 | `unslop` | `skills/unslop` | Eliminate AI conversational filler and enforce direct developer tone | `$unslop` |
-| `using-superpowers` | `skills/using-superpowers` | Automatically select and sequence skills for ambiguous tasks | `$using-superpowers` |
-| `using-git-worktrees` | `skills/using-git-worktrees` | Create isolated git worktrees and safety-checked branches | `$using-git-worktrees` |
 
 ### Recommended workflow
 1. Run `$upsert-codebase-docs` to bootstrap or synchronize `AGENTS.md` and `CODEBASE.md`.
 2. Once documentation exists on disk, launch feature discovery with `$unslop $brainstorming @AGENTS.md @CODEBASE.md` so the agent grounds design decisions in repository architecture.
-3. Use `$workspace-onboarding $unslop` when entering unfamiliar repos to verify active runtime stacks and manifests.
-4. If beginning a multi-task feature, invoke `$using-git-worktrees` to establish a dedicated worktree before modifying repository files.
-
----
+3. Use `$workspace-onboarding $unslop` when entering unfamiliar repositories to verify active runtime stacks and manifests.
 
 ## 2. Technical design and architecture
 
@@ -53,16 +46,14 @@ Resolve domain contracts, evaluate data scaling, and prevent architectural debt 
 | `build-awwwards-quality-sites` | `skills/build-awwwards-quality-sites` | Craft interactive 3D WebGL, Three.js, and GSAP experiences | `$build-awwwards-quality-sites` |
 | `copy-web-design` | `skills/copy-web-design` | Extract design tokens, layout trees, and animations from URLs | `$copy-web-design` |
 | `stitch-design-taste` | `skills/stitch-skill` | Define Google Stitch DESIGN.md tokens and semantic themes | `$stitch-design-taste` |
-| `redesign-existing-projects` | `skills/redesign-skill` | Modernize dated interfaces without modifying core stacks | `$redesign-existing-projects` |
-| `hallmark` | `skills/hallmark` | Audit UI quality and extract tokens for greenfield pages | `$hallmark` |
+| `hallmark` | `skills/hallmark` | Audit UI quality, redesign interfaces, and extract tokens | `$hallmark` |
 | `prototype` | `skills/prototype` | Build rapid interactive click-dummies to validate UX flow | `$prototype` |
 
 ### Recommended workflow
 1. Invoke `$brainstorming` to explore contrasting approaches.
 2. For modules handling over 500 items, verify data scaling against `skills/brainstorming/references/architecture-scalability.md` to guarantee server-side pagination.
 3. Use `$codebase-design` to lock minimal interfaces and inspect database migration files on disk before creating models.
-
----
+4. For interface redesigns and audits, invoke `$hallmark` to modernize layouts and upgrade visual polish within the existing stack.
 
 ## 3. Planning and subagent orchestration
 
@@ -78,8 +69,6 @@ Deconstruct approved technical specifications into testable task batches.
 1. Generate the implementation plan using `$writing-plans`.
 2. Confirm that each task contains exact file targets, complete code snippets, and automated test commands.
 3. If tasks touch disjoint directories (such as database migrations and frontend components), invoke `$dispatching-parallel-agents` to run them concurrently.
-
----
 
 ## 4. Implementation and test-driven development
 
@@ -97,8 +86,6 @@ Write production code using strict vertical slices and test-first iterations.
 1. Execute the current task batch using `$executing-plans`.
 2. Write the failing test first, run the test runner to observe expected failure, implement minimal code, and verify green status.
 3. When investigating bugs, trigger `$systematic-debugging`. If the investigation involves massive logs or multi-database queries, delegate data collection to a subagent to defend against context compaction.
-
----
 
 ## 5. Review and quality assurance
 
@@ -118,8 +105,6 @@ Audit code and interface quality from multiple specialized engineering angles.
 2. For backend endpoints, run `$security-audit` to inspect authorization policies and request validation.
 3. When team feedback suggests merging unrelated concerns into a single file, invoke `$receiving-code-review` to validate counter-arguments with targeted web searches and maintain Single Responsibility boundaries.
 
----
-
 ## 6. Verification, finalization, and documentation
 
 Conduct final safety checks, clean up temporary branches, and write human documentation.
@@ -127,7 +112,7 @@ Conduct final safety checks, clean up temporary branches, and write human docume
 | Skill | Directory | Primary purpose | Command invocation |
 |---|---|---|---|
 | `verification-before-completion` | `skills/verification-before-completion` | Hard-gate requiring test outputs, scoped linting, and git state checks | `$verification-before-completion` |
-| `finishing-a-development-branch` | `skills/finishing-a-development-branch` | Merge feature branches, clean up worktrees, and finalize PRs | `$finishing-a-development-branch` |
+| `finishing-a-development-branch` | `skills/finishing-a-development-branch` | Merge feature branches, verify clean git state, and finalize PRs | `$finishing-a-development-branch` |
 | `technical-writing` | `skills/technical-writing` | Write clear human documentation, README files, and RFCs | `$technical-writing` |
 | `writing-for-agents` | `skills/writing-for-agents` | Draft and update `AGENTS.md`, `CODEBASE.md`, and prompt runbooks | `$writing-for-agents` |
 | `writing-skills` | `skills/writing-skills` | Author new skills or refactor existing skill workflows | `$writing-skills` |
@@ -137,8 +122,6 @@ Conduct final safety checks, clean up temporary branches, and write human docume
 2. The agent executes `git status --short` to confirm zero core documentation files were deleted, runs scoped linters (`pint`, `eslint`) on touched files, and validates fresh test output.
 3. Invoke `$finishing-a-development-branch` to complete git operations.
 4. Update repository documentation using `$technical-writing` for developers or `$writing-for-agents` for agent guidance files.
-
----
 
 ## Complete lifecycle example
 

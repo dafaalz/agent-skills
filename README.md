@@ -1,14 +1,14 @@
-# Agent Skills Collection
+# Agent skills collection
 
-A curated collection of modular skills for AI coding agents, designed according to the open Agent Skills Specification (`agentskills.io`).
+A collection of modular skills for AI coding agents, designed according to the open Agent Skills Specification (`agentskills.io`).
 
 ## Overview
 
-Each skill encapsulates a proven engineering workflow, procedure, or design standard into an isolated folder containing a `SKILL.md` entrypoint. The skills run directly across modern coding assistants including Google Antigravity, Claude Code, and Cursor.
+Each skill encapsulates an engineering workflow, procedure, or design standard into an isolated folder containing a `SKILL.md` entrypoint. The skills run directly across modern coding assistants including Google Antigravity, Claude Code, and Cursor.
 
-## Installation and Usage
+## Installation and usage
 
-### Option 1: Global setup via symbolic links
+### Option 1. Global setup via symbolic links
 
 To make these skills globally available across your local agent sessions, link the `skills` directory to your target agent configuration path:
 
@@ -27,7 +27,7 @@ For Generic Agents:
 ln -sfn /path/to/agent-skills/skills/* ~/.agents/skills/
 ```
 
-### Option 2: Project-level installation
+### Option 2. Project-level installation
 
 Copy individual skill folders directly into your active project workspace:
 ```bash
@@ -35,31 +35,33 @@ mkdir -p .gemini/skills
 cp -r /path/to/agent-skills/skills/<skill-name> .gemini/skills/
 ```
 
-### Option 3: Direct agent prompt
+### Option 3. Direct agent prompt
 
-Point your agent directly to a skill folder or file URL:
+Point your agent directly to a skill folder or file path:
 ```text
 Load and follow the workflow in skills/brainstorming/SKILL.md
 ```
 
-## Skills Catalog
+## Skills catalog
 
-| Skill | Purpose and Trigger Context |
+| Skill | Purpose and trigger context |
 |---|---|
 | `brainstorming` | Use when scoping new features, exploring architectural requirements, planning refactors, stress-testing design decisions, or designing greenfield components before writing implementation plans or code. |
 | `build-awwwards-quality-sites` | Use when building, art-directing, or auditing motion-heavy marketing sites, interactive portfolios, GSAP or Three.js WebGL scenes, and smooth-scroll interfaces. |
+| `codebase-design` | Use when designing module interfaces, evaluating abstraction depth, identifying code seams, or turning shallow pass-through wrappers into deep modules. |
+| `copy-web-design` | Use when reverse-engineering, deconstructing, benchmarking, or replicating web designs, design tokens, layout structures, animations, or components from URLs or screenshots. |
 | `dispatching-parallel-agents` | Use when facing two or more independent tasks that can run without shared state or sequential dependencies. |
 | `executing-plans` | Execute written implementation plans batch by batch with review checkpoints in the current session. |
-| `finishing-a-development-branch` | Use when implementation is complete, all automated tests pass, and the working branch or worktree is ready for integration, pull request creation, or cleanup. |
-| `graphify` | Use for questions about a codebase, architecture, file relationships, or project content. Converts code, docs, and diagrams into a persistent knowledge graph. |
-| `hallmark` | Anti-AI-slop design skill for greenfield pages, audits, redesigns, and design extraction from URLs or screenshots. |
+| `finishing-a-development-branch` | Use when implementation is complete, all automated tests pass, and the working branch is ready for integration, pull request creation, or cleanup. |
+| `graphify` | Use for questions about a codebase, architecture, file relationships, or project content. Converts code, docs, and media into a persistent knowledge graph. |
+| `hallmark` | Anti-slop design system for greenfield pages, UI audits, visual redesigns, and token extraction from URLs or screenshots. |
 | `interface-review` | Use when auditing UI implementation quality, CSS architecture, design token compliance, visual hierarchy, web accessibility standards, or frontend code diffs. |
-| `output-skill` | Overrides default LLM truncation behavior. Enforces complete code generation, bans placeholder patterns, and handles token-limit splits cleanly. |
+| `laravel` | Use when building, modifying, reviewing, testing, or debugging Laravel applications, Eloquent queries, Artisan commands, Blade or Livewire components, Inertia adapters, Form Requests, migrations, or queue jobs. |
+| `output-skill` | Overrides default model truncation behavior. Enforces complete code generation, bans placeholder patterns, and handles token-limit splits cleanly. |
 | `pick-ui-library` | Use when selecting frontend libraries, choosing UI primitives, picking animation tools, or finding curated component packages for a project. |
 | `prototype` | Use when prototyping divergent visual or interaction variants for a UI component, or comparing interactive UI explorations. |
 | `qa-engineer` | Use when testing features from a user perspective, executing exploratory test charters, auditing PR diffs, investigating test flakiness, or verifying release quality gates. |
 | `receiving-code-review` | Use when receiving code review feedback, before implementing suggestions, requiring technical rigor and verification. |
-| `redesign-skill` | Use when auditing or updating an existing website, web app, or frontend UI to replace generic AI patterns, fix typography and layout issues, or improve polish. |
 | `requesting-code-review` | Use when completing tasks, implementing major features, or before merging to verify work meets requirements. |
 | `security-audit` | Use when auditing codebases for security vulnerabilities, conducting threat modeling, reviewing auth boundaries, evaluating exploitability, or verifying security fixes. |
 | `stitch-skill` | Use when generating or reviewing Google Stitch screen designs, crafting DESIGN.md specifications, or translating visual direction into semantic UI constraints. |
@@ -71,10 +73,10 @@ Load and follow the workflow in skills/brainstorming/SKILL.md
 | `testing-patterns` | Use when writing automated tests, creating test fixtures, configuring test mocks or testcontainers, implementing contract tests, or refactoring test suites. |
 | `ui-motion` | Master skill for UI animations, micro-interactions, CSS transitions, Apple gesture physics, codebase motion audits, and 60fps performance optimization. |
 | `unslop` | Use when drafting prose, reviewing text for AI patterns, editing documentation, rewriting generic AI output, or cutting LLM writing habits. |
-| `using-git-worktrees` | Use when starting feature work that needs isolation from current workspace or before executing implementation plans. |
-| `using-superpowers` | Use when starting any conversation. Establishes skill discovery and requires Skill tool invocation before any response. |
+| `upsert-codebase-docs` | Create and maintain high-signal documentation files for AI coding agents and developers. Governs generation and incremental synchronization of `AGENTS.md` and `CODEBASE.md`. |
 | `ux-review` | Use when auditing product user experience, task flows, cognitive load, form usability, error resilience, or mobile interaction ergonomics. |
 | `verification-before-completion` | Use when about to claim work is complete, fixed, or passing, before committing or creating PRs. Requires evidence before assertions. |
+| `workspace-onboarding` | Use when starting a new conversation, initializing work on a project, or onboarding to an unfamiliar workspace to discover the active stack, load rules, and establish execution constraints. |
 | `writing-for-agents` | Use when drafting or editing agent instructions, AGENTS.md, CLAUDE.md, prompt runbooks, context pointers, or skill documentation. |
 | `writing-plans` | Write phased implementation plans with test-first tasks from a spec or design before touching code. |
 | `writing-skills` | Use when creating new skills, modifying existing skills, or verifying agent instruction compliance across workspaces. |
