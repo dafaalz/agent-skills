@@ -4,7 +4,7 @@ Techniques and signals for auditing codebase documentation drift and applying sa
 
 ## Drift signals
 
-Documentation drifts when code implementation mutates while documentation remains static. Monitor these five signals to determine whether `CODEBASE.md` or `AGENTS.md` require updates:
+Documentation drifts when code implementation mutates while documentation remains static. Monitor these six signals to determine whether `CODEBASE.md` or `AGENTS.md` require updates:
 
 ### 1. Asymmetric git diff
 Examine recent git commits or working tree status:
@@ -34,6 +34,9 @@ Parse the verification metadata at the top of `CODEBASE.md`:
 Last verified: YYYY-MM-DD
 ```
 If the elapsed time between the verified date and the current system date exceeds 28 days (4 weeks), trigger an automatic verification pass across database migrations, routes, and operational commands.
+
+### 6. Environment and database configuration drift
+Compare the active environment file (`.env`) and live runtime database status against the Technology Stack table in `CODEBASE.md`. If `DB_CONNECTION` in `.env` or runtime CLI output (such as `php artisan db:show`) differs from the documented database engine in `CODEBASE.md`, trigger an immediate database stack update. Never assume `.env.example` or existing documentation reflects the live connection when `.env` exists on disk.
 
 ## Safe incremental synchronization procedure
 

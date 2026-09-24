@@ -31,9 +31,9 @@ Inspect the target repository to determine structure and technology stack before
    - Single-root application. One primary manifest at root (`composer.json`, `package.json`, or `Cargo.toml`). Generates root `AGENTS.md` and `CODEBASE.md`.
    - Multi-tier decoupled architecture. Distinct manifests inside subdirectories like `backend/` and `frontend/`. Generates root orchestrator `AGENTS.md` alongside dedicated `AGENTS.md` and `CODEBASE.md` pairs inside each active subsystem.
    - Monorepo workspace. Monorepo tools managing multiple packages under `packages/` or `apps/`.
-3. Inspect stack manifests using `references/stack-profilers.md` to identify:
+3. Inspect stack manifests and environment files using `references/stack-profilers.md` to identify:
    - Language and runtime version.
-   - Core framework and database driver.
+   - Core framework and active database driver (prioritizing `.env` over `.env.example`, verified via runtime CLI commands where available).
    - Test runners, linters, and build tooling.
    - Primary packages and third-party integrations.
 
@@ -50,6 +50,7 @@ Determine whether to run greenfield generation or incremental drift synchronizat
    - Migration files added after the last verified date in `CODEBASE.md`.
    - New routes, controllers, or services introduced in git diff.
    - Dependency additions in package manifests.
+   - Database engine or connection mismatches between active `.env` or runtime CLI and the documented stack.
    - Staleness rule expiry exceeding 4 weeks since the recorded verification date.
 3. Resolve profile ambiguities:
    - If conflicting manifests exist, such as both npm and bun lockfiles, formulate a clarifying question with concrete options and a clear recommended choice.

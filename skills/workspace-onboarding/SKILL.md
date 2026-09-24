@@ -13,18 +13,22 @@ Follow these four steps in sequence.
 
 ### Step 1. Stack and environment discovery
 
-Identify the active runtime, framework, database, and package managers from files on disk.
+Identify the active runtime, framework, database, and package managers from files on disk and live runtime commands.
 
 1. Inspect project manifests:
    - For PHP or Laravel projects, read `composer.json` to verify framework version, packages, and custom scripts.
    - For Node, React, Vue, or Next.js projects, read `package.json` to check dependencies, Tailwind versions, and test runners.
    - For Python projects, inspect `pyproject.toml`, `Pipfile`, or `requirements.txt`.
-2. Inspect environment and database drivers:
-   - Check `.env` or `.env.example` for `DB_CONNECTION`, `DATABASE_URL`, port bindings, and external services.
-   - Never assume a default SQLite or MySQL database without verifying configuration files.
-3. Record discovered stack properties: runtime version, framework, database driver, test runner, and linter.
+2. Inspect environment files with strict priority:
+   - Read `.env` first whenever the file exists on disk. Use `.env.example` solely as a fallback template when `.env` is absent.
+   - Check `DB_CONNECTION`, `DATABASE_URL`, port bindings, and external services in the active `.env`.
+   - Never assume a default SQLite or MySQL database from template files when a configured `.env` file exists.
+3. Validate active runtime database configuration:
+   - Run framework introspection commands when available (such as `php artisan db:show` or `php artisan env` for Laravel) to verify the live database engine, host, and port.
+   - Check test configuration files (such as `phpunit.xml`) to identify test specific overrides (such as in-memory SQLite) and avoid misclassifying test fixtures as the application database.
+4. Record discovered stack properties: runtime version, framework, database driver, test runner, and linter.
 
-Completion criterion. A verified inventory of the runtime, framework, database engine, and tooling without unverified assumptions.
+Completion criterion. A verified inventory of the runtime, framework, database engine confirmed via active environment files or runtime CLI, and tooling without unverified assumptions.
 
 ### Step 2. Rule discovery and binding
 

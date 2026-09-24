@@ -16,10 +16,13 @@ php artisan serve                          # Dev server
 php artisan test                           # Run test suite
 php artisan migrate                        # Database migrations
 php artisan route:list                     # Route overview
+php artisan db:show                        # Inspect active database engine, connection, and tables
 ```
 
 ### Database and schema discovery
-- Check `.env.example` or `.env` for `DB_CONNECTION` (pgsql, mysql, sqlite).
+- Read `.env` first to inspect `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, and `DB_DATABASE`. Use `.env.example` solely as a fallback template when `.env` is absent.
+- Run `php artisan db:show` to verify the active runtime database engine and table counts directly.
+- Inspect test configuration files (`phpunit.xml`) to identify in-memory test databases (such as SQLite `:memory:`) and avoid misidentifying test fixtures as the application database.
 - Inspect migrations inside `database/migrations/`.
 - Inspect model relationships inside `app/Models/`.
 
