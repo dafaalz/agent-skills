@@ -99,6 +99,7 @@ Completion criterion. All ambiguities and decision branches resolved through exp
 ### Step 3. Approach exploration
 
 Propose 2 to 3 approaches with tradeoffs, lead with a recommendation, and obtain user confirmation before writing detailed specifications. Evaluate data scaling and reload persistence against `references/architecture-scalability.md`.
+- Protect Single Responsibility Principle and modular boundaries: If a user proposal merges unrelated domains or causes lifecycle regressions, run a targeted web search via `search_web` to verify industry conventions, present a grounded counter-argument citing the reference, and propose a clean decoupled alternative.
 
 Completion criterion. The user selects a preferred approach.
 

@@ -11,14 +11,18 @@ Design deep modules with substantial behavior behind small interfaces, placed at
 
 Follow these five steps in sequence.
 
-### Step 1. Domain context ingestion
+### Step 1. Domain context and schema ingestion
 
-Read the project context to align terminology with the existing codebase before modifying or creating modules.
+Read the project context and verify actual data schemas before modifying or creating modules.
 
 1. Inspect `AGENTS.md`, `CODEBASE.md`, or `CLAUDE.md` in the project root if present. Use the domain nouns, bounded contexts, and naming conventions defined there.
-2. If those files do not exist, infer domain boundaries directly from database migrations, route declarations, and data models. Never require arbitrary glossary files.
+2. Audit database schemas and migration files:
+   - For projects with existing databases, inspect migration directories (such as `database/migrations/`, `prisma/schema.prisma`, or `src/db/`).
+   - Ground all entity attributes, foreign keys, and relations in verified schema files on disk. Never invent columns or assume database fields based on general model training.
+   - For greenfield repositories without existing migrations, mark the status as greenfield initialization and draft the initial schema explicitly without unverified assumptions.
+3. Infer domain boundaries and seams directly from verified migrations, route declarations, and existing data models.
 
-Completion criterion. The agent names modules, methods, and types using verified project domain terms.
+Completion criterion. The agent names modules, methods, and attributes using verified project domain terms and disk-backed database schemas.
 
 ### Step 2. Design It Twice offer
 

@@ -73,6 +73,7 @@ Track execution state inside the plan file:
 - Use standard markdown checkboxes (`- [ ]` and `- [x]`).
 - Keep plan files synchronized with git commits after every completed task.
 - Do not maintain duplicate task trackers in memory or scratch files.
+- Protect against context compaction: For extensive plans exceeding 5 tasks or operations generating large terminal logs, persist batch milestone reports to disk. When an individual task involves surveying massive datasets or broad codebases, delegate it to a subagent via `invoke_subagent` to keep the primary execution context window lean.
 
 ## Integration
 

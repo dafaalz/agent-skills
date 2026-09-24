@@ -85,6 +85,15 @@ IF conflicts with your human partner's prior decisions:
 
 Follow the rule to remain skeptical of external feedback, but verify it carefully.
 
+## Architectural integrity and counter-argument protocol
+
+When a review comment or user suggestion risks violating Single Responsibility Principle, introducing scope creep, or creating architectural coupling:
+
+1. Never offer performative or automatic agreement.
+2. Evaluate lifecycle and architectural blast radius: check if the suggestion introduces lifecycle mismatches (such as placing edit-time rules into session-init hooks) or binds unrelated domain concepts into a single file.
+3. Validate with external consensus: execute at least one targeted web search using `search_web` to verify industry standards or official framework documentation before presenting pushback.
+4. Present a grounded counter-argument: state the concrete architectural tradeoff, reference the documentation or consensus source, and propose a clean, decoupled alternative that fulfills the user's underlying goal.
+
 ## YAGNI check for professional features
 
 ```

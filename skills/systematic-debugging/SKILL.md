@@ -45,6 +45,11 @@ Gather evidence to explain what failed and why before touching production code.
 5. **Upstream data flow tracing.** If the error originates deep in the call stack, trace bad values backward to their origin. Consult `root-cause-tracing.md` in this directory for backward tracing instructions.
    - Completion criterion. Code location that produced the initial invalid value identified.
 
+6. **Large-scale scope and context compaction defense.** If the investigation requires surveying massive logs, hundreds of database files, or multi-repository history:
+   - Dispatch a dedicated `research` or `self` subagent via `invoke_subagent` to isolate heavy tool outputs and prevent context window compaction in the primary agent session.
+   - Persist intermediate findings directly to disk artifacts (`<appDataDir>/brain/<conversation-id>/` or `scratch/`) instead of relying solely on chat memory.
+   - Completion criterion. Heavy data collection delegated to a subagent and key synthesis written to a disk artifact.
+
 Phase 1 exit criterion. The exact line of code, bad input, or environmental discrepancy causing the defect is identified.
 
 ### Phase 2. Pattern analysis

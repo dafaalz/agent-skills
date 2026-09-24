@@ -105,6 +105,30 @@ Skip any step = lying, not verifying
 ❌ Trust agent report
 ```
 
+
+## Git state and documentation preservation gate
+
+Run these git checks before making any completion claim:
+
+1. Execute `git status --short` to verify all touched files.
+2. Inspect deleted files marked with `D`.
+   - Core files must never be deleted without an explicit user prompt: `CODEBASE.md`, `AGENTS.md`, `CLAUDE.md`, `README.md`, and `.env.example`.
+   - If any core documentation file was deleted inadvertently, restore it immediately using `git checkout -- <file>`.
+3. Confirm that untracked temporary files, scratch scripts, or dump files are either cleaned up or added to `.gitignore`.
+
+## Scoped linter and code style verification
+
+Run linters against modified files to prevent shipping formatting bugs or breaking pre-commit hooks:
+
+1. Detect configured linters:
+   - For PHP or Laravel, check `composer.json` for `laravel/pint` or `phpstan/phpstan`.
+   - For JavaScript or TypeScript, check `package.json` for `eslint`, `biome`, or `prettier`.
+2. Scope execution to modified files:
+   - Identify touched files using `git diff --name-only`.
+   - Run the linter strictly against those files (for example: `vendor/bin/pint --test path/to/File.php` or `npx eslint path/to/File.tsx`).
+   - Do not execute full-repository scans that pull in pre-existing legacy errors outside the active scope.
+3. If no linter is configured in project manifests, state "Linter: none configured" in the verification report without failing the gate.
+
 ## Why this matters
 
 From 24 failure memories:
