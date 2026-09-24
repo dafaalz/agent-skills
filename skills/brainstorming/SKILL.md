@@ -65,6 +65,7 @@ Formulate 2 to 3 distinct implementation approaches based on the gap analysis.
   3. Testability and verification effort.
   4. Implementation complexity and delivery risk.
   5. Long-term maintainability.
+- Evaluate data scaling and state lifecycle. Consult `references/architecture-scalability.md` when designing list endpoints, table pagination, or interactive state persistence.
 - Include the status quo as a baseline comparison.
 - Lead with your recommended option and state the technical reasons for the choice.
 - Ask the user to choose an approach before drafting detailed component designs.
@@ -97,7 +98,7 @@ Completion criterion. All ambiguities and decision branches resolved through exp
 
 ### Step 3. Approach exploration
 
-Propose 2 to 3 approaches with tradeoffs, lead with a recommendation, and obtain user confirmation before writing detailed specifications.
+Propose 2 to 3 approaches with tradeoffs, lead with a recommendation, and obtain user confirmation before writing detailed specifications. Evaluate data scaling and reload persistence against `references/architecture-scalability.md`.
 
 Completion criterion. The user selects a preferred approach.
 
