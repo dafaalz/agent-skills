@@ -189,6 +189,3 @@ Completion criterion. The worktree is removed for options 1 and 4, or confirmed 
 ### Upstream callers
 - `subagent-driven-development`, step 7, after completing all tasks.
 - `executing-plans`, step 5, after completing all task batches.
-
-### Companion skills
-- `using-git-worktrees`, which provisions the isolated worktrees cleaned up by this skill.

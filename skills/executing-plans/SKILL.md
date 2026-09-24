@@ -17,7 +17,7 @@ Follow these four steps in sequence:
 ### Step 1. Plan audit and workspace setup
 
 Read and inspect the implementation plan before making code changes:
-- Verify workspace isolation. Confirm that work proceeds on a dedicated branch or worktree created by `using-git-worktrees`. Never modify `main` or `master` directly.
+- Verify workspace isolation. Confirm that work proceeds on a dedicated git branch or isolated workspace. Never modify `main` or `master` directly.
 - Inspect plan structure. Verify that every task specifies exact file targets, full code blocks, and test commands.
 - Surface ambiguities early. If the plan contains missing requirements, broken logic, or placeholders like TODO or TBD, stop and ask the user for clarification before editing code.
 - Mark the first batch. Identify the logical task boundary for the first execution batch, typically 1 to 3 related tasks.
@@ -78,7 +78,6 @@ Track execution state inside the plan file:
 ## Integration
 
 Coordinate with related workflow skills:
-- `using-git-worktrees` sets up isolated workspaces before starting execution.
 - `writing-plans` creates the structured implementation plan this skill executes.
 - `finishing-a-development-branch` finishes branch integration after all tasks pass.
 - `subagent-driven-development` serves as the alternative execution skill when delegating tasks to fresh subagents.

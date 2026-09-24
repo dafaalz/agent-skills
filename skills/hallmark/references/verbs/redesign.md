@@ -12,6 +12,35 @@ Hallmark redesigns visual and interaction layers. It does not delete production 
 - Treat PDFs, README files, `.md` briefs, docs, transcripts, and pitch decks as source material for understanding the product. They are not page copy by default. Summarize and adapt them unless the user explicitly says to use their wording verbatim.
 - Before editing, state the files you expect to modify, create, and delete. Any deletion needs explicit confirmation.
 
+## Brownfield execution invariants
+
+When redesigning existing components or pages within an active codebase, enforce these execution boundaries:
+- Inspect package manifests (`package.json`, etc.) for framework dependencies and versions (such as Tailwind CSS v3 versus v4) before writing code to prevent syntax conflicts.
+- Work within the existing stack. Never migrate frameworks, replace styling solutions, or introduce unauthorized packages without explicit instruction.
+- Preserve application logic, form handling, authentication states, and event listeners. Never alter component business logic while restyling.
+- Make changes incrementally and reviewably. Modify existing component templates rather than rewriting entire files from scratch.
+
+## Brownfield fix priority
+
+Apply updates in this sequence to deliver visual improvement with minimal regression risk:
+1. Font selection and display hierarchy
+2. Color palette cleanup and accent consolidation
+3. Hover, active, and keyboard focus states
+4. Layout constraints, grid structure, and whitespace
+5. Component pattern replacements (cards, badges, navigation)
+6. Loading, empty, and error feedback states
+7. Typography fine-tuning (tracking, line-height, text-wrap)
+
+## Micro-polish techniques for existing pages
+
+- Balanced typography wrapping. Use `text-wrap: balance` on headers and `text-wrap: pretty` on body text to eliminate orphaned words.
+- Tabular figures for data. Apply `font-variant-numeric: tabular-nums` or monospace typography to dashboards, metric counters, and tables.
+- Mobile viewport stability. Replace `height: 100vh` with `min-height: 100dvh` on full-bleed containers to avoid dynamic browser address bar jumps.
+- Card action alignment. Align call-to-action buttons to the card bottom using `margin-top: auto` or CSS Grid across uneven sibling cards.
+- Surface-tinted shadows. Derive shadow values from the underlying background hue rather than harsh generic black shadows.
+- Tactile depth. Break sterile flat containers with subtle SVG noise overlays at 3 to 5 percent opacity, or layered glassmorphism (`backdrop-filter: blur(12px)` with a 1px semi-transparent inner border and subtle inset box shadow).
+- Predictable z-index scales. Define z-index layers via custom properties or standardized scales (such as 10, 20, 30, 40, 50).
+
 ## Step 0 · Detect scope first
 
 Before anything else, decide whether the redesign is **single-page** or **multi-page**. The behaviour diverges hard.
