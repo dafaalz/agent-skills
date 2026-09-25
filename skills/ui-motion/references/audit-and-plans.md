@@ -44,17 +44,43 @@ Never use `scale(0)`. Starting entry scale at `scale(0.95)` grounds the object. 
 ### 4. Interruptibility
 CSS transitions and springs retarget cleanly from current visual coordinates mid-flight, whereas keyframes reset to their initial frame. Rapidly triggered elements (toasts, toggles, gestures) must rely on transitions or springs. Audit for fixed-duration tweens on gestures, missing velocity dismissals, and hard stops at drag boundaries.
 
-### 5. Performance
-Animate `transform` and `opacity` exclusively. Audit for `transition: all`, animated box-model layout properties (`height`, `width`, `margin`, `padding`), Framer Motion shorthand props (`x`, `y`, `scale`) under load, and CSS custom properties on parent elements driving child transforms.
+### 5. Performance and Core Web Vitals
+Animate `transform` and `opacity` exclusively to remain on the compositor thread. Audit for:
+* `transition: all` triggering inadvertent layout or paint recalcs.
+* Animated box-model layout properties (`height`, `width`, `margin`, `padding`, `top`, `left`) causing Cumulative Layout Shift (CLS) spikes.
+* Heavy JavaScript animation loops blocking presentation delay and degrading Interaction to Next Paint (INP) beyond the 200ms threshold.
+* Indiscriminate `will-change` declarations causing layer explosion and VRAM exhaustion.
+* Display list invalidations in Chromium cc pipeline from simultaneous DOM mutations during active motion.
 
-### 6. Accessibility
-Audit for motion lacking `@media (prefers-reduced-motion: reduce)`, hover transitions active on touch screens lacking pointer fine queries, and reduced-motion implementations that eliminate essential visual feedback instead of softening movement.
+### 6. Accessibility and SSR hydration safety
+Audit candidate code against these constraints:
+* Presence of `@media (prefers-reduced-motion: reduce)` fallbacks.
+* Absence of conditional JSX tag branching (`if (reduce) return <div>` versus `<motion.div>`) that triggers React 19 hydration mismatches and permanently locks server-rendered `opacity: 0` elements into invisibility.
+* Standardized attribute contract hooks (`[data-motion-enter]`) backed by `!important` CSS overrides.
+* Hover transitions gated behind `@media (hover: hover) and (pointer: fine)` to protect touch devices.
 
 ### 7. Cohesion and tokens
 Easing curves and duration scales must live as centralized tokens. Audit for duplicated cubic-bezier definitions, isolated bouncy interactions inside rigid data tools, simultaneous group introductions lacking stagger, and abrupt crossfades.
 
 ### 8. Missed opportunities
 Identify interaction boundaries where introducing an animation resolves visual discontinuities.
+
+---
+
+## Remedial preference hierarchy
+
+When formulating recommendations or refactoring plans, evaluate remedies in this strict sequence. Always prefer earlier, simpler remedies over adding code:
+
+1. **Delete the animation.** Eliminate motion on keyboard shortcuts, command palettes, high-frequency actions over 100 times daily, or decorative transitions that obscure readable data.
+2. **Reduce parameters.** Shorten duration under 250ms, decrease displacement scale, or prune superfluous properties.
+3. **Correct easing curves.** Replace `ease-in` or default browser curves with `--ease-out` or custom cubic-bezier tokens.
+4. **Fix physical grounding and origin.** Align `transform-origin` to trigger coordinates and replace `scale(0)` with `scale(0.95)` and zero opacity.
+5. **Establish interruptibility.** Convert `@keyframes` to CSS transitions or spring solvers so re-triggering retains live velocity.
+6. **Move to GPU compositor.** Shift box-model properties (`width`, `height`, `margin`, `padding`, `top`, `left`) to `transform` and `opacity`. Replace Framer Motion shorthand properties with full transform strings.
+7. **Safeguard Core Web Vitals.** Reserve static dimensions to maintain CLS at 0, and offload script work to keep INP under 200ms.
+8. **Apply asymmetric timing.** Set slow deliberate durations on user hold phases (for example, 2s linear) and rapid responses on release (200ms ease-out).
+9. **Add polish.** Bridge overlapping state crossfades with a temporary 2px blur mask, or add 30ms to 80ms stagger on dynamic group entrances.
+10. **Enforce accessibility and SSR hydration safety.** Use `[data-motion-enter]` attribute contracts with `!important` CSS overrides rather than JSX component branching to guarantee zero React 19 hydration mismatches.
 
 ---
 
@@ -77,9 +103,9 @@ When discovering new animation opportunities in an interface, search these inter
 
 ### Code search patterns
 Run regex sweeps across the codebase:
-- Conditional rendering without transitions: `{isOpen &&`, `display: none` toggles.
-- Unstyled triggers: `onClick` handlers on elements lacking `:active` pseudo-classes.
-- Native interactive tags: files containing `<dialog>`, `<details>`, drag events, or `.map(` lists.
+* Conditional rendering without transitions, targeting `{isOpen &&` and `display: none` toggles.
+* Unstyled triggers, targeting `onClick` handlers on elements lacking `:active` pseudo-classes.
+* Native interactive tags, targeting files containing `<dialog>`, `<details>`, drag events, or `.map(` lists.
 
 ---
 
