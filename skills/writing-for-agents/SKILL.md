@@ -69,27 +69,35 @@ skills/<skill-name>/
 ├── SKILL.md              # Required entrypoint and runbook
 ├── references/           # Optional deep reference manuals and guides
 ├── scripts/              # Optional deterministic executable helpers
+├── assets/               # Optional static templates, boilerplate, and mock data
 └── examples/             # Optional verified sample implementations
 ```
 
-Discovery priority runs in sequence:
-1. Workspace project customizations in `.agents/skills/`
-2. Global configuration in `~/.gemini/config/skills/`
+The directory name must match the `name` field in the frontmatter. Discovery priority runs in sequence:
+1. Universal workspace project skills in `.agents/skills/`
+2. Universal user skills in `~/.agents/skills/` or platform configs in `~/.gemini/config/skills/`
 3. Built-in application mounts
 
-Every skill entrypoint must contain YAML frontmatter:
+Every skill entrypoint must contain YAML frontmatter compliant with the AgentSkills specification:
 
 ```yaml
 ---
 name: skill-name-in-kebab-case
-description: Use when [specific triggering conditions and symptoms].
+description: Short functional summary. Use when [triggering conditions]. Don't use for [negative exclusions].
+compatibility: Optional environment requirements (max 500 chars)
+license: Optional SPDX license or path to license file
+metadata:
+  version: "1.0.0"
+  author: "Team"
+allowed-tools: optional tool names separated by spaces
 ---
 ```
 
 Frontmatter rules:
-- Format the name with lowercase letters, digits, and hyphens only.
-- Write descriptions in third person, starting with "Use when". Describe triggering symptoms and operational conditions only. Never summarize the workflow in the description, because models may execute the summary instead of reading the complete skill body. Keep descriptions under 500 characters.
-- Choose invocation mode intentionally. Model-invoked skills include a description for autonomous discovery. User-invoked skills set `disable-model-invocation` to true to save context load when human command suffices. Read `references/skill-mechanics.md` for invocation choices and router skills.
+- Format the `name` with 1 to 64 lowercase alphanumeric characters and single hyphens. Do not use leading, trailing, or consecutive hyphens. The name must match the parent directory name.
+- Write descriptions in third person up to 1024 characters (recommended under 500 characters to conserve context). State the core function, positive triggers starting with "Use when", and negative exclusions starting with "Don't use for" to prevent false positive routing. Never summarize the internal workflow in the description, because models may execute the summary instead of reading the complete skill body.
+- Optional fields include `compatibility` for environment constraints, `license` for distribution terms, `metadata` for arbitrary attributes, and `allowed-tools` to restrict tool access.
+- Choose invocation mode intentionally. Model-invoked skills include a description for autonomous discovery. User-invoked skills set `disable-model-invocation: true` (platform extension) to save context load when human command suffices. Read `references/agentskills-spec.md` and `references/skill-mechanics.md` for full schema rules and router skills.
 
 ## Progressive disclosure and context pointers
 
@@ -149,7 +157,7 @@ Treat skill authoring as test-driven development for process documentation. An u
 3. Dispatch fresh subagents with the candidate skill to uncover evasions and close loopholes.
 4. Verify subagent compliance across consecutive runs.
 
-Read `references/testing-methodology.md` for deep behavioral testing patterns, and `references/google-agent-standards.md` for platform standards.
+Read `references/testing-methodology.md` for deep behavioral testing patterns, `references/agentskills-spec.md` for the official specification, and `references/google-agent-standards.md` for platform standards.
 
 ## Quick audit checklist
 
@@ -157,7 +165,7 @@ Run this check before deploying any agent document or publishing a skill:
 
 | Check | Passing condition |
 |---|---|
-| Frontmatter | Contains kebab-case name and trigger-only description starting with "Use when" under 500 characters |
+| Frontmatter | Contains 1 to 64 char kebab-case name matching directory, valid description with positive and negative triggers, and valid optional metadata |
 | Information hierarchy | Primary steps, secondary rules, and tertiary references cleanly separated |
 | Context load | `SKILL.md` is under 250 lines with heavy reference moved to `references/` |
 | Completion criteria | Every operational step terminates on a checkable, binary completion criterion |

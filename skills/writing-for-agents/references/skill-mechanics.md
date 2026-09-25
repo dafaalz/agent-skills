@@ -1,6 +1,6 @@
 # Skill mechanics
 
-This guide covers skill-specific mechanics for `writing-for-agents`, including frontmatter, invocation choices, and router skills. Universal writing rules live in `../SKILL.md`.
+This guide covers skill-specific mechanics for `writing-for-agents`, including invocation choices and router skills. Universal writing rules live in `../SKILL.md`, and the full open specification schema lives in `agentskills-spec.md`.
 
 ## Invocation
 
