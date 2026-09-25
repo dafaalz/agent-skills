@@ -7,14 +7,20 @@ description: Use when authoring UI animations, micro-interactions, spring physic
 
 Design, build, audit, and optimize hardware-accelerated user interface motion.
 
+## Overview
+
+UI motion engineering delivers hardware-accelerated, physically grounded interface motion that preserves utility, enhances spatial orientation, and avoids decorative bloat. Every motion must pass frequency gating, use the most performant execution layer, respect user accessibility preferences, and operate under strict duration budgets.
+
+Consult deep reference documents in references/ for recipes, gesture physics, and audit playbooks.
+
 ## Workflow router
 
 Identify user intent and route execution immediately:
 
-1. **Authoring animations from scratch.** Follow the build sequence below to gate necessity, select tools, and pick exact tokens. For pre-built component patterns, consult [recipes.md](references/recipes.md).
-2. **Refining tactile micro-interactions.** Add active press feedback, anchor popovers to trigger coordinates, eliminate secondary tooltip delays, and output reviews using the Before, After, Why format.
-3. **Fluid gestures and spring physics.** Load [physics-and-gestures.md](references/physics-and-gestures.md) for Apple momentum decay projection, rubber band boundaries, pointer capture, and velocity handoffs.
-4. **Codebase audits and refactor planning.** Load [audit-and-plans.md](references/audit-and-plans.md) for the eight-category audit playbook, grep seam search patterns, and self-contained plan generation.
+1. **Authoring animations from scratch.** Follow the build sequence below to gate necessity, select tools, and pick exact tokens. Consult [references/recipes.md](references/recipes.md) for pre-built component patterns.
+2. **Refining tactile micro-interactions.** Add active press feedback, anchor popovers to trigger coordinates, eliminate secondary tooltip delays, and format reviews using the Before, After, Why table.
+3. **Fluid gestures and spring physics.** Consult [references/physics-and-gestures.md](references/physics-and-gestures.md) for Apple momentum decay projection, rubber band boundaries, pointer capture, and velocity handoffs.
+4. **Codebase audits and refactor planning.** When explicitly called with an audit request (e.g. `/ui-motion audit <target>`), follow [references/audit-and-plans.md](references/audit-and-plans.md) to inspect the repository against motion failure modes and generate structured refactor plans under `plans/` without mutating source files.
 
 ## Execution invariants
 
@@ -26,7 +32,7 @@ Avoid these core failure modes:
 
 ## The build sequence
 
-### 1. Should this animate at all?
+### 1. Frequency gate
 
 Evaluate interaction frequency before writing motion code:
 
@@ -41,7 +47,7 @@ Keyboard-initiated actions disqualify animation automatically. Raycast uses no o
 
 If the request fails this gate, state the decision directly and do not write animation code. Deliver the non-motion alternative instead.
 
-### 2. What is the purpose?
+### 2. Sanctioned purpose
 
 Name exactly one sanctioned purpose before writing code:
 
@@ -54,7 +60,7 @@ Name exactly one sanctioned purpose before writing code:
 
 If no purpose applies, halt and do not write animation code. Data tables, financial graphs, and reading content must remain stationary.
 
-### 3. Pick the tool, cheapest that works
+### 3. Cheapest tool that works
 
 Walk down this table in order and select the first matching tool:
 
@@ -70,7 +76,7 @@ CSS transitions outperform JavaScript under load because they execute on the GPU
 
 For complex headless UI primitives (toasts, drawers, command menus), rely on battle-tested libraries such as Sonner or Vaul to manage ARIA attributes and focus traps properly.
 
-### 4. Hardware accelerated properties
+### 4. Hardware-accelerated transform and opacity
 
 - **Animate `transform` and `opacity` exclusively.** They skip layout recalculation and paint passes, running on the compositor thread. Properties like `width`, `height`, `margin`, `padding`, `top`, and `left` force expensive layout thrashing. Allow `height` only on accordions where transform cannot match the behavior.
 - **Never use `scale(0)`.** Start entry transitions from `scale(0.95)` with zero opacity.
@@ -85,7 +91,7 @@ For complex headless UI primitives (toasts, drawers, command menus), rely on bat
 
 - **Avoid parent CSS variable updates during gestures.** Setting custom properties on parent elements triggers style recalculation across all child elements. Apply inline transforms directly to the target element.
 
-### 5. Easing curves and duration tokens
+### 5. Easing curves and duration budget
 
 Standard browser easings lack punch. Use these tokens:
 
@@ -95,16 +101,16 @@ Standard browser easings lack punch. Use these tokens:
 --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);     /* iOS drawer curve */
 ```
 
-Easing selection rules:
-- Entering or exiting elements: `ease-out` (starts quickly and feels responsive).
-- Moving or morphing on screen: `ease-in-out`.
-- Hover or color changes: `ease`.
-- Constant motion (marquees, progress indicators): `linear`.
-- Default: `ease-out`.
+Apply these easing selection rules:
+- Use `ease-out` for entering or exiting elements because it starts quickly and feels responsive.
+- Use `ease-in-out` for moving or morphing on screen.
+- Use `ease` for hover or color changes.
+- Use `linear` for constant motion such as marquees and progress indicators.
+- Use `ease-out` as the default curve.
 
 Never use `ease-in` on interactive UI elements. It delays visual response and makes interfaces feel sluggish.
 
-Duration budget reference:
+Follow this duration budget reference:
 
 | Element | Target duration |
 | --- | --- |
@@ -116,7 +122,7 @@ Duration budget reference:
 
 Keep functional UI animations under 300ms. A 180ms dropdown feels significantly more responsive than a 400ms dropdown.
 
-### 6. Accessibility and device safety
+### 6. Accessibility and prefers-reduced-motion
 
 Include accessibility and pointer checks in all delivered animation styles:
 
@@ -151,7 +157,7 @@ When reviewing or proposing UI micro-interaction changes, format findings using 
 | `transition: all 300ms` | `transition: transform 200ms ease-out` | Specify exact properties to avoid expensive style recalculations |
 | `transform: scale(0)` | `transform: scale(0.95); opacity: 0` | Physical objects never emerge from absolute zero |
 | `ease-in` on dropdown | `ease-out` with custom curve | `ease-in` delays initial motion and feels sluggish |
-| No `:active` state on button | `transform: scale(0.97)` on `:active` | Pressable targets must provide immediate tactile feedback |
+| Missing active press feedback | `transform: scale(0.97)` on active press | Pressable targets must provide immediate tactile feedback |
 | `transform-origin: center` on popover | `transform-origin: var(--transform-origin)` | Popovers scale from trigger origin, while dialog modals remain centered |
 
 ## Never ship checklist
@@ -170,7 +176,7 @@ Verify code against this checklist before delivering. Every item represents an a
 | Keyframes on rapidly triggered elements | CSS transitions or springs |
 | Animating `width`, `height`, `margin`, `padding`, `top`, or `left` | `transform` and `opacity` |
 | Framer Motion shorthand props under load | Full `transform` string |
-| Ungated `:hover` motion | `@media (hover: hover) and (pointer: fine)` |
+| Ungated hover motion | `@media (hover: hover) and (pointer: fine)` |
 | Missing `prefers-reduced-motion` | Gentler variant preserving opacity |
 | Everything entering simultaneously | 30 to 80ms stagger |
 | Hard stops at drag boundaries | Elastic boundary resistance |
