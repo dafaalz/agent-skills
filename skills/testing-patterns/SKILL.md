@@ -12,12 +12,29 @@ Read the reference guides for domain-specific execution details:
 * For backend services, containerized databases, API contracts, and property fuzzing, read `references/backend-patterns.md`.
 * For browser user journeys, Playwright locators, and session reuse, read `references/e2e-patterns.md`.
 * For test fixture generation, fluent builders, and tenant isolation, read `references/test-data-builders.md`.
+* For seam boundary and mock isolation pitfalls, read `references/tdd-anti-patterns.md`.
 
 ## Workflow
 
-Execute the five testing steps sequentially. Complete each verification criterion before proceeding to the next step.
+Execute the six testing steps sequentially. Complete each verification criterion before proceeding to the next step.
 
-### Step 1. Scope and tier selection
+### Step 1. Red-green loop and seam selection
+
+Apply test-driven development through vertical slices at confirmed seam boundaries:
+
+1. Identify candidate public seams:
+   * Inspect the caller contract or public interface specification.
+   * Target public methods, API endpoints, or top-level component boundaries. Avoid reaching into private collaborators or internal state.
+   * Consult `references/tdd-anti-patterns.md` for seam boundary and mock isolation pitfalls.
+2. Execute the Red-green loop per vertical slice:
+   * Red. Write a minimal failing test observing behavior at the public seam. Run the test to confirm it fails cleanly from missing behavior rather than syntax or setup errors.
+   * Green. Write minimal production code to pass the test without premature optimization, unused configurability, or speculative abstractions. Run the test suite to confirm clean passes.
+   * Refactor. Clean up structure, remove duplication, and improve readability only after tests pass.
+   * Repeat the loop for subsequent vertical slices.
+
+Completion criterion. Target seams map to public contracts, and every slice passes through verified red-green cycles before refactoring.
+
+### Step 2. Scope and tier selection
 
 Align testing scope with system topology to prevent duplicated test coverage:
 
@@ -29,7 +46,7 @@ Align testing scope with system topology to prevent duplicated test coverage:
 
 Completion criterion. The testing tier matches system architecture, and test scope excludes redundant coverage across tiers.
 
-### Step 2. Test data strategy via test data builders
+### Step 3. Test data strategy via test data builders
 
 Construct fixtures through fluent test data builders following Google DAMP (Descriptive And Meaningful Phrases) principles:
 
@@ -40,7 +57,7 @@ Construct fixtures through fluent test data builders following Google DAMP (Desc
 
 Completion criterion. Tests construct domain fixtures through fluent builders, declaring only behavior-critical fields while running deterministically in parallel.
 
-### Step 3. Network and dependency isolation
+### Step 4. Network and dependency isolation
 
 Isolate network boundaries and infrastructure dependencies through environment-native interception:
 
@@ -57,7 +74,7 @@ Isolate network boundaries and infrastructure dependencies through environment-n
 
 Completion criterion. Network calls intercept cleanly through MSW, and backend persistence tests execute against containerized databases on tmpfs mounts.
 
-### Step 4. Declarative assertion construction
+### Step 5. Declarative assertion construction
 
 Construct assertions evaluating public observable behavior and accessibility trees instead of internal implementation details:
 
@@ -73,7 +90,7 @@ Construct assertions evaluating public observable behavior and accessibility tre
 
 Completion criterion. Assertions verify only public behavior, accessible roles, or persisted state without inspecting internal implementation mechanics.
 
-### Step 5. Speed and determinism verification
+### Step 6. Speed and determinism verification
 
 Verify test execution speed, determinism, and absence of intermittent failures:
 
