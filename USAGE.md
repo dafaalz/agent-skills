@@ -1,13 +1,13 @@
 # Skill usage guide
 
-Orchestrate the 34 specialized skills in this repository across the complete software delivery lifecycle.
+Orchestrate the 25 specialized skills in this repository across the complete software delivery lifecycle.
 
 ## Overview
 
 Each skill defines operational procedures, hard gates, and completion criteria for a specific engineering task. Combine skills to eliminate unverified assumptions, prevent context compaction, and deliver verified production changes.
 
 ```
-Codebase docs -> Session init -> Technical design -> Implementation planning -> TDD execution -> Quality audit -> Finalization
+Codebase docs -> Session init -> Technical design -> Implementation planning -> Test-driven execution -> Quality audit -> Finalization
 ```
 
 ## 1. Codebase documentation and session initialization
@@ -40,35 +40,33 @@ Resolve domain contracts, evaluate data scaling, and prevent architectural debt 
 ### Frontend architecture, layout, and motion
 | Skill | Directory | Primary purpose | Command invocation |
 |---|---|---|---|
-| `pick-ui-library` | `skills/pick-ui-library` | Evaluate and select curated UI primitives and packages | `$pick-ui-library` |
-| `design-taste-frontend` | `skills/taste-skill` | Build modern Tailwind layouts with proper visual hierarchy | `$design-taste-frontend` |
-| `ui-motion` | `skills/ui-motion` | Author spring physics animations and view transitions | `$ui-motion` |
-| `build-awwwards-quality-sites` | `skills/build-awwwards-quality-sites` | Craft interactive 3D WebGL, Three.js, and GSAP experiences | `$build-awwwards-quality-sites` |
+| `frontend-design` | `skills/frontend-design` | Build Tailwind layouts, tokens, DESIGN.md specs, and select UI libraries | `$frontend-design` |
+| `ui-motion` | `skills/ui-motion` | Author spring physics animations, gesture tracking, and route motion audits | `$ui-motion` |
 | `copy-web-design` | `skills/copy-web-design` | Extract design tokens, layout trees, and animations from URLs | `$copy-web-design` |
-| `stitch-design-taste` | `skills/stitch-skill` | Define Google Stitch DESIGN.md tokens and semantic themes | `$stitch-design-taste` |
-| `hallmark` | `skills/hallmark` | Audit UI quality, redesign interfaces, and extract tokens | `$hallmark` |
 | `prototype` | `skills/prototype` | Build rapid interactive click-dummies to validate UX flow | `$prototype` |
 
 ### Recommended workflow
 1. Invoke `$brainstorming` to explore contrasting approaches.
 2. For modules handling over 500 items, verify data scaling against `skills/brainstorming/references/architecture-scalability.md` to guarantee server-side pagination.
 3. Use `$codebase-design` to lock minimal interfaces and inspect database migration files on disk before creating models.
-4. For interface redesigns and audits, invoke `$hallmark` to modernize layouts and upgrade visual polish within the existing stack.
+4. For interface layouts, visual token systems, and UI library selection, invoke `$frontend-design` to build accessible layouts and upgrade visual polish within the existing stack.
+5. For physics-based animations, micro-interactions, or codebase motion audits, invoke `$ui-motion` to engineer hardware-accelerated transitions or route structured audit plans.
 
-## 3. Planning and subagent orchestration
+## 3. Planning and execution orchestration
 
-Deconstruct approved technical specifications into testable task batches.
+Deconstruct approved technical specifications into testable task batches and select execution modes.
 
 | Skill | Directory | Primary purpose | Command invocation |
 |---|---|---|---|
-| `writing-plans` | `skills/writing-plans` | Convert design specifications into phased TDD plans | `$writing-plans` |
+| `writing-plans` | `skills/writing-plans` | Convert design specifications into phased implementation plans | `$writing-plans` |
 | `dispatching-parallel-agents` | `skills/dispatching-parallel-agents` | Run two or more independent, non-overlapping tasks concurrently | `$dispatching-parallel-agents` |
-| `subagent-driven-development` | `skills/subagent-driven-development` | Execute plan tasks through independent subagents with fresh review gates | `$subagent-driven-development` |
+| `executing-plans` | `skills/executing-plans` | Execute plans via inline batches or delegated subagents with review gates | `$executing-plans` |
 
 ### Recommended workflow
 1. Generate the implementation plan using `$writing-plans`.
 2. Confirm that each task contains exact file targets, complete code snippets, and automated test commands.
-3. If tasks touch disjoint directories (such as database migrations and frontend components), invoke `$dispatching-parallel-agents` to run them concurrently.
+3. Select an execution strategy in `$executing-plans`. Use Mode 1 (Inline Batch Execution) with diff checkpoints for tightly coupled tasks in the current session, or Mode 2 (Subagent Delegation) with two-stage automated review for independent tasks.
+4. If tasks touch disjoint directories (such as database migrations and frontend components), invoke `$dispatching-parallel-agents` to run them concurrently.
 
 ## 4. Implementation and test-driven development
 
@@ -76,15 +74,14 @@ Write production code using strict vertical slices and test-first iterations.
 
 | Skill | Directory | Primary purpose | Command invocation |
 |---|---|---|---|
-| `executing-plans` | `skills/executing-plans` | Execute plans batch by batch with diff checkpoints | `$executing-plans` |
-| `tdd` | `skills/tdd` | Drive code development via Red, Green, and Refactor cycles | `$tdd` |
-| `testing-patterns` | `skills/testing-patterns` | Author unit fixtures, contract tests, and database factories | `$testing-patterns` |
+| `executing-plans` | `skills/executing-plans` | Execute plan tasks through inline batch loops or delegated subagents | `$executing-plans` |
+| `testing-patterns` | `skills/testing-patterns` | Drive code development via red-green loops, fixtures, and contract tests | `$testing-patterns` |
 | `systematic-debugging` | `skills/systematic-debugging` | Identify root causes before proposing patches or bug fixes | `$systematic-debugging` |
 | `full-output-enforcement` | `skills/output-skill` | Enforce full code generation and ban truncated placeholder comments | `$full-output-enforcement` |
 
 ### Recommended workflow
-1. Execute the current task batch using `$executing-plans`.
-2. Write the failing test first, run the test runner to observe expected failure, implement minimal code, and verify green status.
+1. Execute the plan using `$executing-plans`, choosing inline batch execution for coupled changes or subagent task delegation for isolated tasks.
+2. Apply `$testing-patterns` to write the failing test first, run the test runner to observe expected failure, implement minimal code, and verify green status.
 3. When investigating bugs, trigger `$systematic-debugging`. If the investigation involves massive logs or multi-database queries, delegate data collection to a subagent to defend against context compaction.
 
 ## 5. Review and quality assurance
@@ -93,17 +90,15 @@ Audit code and interface quality from multiple specialized engineering angles.
 
 | Skill | Directory | Primary purpose | Command invocation |
 |---|---|---|---|
-| `interface-review` | `skills/interface-review` | Audit visual hierarchy, Tailwind classes, and accessibility | `$interface-review` |
-| `ux-review` | `skills/ux-review` | Audit cognitive load, interaction ergonomics, and error states | `$ux-review` |
+| `ui-ux-review` | `skills/ui-ux-review` | Audit visual hierarchy, accessibility, ergonomics, and cognitive load | `$ui-ux-review` |
+| `code-review` | `skills/code-review` | Request structured reviews, evaluate feedback, and verify fixes | `$code-review` |
 | `qa-engineer` | `skills/qa-engineer` | Execute exploratory testing charters and stress edge cases | `$qa-engineer` |
 | `security-audit` | `skills/security-audit` | Evaluate authentication boundaries, CSRF, and injection attack vectors | `$security-audit` |
-| `requesting-code-review` | `skills/requesting-code-review` | Prepare structured PR summaries and reviewer checklists | `$requesting-code-review` |
-| `receiving-code-review` | `skills/receiving-code-review` | Process PR feedback with technical rigor and search-backed pushback | `$receiving-code-review` |
 
 ### Recommended workflow
-1. For frontend changes, run `$interface-review` and `$ux-review` to confirm typography contrast and interaction feedback.
+1. For frontend changes, run `$ui-ux-review` to confirm typography contrast, accessibility compliance, and interaction ergonomics.
 2. For backend endpoints, run `$security-audit` to inspect authorization policies and request validation.
-3. When team feedback suggests merging unrelated concerns into a single file, invoke `$receiving-code-review` to validate counter-arguments with targeted web searches and maintain Single Responsibility boundaries.
+3. When requesting reviews or receiving feedback, invoke `$code-review` to validate counter-arguments with targeted web searches, protect architectural boundaries, and verify fixes before merging.
 
 ## 6. Verification, finalization, and documentation
 
@@ -114,14 +109,13 @@ Conduct final safety checks, clean up temporary branches, and write human docume
 | `verification-before-completion` | `skills/verification-before-completion` | Hard-gate requiring test outputs, scoped linting, and git state checks | `$verification-before-completion` |
 | `finishing-a-development-branch` | `skills/finishing-a-development-branch` | Merge feature branches, verify clean git state, and finalize PRs | `$finishing-a-development-branch` |
 | `technical-writing` | `skills/technical-writing` | Write clear human documentation, README files, and RFCs | `$technical-writing` |
-| `writing-for-agents` | `skills/writing-for-agents` | Draft and update `AGENTS.md`, `CODEBASE.md`, and prompt runbooks | `$writing-for-agents` |
-| `writing-skills` | `skills/writing-skills` | Author new skills or refactor existing skill workflows | `$writing-skills` |
+| `writing-for-agents` | `skills/writing-for-agents` | Draft and update `AGENTS.md`, `CODEBASE.md`, prompt runbooks, and skill specifications | `$writing-for-agents` |
 
 ### Recommended workflow
 1. Run `$verification-before-completion` before making any completion claim.
 2. The agent executes `git status --short` to confirm zero core documentation files were deleted, runs scoped linters (`pint`, `eslint`) on touched files, and validates fresh test output.
 3. Invoke `$finishing-a-development-branch` to complete git operations.
-4. Update repository documentation using `$technical-writing` for developers or `$writing-for-agents` for agent guidance files.
+4. Update repository documentation using `$technical-writing` for human developers or `$writing-for-agents` for agent guidance files and skill specifications.
 
 ## Complete lifecycle example
 
@@ -138,10 +132,10 @@ $unslop $brainstorming @AGENTS.md @CODEBASE.md kita mau bikin sistem export invo
 $writing-plans buat plan implementasi bertahap untuk worker dan controller export
 
 # Step 4. Execute implementation with test-driven development
-$executing-plans $tdd eksekusi batch 1 (job class dan unit test)
+$executing-plans $testing-patterns eksekusi batch 1 (job class dan unit test)
 
 # Step 5. Polish frontend export modal
-$design-taste-frontend $ui-motion buat modal pilihan format export dan progress bar
+$frontend-design $ui-motion buat modal pilihan format export dan progress bar
 
 # Step 6. Verify security and QA edge cases
 $security-audit $qa-engineer uji apakah user bisa mendownload invoice milik tenant lain
