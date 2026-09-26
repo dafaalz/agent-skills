@@ -20,6 +20,18 @@ TARGET_SKILLS = [
     "testing-patterns",
     "writing-for-agents",
     "ui-motion",
+    "systematic-debugging",
+    "security-audit",
+    "codebase-design",
+    "brainstorming",
+    "finishing-a-development-branch",
+    "qa-engineer",
+    "react",
+    "conventional-commit",
+    "s13n",
+    "i18n",
+    "summarize",
+    "ping",
 ]
 
 REQUIRED_REFERENCES = {
@@ -33,6 +45,7 @@ REQUIRED_REFERENCES = {
         "references/responsive.md",
         "references/slop-test.md",
         "references/structure.md",
+        "references/api-resilience.md",
     ],
     "ui-ux-review": [
         "references/accessibility.md",
@@ -50,6 +63,8 @@ REQUIRED_REFERENCES = {
     ],
     "code-review": [
         "references/code-reviewer-prompt.md",
+        "references/architectural-lenses.md",
+        "references/comment-hygiene.md",
     ],
     "executing-plans": [
         "prompts/implementer-prompt.md",
@@ -62,6 +77,7 @@ REQUIRED_REFERENCES = {
         "references/backend-patterns.md",
         "references/e2e-patterns.md",
         "references/test-data-builders.md",
+        "references/pre-commit-hooks.md",
     ],
     "writing-for-agents": [
         "references/testing-skills.md",
@@ -70,6 +86,41 @@ REQUIRED_REFERENCES = {
         "references/audit-and-plans.md",
         "references/physics-and-gestures.md",
         "references/recipes.md",
+    ],
+    "systematic-debugging": [
+        "references/reproduction-and-loops.md",
+    ],
+    "security-audit": [
+        "references/credentials-hygiene.md",
+    ],
+    "codebase-design": [
+        "references/codebase-health-and-hotspots.md",
+    ],
+    "brainstorming": [
+        "references/domain-modeling.md",
+    ],
+    "finishing-a-development-branch": [
+        "references/resolving-conflicts.md",
+    ],
+    "qa-engineer": [
+        "references/lighthouse-ci.md",
+    ],
+    "conventional-commit": [
+        "references/commit-types.md",
+    ],
+    "s13n": [
+        "references/divergence-taxonomy.md",
+    ],
+    "i18n": [
+        "references/intl-language.md",
+        "references/intl-date-and-time-format.md",
+        "references/intl-number-and-currency.md",
+        "references/intl-bidi.md",
+        "references/intl-pluralization.md",
+        "references/intl-collation-and-sorting.md",
+        "references/intl-text-processing.md",
+        "references/intl-content-and-assets.md",
+        "references/intl-testing-and-qa.md",
     ],
 }
 
