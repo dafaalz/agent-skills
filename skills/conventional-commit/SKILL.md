@@ -39,6 +39,8 @@ git diff --cached -- <path>
 
 Identify any credential files (`.env`, `*.pem`, `credentials.json`) or build output (`dist/`, `build/`). If secrets are present, unstage them immediately using `git restore --staged <path>` and alert the user.
 
+Completion criterion. The diff and status are inspected, secrets and build artifacts are unstaged, and the change boundary is identified.
+
 ### Step 2. Decide commit count
 
 Ensure one logical change per commit so each commit remains independently revertable.
@@ -51,6 +53,8 @@ Split the changes when:
 - Test additions for separate features are mixed together.
 
 Do not split when changes form a single atomic unit, such as a bug fix accompanied by its regression test.
+
+Completion criterion. A planned commit count where each planned commit contains exactly one logical, revertable change.
 
 ### Step 3. Stage one logical change
 
@@ -72,6 +76,8 @@ Use `s` to split hunks into the smallest possible units. Verify staged contents 
 git diff --cached --stat
 git diff --cached
 ```
+
+Completion criterion. Only the specific files or hunks for the target logical change appear in `git diff --cached`.
 
 ### Step 4. Compose message
 
@@ -102,6 +108,8 @@ Optional co-author trailer:
 Co-authored-by: Name <email@example.com>
 ```
 
+Completion criterion. A commit message matching Conventional Commits syntax with a lowercase imperative subject under 72 characters.
+
 ### Step 5. Commit
 
 Commit using a heredoc so multi-line messages and blank lines are preserved:
@@ -123,6 +131,8 @@ For simple single-line commits:
 git commit -m "docs: document skill configuration workflow"
 ```
 
+Completion criterion. A newly minted git commit recorded in HEAD with the exact drafted message.
+
 ### Step 6. Repeat and verify
 
 Loop back to Step 1 until the working tree is clean. Validate the resulting git history:
@@ -143,6 +153,8 @@ If co-author trailers were not requested, ensure no accidental trailers were com
 ```bash
 git log --format='%B' -5 | grep -iE 'co-authored-by|generated with' && echo 'UNWANTED TRAILER' || echo 'clean'
 ```
+
+Completion criterion. Working tree status is completely clean and the subject verification command returns all subjects valid.
 
 ## Common mistakes
 

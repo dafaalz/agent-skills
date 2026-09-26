@@ -1,6 +1,6 @@
 ---
 name: verification-before-completion
-description: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs, requiring fresh verification command output before making assertions.
+description: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs, requiring fresh verification command output before making assertions. Don't use for initial exploratory brainstorming or rough drafting phases.
 ---
 
 # Verification before completion
@@ -23,19 +23,51 @@ If you haven't run the verification command in this message, you cannot claim it
 
 ## The gate function
 
-```
 BEFORE claiming any status or expressing satisfaction:
 
-1. IDENTIFY: What command proves this claim?
-2. RUN: Execute the FULL command (fresh, complete)
-3. READ: Full output, check exit code, count failures
-4. VERIFY: Does output confirm the claim?
-   - If NO: State actual status with evidence
-   - If YES: State claim WITH evidence
-5. ONLY THEN: Make the claim
+1. Identify. Determine what command proves this claim.
+2. Run. Execute the full command freshly and completely.
+3. Read. Inspect full output, check exit codes, and count failures.
+4. Verify. Confirm whether output proves the claim.
+   - If not, state actual status with evidence.
+   - If yes, state claim with evidence attached.
+5. Claim. Make the claim only after evidence is verified.
 
-Skip any step = lying, not verifying
-```
+Skip any step = lying, not verifying.
+
+## Workflow
+
+Follow these five steps before claiming completion:
+
+### Step 1. Command identification
+
+Identify the deterministic command that validates the exact claim, including test runners, linters, and type checkers.
+
+Completion criterion. An exact terminal command selected that directly inspects the modified code or behavior.
+
+### Step 2. Fresh command execution
+
+Execute the verification command in full without relying on cached logs or previous runs.
+
+Completion criterion. Fresh command execution output captured in the current turn.
+
+### Step 3. Output inspection and exit code triage
+
+Read the full terminal output, verify exit code 0, and confirm zero errors or failures.
+
+Completion criterion. Terminal output confirms zero failing assertions, zero type errors, and zero unhandled exceptions.
+
+### Step 4. Git diff and repository safety gate
+
+Inspect working tree status and diffs to confirm no core documentation files were inadvertently deleted and untracked artifacts are cleaned up.
+
+Completion criterion. `git status --short` confirms all touched files are intentional, with zero unwanted file deletions or orphan scratch files.
+
+### Step 5. Claim with evidence
+
+State the completion claim citing the exact command run, test counts, and exit status.
+
+Completion criterion. The user receives a factual statement backed by terminal evidence, with zero unverified assumptions.
 
 ## Common failures
 

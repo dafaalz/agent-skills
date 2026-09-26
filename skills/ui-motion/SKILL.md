@@ -36,7 +36,7 @@ Avoid these core failure modes:
 
 ## The build sequence
 
-### 1. Frequency gate
+### Step 1. Frequency gate
 
 Evaluate interaction frequency before writing motion code:
 
@@ -51,7 +51,9 @@ Keyboard-initiated actions disqualify animation automatically. Raycast uses no o
 
 If the request fails this gate, state the decision directly and do not write animation code. Deliver the non-motion alternative instead.
 
-### 2. Sanctioned purpose
+Completion criterion. The interaction frequency is classified and confirmed eligible for motion, or disqualified in favor of an instant 0ms state toggle.
+
+### Step 2. Sanctioned purpose selection
 
 Name exactly one sanctioned purpose before writing code:
 
@@ -64,7 +66,9 @@ Name exactly one sanctioned purpose before writing code:
 
 If no purpose applies, halt and do not write animation code. Data tables, financial graphs, and reading content must remain stationary.
 
-### 3. Cheapest tool that works
+Completion criterion. Exactly one sanctioned purpose declared before writing animation code.
+
+### Step 3. Tool selection
 
 Walk down this table in order and select the first matching tool:
 
@@ -80,7 +84,9 @@ CSS transitions outperform JavaScript under load because they execute on the GPU
 
 For complex headless UI primitives (toasts, drawers, command menus), rely on battle-tested libraries such as Sonner or Vaul to manage ARIA attributes and focus traps properly.
 
-### 4. Hardware-accelerated transform and opacity
+Completion criterion. The cheapest capable tool selected, preferring compositor CSS transitions before JavaScript animation libraries.
+
+### Step 4. Hardware acceleration and property scoping
 
 - **Animate `transform` and `opacity` exclusively.** They skip layout recalculation and paint passes, running on the compositor thread. Properties like `width`, `height`, `margin`, `padding`, `top`, and `left` force expensive layout thrashing. Allow `height` only on accordions where transform cannot match the behavior.
 - **Never use `scale(0)`.** Start entry transitions from `scale(0.95)` with zero opacity.
@@ -95,7 +101,9 @@ For complex headless UI primitives (toasts, drawers, command menus), rely on bat
 
 - **Avoid parent CSS variable updates during gestures.** Setting custom properties on parent elements triggers style recalculation across all child elements. Apply inline transforms directly to the target element.
 
-### 5. Easing curves and duration budget
+Completion criterion. Motion styles animate `transform` and `opacity` exclusively with valid trigger-anchored transform origins.
+
+### Step 5. Easing curves and duration calibration
 
 Standard browser easings lack punch. Use these tokens:
 
@@ -132,7 +140,9 @@ Follow this duration budget reference:
 
 Keep functional UI animations under 300ms. A 180ms dropdown feels faster and more responsive than a 400ms dropdown.
 
-### 6. Accessibility and SSR hydration safety
+Completion criterion. Custom cubic bezier tokens and duration budgets under 300ms assigned without using `ease-in`.
+
+### Step 6. Accessibility and SSR hydration verification
 
 Include accessibility and pointer checks in all delivered animation styles:
 
@@ -155,6 +165,8 @@ Include accessibility and pointer checks in all delivered animation styles:
 ```
 
 Never branch conditionally on `useReducedMotion()` in JSX before initial hydration. Tag swapping (`if (reduce) return <div>` versus `<motion.div>`) triggers React 19 hydration mismatches and traps server-rendered `opacity: 0` in permanent invisibility. Use identical DOM trees with `[data-motion-enter]` attribute contracts and CSS `!important` overrides.
+
+Completion criterion. Styles include `@media (prefers-reduced-motion: reduce)` overrides without conditional JSX tag branching.
 
 ## Review format
 

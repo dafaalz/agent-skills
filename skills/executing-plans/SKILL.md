@@ -1,6 +1,6 @@
 ---
 name: executing-plans
-description: Use when executing written implementation plans batch by batch inline in the current session or task by task via delegated subagents.
+description: Use when executing written implementation plans batch by batch inline in the current session or task by task via delegated subagents. Don't use for architectural design, plan authoring, or open-ended ideation.
 ---
 
 # Executing implementation plans
@@ -50,6 +50,8 @@ Group plan tasks into logical batches before writing code:
 - Keep tightly dependent changes in the same batch.
 - Mark the current batch boundaries clearly for the user.
 
+Completion criterion. Plan tasks partitioned into sequential batches of 1 to 3 related tasks with confirmed boundaries.
+
 ### Step 2. Test-driven task execution
 
 Execute each task in the active batch following red, green, refactor cycles:
@@ -65,6 +67,8 @@ git commit -m "feat(scope): implement specific task functionality"
 ```
 
 Repeat this sequence for every task within the batch.
+
+Completion criterion. All tasks in the active batch pass their red-green test cycles, reflect `- [x]` in the plan file, and have dedicated git commits.
 
 ### Step 3. Batch review checkpoint
 
@@ -84,6 +88,8 @@ Batch checkpoint report
 ```
 4. Request user confirmation. Await explicit user approval before proceeding to the next batch.
 
+Completion criterion. Regression tests pass with zero failures and explicit user confirmation is received before advancing to the next batch.
+
 ## Mode 2. Subagent delegation
 
 Execute tasks by orchestrating isolated subagents per task to preserve the primary context window and enforce independent dual-stage review gates.
@@ -94,6 +100,8 @@ Initialize execution state from the plan file:
 - Read the plan file in `docs/superpowers/plans/` and extract all tasks.
 - Maintain full task specifications in memory, including target files, commands, and acceptance criteria.
 - Keep the plan file synchronized as the single source of truth.
+
+Completion criterion. All tasks parsed from the plan file into a structured task queue with exact paths, commands, and acceptance criteria.
 
 ### Step 2. Dispatch implementer subagent
 
@@ -109,6 +117,8 @@ Dispatch a fresh subagent for each task using the template at `prompts/implement
   - BLOCKED. Implementer cannot proceed. Assess whether to supply context, upgrade model strength, or escalate to the user.
 - Never dispatch parallel implementers on shared files or overlapping branches. Consult `references/parallel-dispatch.md` for domain partitioning criteria and parallel prompt templates when dispatching subagents across disjoint domains.
 
+Completion criterion. Implementer subagent completes task execution and reports a verified status with clean test output.
+
 ### Step 3. Two-stage review cycle
 
 Every completed task must pass two independent reviews before acceptance:
@@ -117,6 +127,8 @@ Every completed task must pass two independent reviews before acceptance:
 2. Code quality review. After spec compliance passes, dispatch a reviewer using `prompts/code-quality-reviewer-prompt.md`. The reviewer evaluates single responsibility, interface clarity, test rigor, and maintainability. The implementer resolves all blocker and high-priority findings.
 
 Repeat the review loop until both reviewers approve the changes. Never skip either review stage.
+
+Completion criterion. Independent spec compliance and code quality reviews both pass with zero unresolved high-priority findings.
 
 ### Step 4. Mark task completed and advance
 
@@ -128,6 +140,8 @@ Once both reviews pass:
 BASE_SHA=$(git merge-base origin/main HEAD)
 git diff --stat ${BASE_SHA}..HEAD
 ```
+
+Completion criterion. The completed task checkbox is marked `- [x]` in the plan file and diff statistics are verified before advancing.
 
 ## Model selection for subagents
 

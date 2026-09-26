@@ -9,17 +9,41 @@ Performance optimization and architectural patterns for React and Next.js applic
 
 ## Workflow
 
-1. Identify performance bottleneck or architecture requirement in the target component or page.
-2. Select the matching rule category starting with highest impact (waterfalls and bundle size first).
-3. Read the relevant rule file in `rules/<rule-name>.md` for specific code examples and anti-patterns.
-4. Apply the minimal surgical change to eliminate the bottleneck.
-5. Verify build, tests, and bundle size or rendering behavior.
+### Step 1. Bottleneck identification and seam isolation
 
-## Rule Categories by Priority
+Profile component rendering or network waterfalls to isolate the exact performance bottleneck or architectural requirement.
+
+Completion criterion. An identified target file, component, or network trace mapped to an observed performance metric or defect.
+
+### Step 2. Rule selection and priority triage
+
+Consult the priority catalog below to match the isolated symptom, evaluating highest-impact categories first.
+
+Completion criterion. A selected rule name from `rules/<rule-name>.md` corresponding to the primary performance defect.
+
+### Step 3. Reference consultation
+
+Read the specific rule file in `rules/<rule-name>.md` for concrete code implementations, anti-patterns, and mechanical fixes.
+
+Completion criterion. The rule file is inspected and the canonical fix pattern is established before mutating source files.
+
+### Step 4. Surgical implementation
+
+Apply the minimal code changes required to eliminate the bottleneck without modifying adjacent business logic or state hooks.
+
+Completion criterion. Targeted components implement the rule pattern with zero orphan imports or unused state.
+
+### Step 5. Verification pass
+
+Run build commands, test suites, and bundle or render profiling to verify that the bottleneck is eliminated.
+
+Completion criterion. Clean build exit code, passing test assertions, and verified elimination of the target performance defect.
+
+## Rule categories by priority
 
 | Priority | Category | Impact | Prefix | Focus |
 | --- | --- | --- | --- | --- |
-| 1 | Eliminating Waterfalls | CRITICAL | `async-` | Parallelize requests, defer await, leverage streaming |
+| 1 | Eliminating Waterfalls | CRITICAL | `async-` | Parallelize requests, defer await, use streaming |
 | 2 | Bundle Size Optimization | CRITICAL | `bundle-` | Tree-shaking, dynamic imports, avoid barrel files |
 | 3 | Server-Side Performance | HIGH | `server-` | Server Actions auth, RSC caching, minimize client serialization |
 | 4 | Client-Side Data Fetching | MEDIUM-HIGH | `client-` | SWR deduplication, passive listeners, compact client storage |
@@ -28,9 +52,9 @@ Performance optimization and architectural patterns for React and Next.js applic
 | 7 | JavaScript Performance | LOW-MEDIUM | `js-` | Map and Set lookups, early exits, loop hoisting |
 | 8 | Advanced Patterns | LOW | `advanced-` | Stable callback refs, single initialization, event handler refs |
 
-## Rule Catalog
+## Rule catalog
 
-### 1. Eliminating Waterfalls (CRITICAL)
+### 1. Eliminating waterfalls (CRITICAL)
 
 - `async-cheap-condition-before-await`. Check cheap sync conditions before awaiting flags or remote values.
 - `async-defer-await`. Move await into branches where values are actually used.
@@ -39,7 +63,7 @@ Performance optimization and architectural patterns for React and Next.js applic
 - `async-api-routes`. Start promises early and await late in API route handlers.
 - `async-suspense-boundaries`. Wrap async components in Suspense to stream content.
 
-### 2. Bundle Size Optimization (CRITICAL)
+### 2. Bundle size optimization (CRITICAL)
 
 - `bundle-barrel-imports`. Import modules directly from concrete paths instead of index barrel files.
 - `bundle-analyzable-paths`. Prefer statically analyzable import and file system paths.
@@ -48,7 +72,7 @@ Performance optimization and architectural patterns for React and Next.js applic
 - `bundle-conditional`. Load optional modules only when their feature flag is activated.
 - `bundle-preload`. Preload heavy modules on user hover or focus interactions.
 
-### 3. Server-Side Performance (HIGH)
+### 3. Server-side performance (HIGH)
 
 - `server-auth-actions`. Authenticate and authorize inside every Server Action like an API endpoint.
 - `server-cache-react`. Use React.cache() for per-request deduplication across the component tree.
@@ -61,14 +85,14 @@ Performance optimization and architectural patterns for React and Next.js applic
 - `server-parallel-nested-fetching`. Chain nested fetches per item concurrently in Promise.all().
 - `server-after-nonblocking`. Use Next.js after() for non-blocking secondary tasks.
 
-### 4. Client-Side Data Fetching (MEDIUM-HIGH)
+### 4. Client-side data fetching (MEDIUM-HIGH)
 
 - `client-swr-dedup`. Use SWR or React Query for automatic client-side request deduplication.
 - `client-event-listeners`. Deduplicate global window or document event listeners.
 - `client-passive-event-listeners`. Use passive event listeners for scroll and touch listeners.
 - `client-localstorage-schema`. Version and minimize localStorage and sessionStorage payloads.
 
-### 5. Re-render Optimization (MEDIUM)
+### 5. Re-render optimization (MEDIUM)
 
 - `rerender-defer-reads`. Do not subscribe to state that is only used inside action callbacks.
 - `rerender-memo`. Extract expensive pure subtrees into memoized components.
@@ -86,7 +110,7 @@ Performance optimization and architectural patterns for React and Next.js applic
 - `rerender-use-ref-transient-values`. Use refs for high-frequency transient values that do not impact layout.
 - `rerender-no-inline-components`. Never define component functions inside parent component render bodies.
 
-### 6. Rendering Performance (MEDIUM)
+### 6. Rendering performance (MEDIUM)
 
 - `rendering-animate-svg-wrapper`. Animate a wrapper div with hardware acceleration instead of the SVG element directly.
 - `rendering-content-visibility`. Apply CSS content-visibility to long offscreen lists.
@@ -100,7 +124,7 @@ Performance optimization and architectural patterns for React and Next.js applic
 - `rendering-resource-hints`. Preconnect and preload assets using React DOM resource hints.
 - `rendering-script-defer-async`. Apply defer or async attributes to external script tags.
 
-### 7. JavaScript Performance (LOW-MEDIUM)
+### 7. JavaScript performance (LOW-MEDIUM)
 
 - `js-batch-dom-css`. Group multiple DOM style changes via class names or cssText.
 - `js-index-maps`. Build Map instances for repeated record lookups by ID.
@@ -117,14 +141,14 @@ Performance optimization and architectural patterns for React and Next.js applic
 - `js-flatmap-filter`. Use flatMap to filter and map in a single pass.
 - `js-request-idle-callback`. Defer non-critical compute to browser idle periods.
 
-### 8. Advanced Patterns (LOW)
+### 8. Advanced patterns (LOW)
 
 - `advanced-effect-event-deps`. Do not include useEffectEvent return functions in effect dependencies.
 - `advanced-event-handler-refs`. Store unstable event handler callbacks in refs for stable consumption.
 - `advanced-init-once`. Execute one-time application bootstrap logic once per application lifecycle.
 - `advanced-use-latest`. Use useLatest ref helpers to access latest state inside stable callbacks.
 
-## Applying Rules
+## Applying rules
 
 Read individual rule files in `rules/` for concrete problem descriptions, incorrect code snippets, and correct implementations:
 

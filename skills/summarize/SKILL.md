@@ -26,6 +26,34 @@ git log --oneline -n 5
 
 If the session produced no code modifications, state this directly.
 
+## Workflow
+
+Follow these four steps in sequence:
+
+### Step 1. State reconnaissance and evidence extraction
+
+Run status, diff, and log commands to inspect the exact working tree changes and recorded command runs from the session.
+
+Completion criterion. An inventory of all modified, created, and deleted files cross-referenced with executed terminal commands.
+
+### Step 2. Synthesize actions and root causes
+
+Draft the overview, chronological actions table, and root-cause breakdowns citing concrete file paths and test outputs.
+
+Completion criterion. Chronological actions and resolved issues drafted with zero unverified claims and zero omitted failures.
+
+### Step 3. Tabulate verification and gaps
+
+Construct the verification evidence table and document known gaps, unverified edge cases, and next steps plainly.
+
+Completion criterion. Every automated verification command is tabulated with exact exit status and unverified areas are explicitly listed.
+
+### Step 4. Context handoff assembly
+
+When transferring work to another agent, append the structured handoff block containing branch, entry point, verification commands, and open tasks.
+
+Completion criterion. A complete session execution summary rendered to the user or persisted to disk.
+
 ## Execution summary structure
 
 Render sections in sequence. Omit a section only when empty, stating the omission explicitly.

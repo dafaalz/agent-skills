@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Use when requesting review for code changes, evaluating review feedback, pushing back against incorrect suggestions, or verifying review fixes.
+description: Use when requesting review for code changes, evaluating review feedback, pushing back against incorrect suggestions, or verifying review fixes. Don't use for automated test execution or lint fixing.
 ---
 
 # Code review
@@ -31,7 +31,7 @@ Request code review under the following mandatory conditions:
 
 Request review optionally when encountering complex bug fixes, before significant refactoring, or when stuck and requiring an objective fresh perspective.
 
-### How to request
+### Step 1. Commit boundary extraction and reviewer dispatch
 
 Follow this procedure to extract commit boundaries and dispatch the reviewer:
 
@@ -59,12 +59,16 @@ git diff --stat ${BASE_SHA}..${HEAD_SHA}
 - `HEAD_SHA`. Ending commit SHA for the diff range.
 - `DESCRIPTION`. Brief summary of architectural decisions and changed files.
 
-### Triaging feedback
+Completion criterion. The code reviewer subagent is dispatched with verified commit SHA boundaries, diff stats, and requirements context.
+
+### Step 2. Finding triage and priority ranking
 
 Categorize all review findings into three priority tiers:
 - Critical. Bugs, security vulnerabilities, data loss risks, broken invariants, or failing tests. Fix these immediately before any further work.
 - Important. Architectural debt, missing error handling, test coverage gaps, or performance regressions. Address these before merging.
 - Minor. Style inconsistencies, naming improvements, or documentation polish. Track or address these after functional concerns pass.
+
+Completion criterion. Every review item is cataloged into Critical, Important, or Minor tier with confirmed file locations.
 
 ### Workflow integration
 
@@ -77,7 +81,7 @@ Align review cadence with development workflows:
 
 Review comments represent hypotheses to evaluate, not unilateral commands to execute. Process every piece of feedback through deliberate verification.
 
-### The evaluation response loop
+### Step 3. Feedback verification and pushback loop
 
 Follow this six-step loop for every review item:
 1. Read. Process the entire review item without defensive or emotional reactions.
@@ -86,6 +90,8 @@ Follow this six-step loop for every review item:
 4. Evaluate. Assess whether the proposed change is technically sound for this specific stack.
 5. Respond. Provide a factual technical response or reasoned pushback.
 6. Implement. Apply approved modifications one item at a time, running tests after each edit.
+
+Completion criterion. All review comments verified against codebase truth, with ambiguous items clarified and grounded counter-arguments formulated where architecture is degraded.
 
 ### Banned performative agreement
 
@@ -130,7 +136,7 @@ Verify necessity using this process:
 2. If the feature has zero active callers, reject the abstraction and propose removing dead code instead.
 3. If active callers exist, implement the minimum clean logic required to satisfy those callers without speculative generalizations.
 
-### Implementation order and regression testing
+### Step 4. Surgical remediation and regression pass
 
 Execute accepted review changes methodically to avoid compound regressions:
 - Clarify ambiguous items first before touching code.
@@ -139,6 +145,8 @@ Execute accepted review changes methodically to avoid compound regressions:
 - Address complex refactorings and structural modifications last.
 - Test each fix individually. Run targeted test suites immediately after modifying each file.
 - Execute full test suites and linters after all items are resolved to confirm zero regressions.
+
+Completion criterion. Accepted fixes implemented one by one, each verified by targeted test runs, followed by a clean full test suite pass.
 
 ### Handling pushback and corrections
 

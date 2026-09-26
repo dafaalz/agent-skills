@@ -8,11 +8,11 @@ allowed-tools: Read Write Edit Glob Grep Bash
 
 Normalize diverging patterns across a repository into a single canonical architecture protected by automated linter guards.
 
-## Governing Principle
+## Governing principle
 
 Never silently select a canonical variant without verified repository evidence or user authorization. The majority pattern is evidence, not authority. A minority pattern may represent an active architectural migration. Normalizing to the majority without checking destroys intentional migrations.
 
-## Precedence Hierarchy
+## Precedence hierarchy
 
 Resolve convention questions against this hierarchy, evaluated highest to lowest:
 
@@ -24,7 +24,7 @@ Resolve convention questions against this hierarchy, evaluated highest to lowest
 | 4 | User confirmation | Authoritative | Ask via structured choice when patterns conflict |
 | 5 | Per-language standards in `references/std-*.md` | Advisory | Baseline default when the repository lacks conventions |
 
-## Reference Modules
+## Reference modules
 
 Load relevant reference files on demand based on repository language and scope:
 
@@ -61,6 +61,8 @@ find . -type f -not -path './.git/*' -not -path '*/node_modules/*' -not -path '*
 
 If the repository is mid-migration (indicated by `TODO(migrate)` comments or dual implementations), clarify migration intent before touching files.
 
+Completion criterion. An inventory of repository convention files, active formatters, and language distribution counts.
+
 ### Phase 2. Detect divergences
 
 Probe codebase concerns systematically. Consult [references/divergence-taxonomy.md](references/divergence-taxonomy.md) for full taxonomy:
@@ -73,6 +75,8 @@ grep -rn --exclude-dir={node_modules,.git,dist,build,vendor} -E "throw new|raise
 
 Record each divergence with exact file counts and sample locations. Check git history for recent changes in minority variants to distinguish intentional modernizations from accidental deviations.
 
+Completion criterion. A catalog of identified divergences mapping file counts and sample snippets to each variant.
+
 ### Phase 3. Resolve canonical variants
 
 Resolve canonical patterns using the Precedence Hierarchy. When rank 1 and rank 2 answer the question, proceed directly to normalization.
@@ -83,6 +87,8 @@ When code patterns conflict and rank 1 or 2 does not specify a rule, present opt
 - Highlight the recommended variant with clear rationale.
 - Highlight counter-signals such as newer modules or recent commit ranges.
 - Cap questions to at most four major divergences per round.
+
+Completion criterion. A confirmed canonical variant selected via convention documents, tool configs, or explicit user sign-off.
 
 ### Phase 4. Normalize
 
@@ -109,6 +115,8 @@ gofmt -w . && goimports -w .
 
 Never touch generated files, lockfiles, or external vendor dependencies (`vendor/`, `node_modules/`, `dist/`).
 
+Completion criterion. All instances of the deprecated variant replaced across the codebase, with automated linter guards installed.
+
 ### Phase 5. Verify
 
 Confirm the codebase is healthy and consistent:
@@ -121,7 +129,9 @@ Confirm the codebase is healthy and consistent:
 grep -rn "disallowed-pattern" --exclude-dir={node_modules,.git,dist,build,vendor} . && echo "FAIL" || echo "CLEAN"
 ```
 
-## Common Mistakes
+Completion criterion. Clean build exit code, passing test suite, and grep confirmation showing zero remaining deprecated occurrences.
+
+## Common mistakes
 
 | Mistake | Consequence | Correct Approach |
 | --- | --- | --- |
