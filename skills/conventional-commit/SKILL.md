@@ -46,6 +46,7 @@ Completion criterion. The diff and status are inspected, secrets and build artif
 Ensure one logical change per commit so each commit remains independently revertable.
 
 Split the changes when:
+
 - The working tree spans multiple commit types, such as `feat` alongside `fix`.
 - Changes touch unrelated subsystems that belong in separate reviews.
 - A mechanical formatting sweep is mixed with behavioral code. Always split these, because reviewers cannot spot logic changes inside wide formatting diffs.
@@ -79,19 +80,35 @@ git diff --cached
 
 Completion criterion. Only the specific files or hunks for the target logical change appear in `git diff --cached`.
 
-### Step 4. Compose message
+### Step 4. Choose format mode and compose message
 
-Format commits using the conventional grammar:
+Determine whether the project or user prefers **oneline** or **multiline** commits:
 
-```text
-<type>[optional scope][!]: <description>
+#### Format Options
 
-[optional body]
+1. **Oneline Mode (Single-line)**:
+   - Format: `<type>[optional scope]: <description>`
+   - Use when the subject line alone conveys complete intent, or when the user / repository standard requires compact commit history.
+   - Do NOT include empty lines, bodies, descriptions, or footers.
+   - Example: `feat(ui): add custom-select blade component`
 
-[optional footer(s)]
-```
+2. **Multiline Mode**:
+   - Format:
+
+     ```text
+     <type>[optional scope][!]: <description>
+
+     [optional body]
+
+     [optional footer(s)]
+     ```
+
+   - Use when detailing complex reason, migration guides, breaking changes (`BREAKING CHANGE:`), or tracking issue references (`Closes: #123`).
+
+#### Rules for message components
 
 Rules for message components:
+
 - Type. Pick one standard type documented in `references/commit-types.md` (`feat`, `fix`, `refactor`, `perf`, `test`, `build`, `ci`, `docs`, `style`, `chore`, `revert`).
 - Scope. Add a scope only when changes are isolated to a single bounded module, package, or directory. Use lowercase kebab-case naming, such as `fix(auth):` or `feat(api):`. Omit the scope for repository-wide changes.
 - Breaking change marker. Add `!` immediately before the colon when upgrading requires consumers to modify their code. Always pair `!` with a `BREAKING CHANGE:` footer detailing the migration.
@@ -100,6 +117,7 @@ Rules for message components:
 - Footers. Optional. Include issue references (`Closes: #123`) or migration guides (`BREAKING CHANGE: payload key renamed to data`).
 
 Optional co-author trailer:
+
 - Include a co-author trailer only when the user requests it or repository guidelines require attribution.
 - Resolve identity strictly from real sources, including explicit user prompt, git configuration (`git config --get coauthor.name`), or existing repository history. If no real identity exists, omit the trailer.
 - Place the trailer at the bottom of the footers block separated by a blank line:
@@ -112,6 +130,14 @@ Completion criterion. A commit message matching Conventional Commits syntax with
 
 ### Step 5. Commit
 
+#### For Oneline Commits (Single-line):
+
+```bash
+git commit -m "feat(ui): add custom-select blade component"
+```
+
+#### For Multiline Commits:
+
 Commit using a heredoc so multi-line messages and blank lines are preserved:
 
 ```bash
@@ -123,12 +149,6 @@ Returns 401 instead of propagating stale sessions.
 
 Closes: #341
 EOF
-```
-
-For simple single-line commits:
-
-```bash
-git commit -m "docs: document skill configuration workflow"
 ```
 
 Completion criterion. A newly minted git commit recorded in HEAD with the exact drafted message.
@@ -158,11 +178,11 @@ Completion criterion. Working tree status is completely clean and the subject ve
 
 ## Common mistakes
 
-| Mistake | Consequence | Correct approach |
-| --- | --- | --- |
-| Running `git add .` indiscriminately | Bundles unrelated edits and generated files | Stage specific paths or use `git add -p` |
-| Vague subject like `fix: bug fix` | Changelog provides zero actionable context | Describe what was repaired, like `fix(cart): clear discounts on logout` |
-| Scope used on broad sweep | Misrepresents change blast radius | Omit scope on global changes |
-| Adding `!` without breaking footer | Leaves consumers without migration details | Always provide a `BREAKING CHANGE:` footer |
-| Fabricating co-author identity | Injects false attribution into permanent git log | Omit trailer when no identity is provided |
-| Merging formatting and logic | Hides logic changes during code review | Split into a `style:` or `refactor:` commit first |
+| Mistake                              | Consequence                                      | Correct approach                                                        |
+| ------------------------------------ | ------------------------------------------------ | ----------------------------------------------------------------------- |
+| Running `git add .` indiscriminately | Bundles unrelated edits and generated files      | Stage specific paths or use `git add -p`                                |
+| Vague subject like `fix: bug fix`    | Changelog provides zero actionable context       | Describe what was repaired, like `fix(cart): clear discounts on logout` |
+| Scope used on broad sweep            | Misrepresents change blast radius                | Omit scope on global changes                                            |
+| Adding `!` without breaking footer   | Leaves consumers without migration details       | Always provide a `BREAKING CHANGE:` footer                              |
+| Fabricating co-author identity       | Injects false attribution into permanent git log | Omit trailer when no identity is provided                               |
+| Merging formatting and logic         | Hides logic changes during code review           | Split into a `style:` or `refactor:` commit first                       |
