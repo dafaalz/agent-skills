@@ -49,17 +49,23 @@ Load and follow the workflow in skills/brainstorming/SKILL.md
 | `brainstorming` | Use when scoping new features, exploring architectural requirements, planning refactors, stress-testing design decisions, or designing greenfield components before writing implementation plans or code. |
 | `code-review` | Use when requesting review for code changes, evaluating review feedback, pushing back against incorrect suggestions, or verifying review fixes. |
 | `codebase-design` | Use when designing module interfaces, evaluating abstraction depth, identifying code seams, or turning shallow pass-through wrappers into deep modules. |
+| `conventional-commit` | Use when creating atomic git commits adhering to the Conventional Commits specification, staging selective hunks, or writing commit messages. |
 | `copy-web-design` | Use when reverse-engineering, deconstructing, benchmarking, or replicating web designs, design tokens, layout structures, animations, or components from URLs or screenshots. |
 | `dispatching-parallel-agents` | Use when facing two or more independent tasks that can run without shared state or sequential dependencies. |
 | `executing-plans` | Use when executing written implementation plans batch by batch inline in the current session or task by task via delegated subagents. |
 | `finishing-a-development-branch` | Use when implementation is complete, all automated tests pass, and the working branch or worktree is ready for integration, pull request creation, or cleanup. |
 | `frontend-design` | Use when building frontend interfaces, styling layouts with Tailwind CSS, establishing visual tokens, generating DESIGN.md, or selecting UI libraries. |
 | `graphify` | Use when turning codebases, documentation, research papers, or media into a persistent knowledge graph, or querying structural dependencies. |
+| `i18n` | Use when implementing internationalization, localization, locale negotiation, date/number formatting, ICU messages, or RTL/BiDi layouts. |
 | `laravel` | Use when building, modifying, reviewing, testing, or debugging Laravel applications, Eloquent queries, Artisan commands, Blade or Livewire components, Inertia adapters, Form Requests, migrations, or queue jobs. |
 | `output-skill` | Use when generating exhaustive, unabridged code or prose, enforcing complete generation, banning placeholders, and managing token splits. |
+| `ping` | Use when diagnosing agent execution latency, shell round-trip response times, process spawn overhead, or host environment clock skew. |
 | `prototype` | Use when prototyping divergent visual or interaction variants for a UI component, or comparing interactive UI explorations. |
 | `qa-engineer` | Use when testing features from a user perspective, executing exploratory test charters, auditing PR diffs, investigating test flakiness, or verifying release quality gates. |
+| `react` | Use when designing, building, testing, or optimizing React and Next.js applications, Server Components, client state, or data fetching. |
+| `s13n` | Use when standardizing inconsistent code patterns across a repository, resolving architectural divergence, or installing linter guards. |
 | `security-audit` | Use when auditing codebases for security vulnerabilities, conducting threat modeling, reviewing auth boundaries, evaluating exploitability, or verifying security fixes. |
+| `summarize` | Use when generating structured session execution summaries, documenting root causes, evidence tables, or transferring context between agent sessions. |
 | `systematic-debugging` | Use when debugging any bug, test failure, unexpected behavior, or performance issue before proposing fixes. |
 | `technical-writing` | Use when writing or reviewing human-facing documentation, RFCs, README files, PR descriptions, or technical guides. |
 | `testing-patterns` | Use when writing automated tests, creating test fixtures, configuring test mocks or testcontainers, implementing contract tests, or refactoring test suites. |
