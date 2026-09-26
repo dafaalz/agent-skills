@@ -4,7 +4,7 @@ description: Use when creating atomic git commits adhering to the Conventional C
 allowed-tools: Bash Read Grep Glob
 ---
 
-# Conventional Commit
+# Conventional commit
 
 Commit the working tree as atomic commits following the Conventional Commits 1.0.0 specification with concise imperative subjects.
 
@@ -144,13 +144,13 @@ If co-author trailers were not requested, ensure no accidental trailers were com
 git log --format='%B' -5 | grep -iE 'co-authored-by|generated with' && echo 'UNWANTED TRAILER' || echo 'clean'
 ```
 
-## Common Mistakes
+## Common mistakes
 
-| Mistake | Consequence | Correct Approach |
+| Mistake | Consequence | Correct approach |
 | --- | --- | --- |
 | Running `git add .` indiscriminately | Bundles unrelated edits and generated files | Stage specific paths or use `git add -p` |
 | Vague subject like `fix: bug fix` | Changelog provides zero actionable context | Describe what was repaired, like `fix(cart): clear discounts on logout` |
 | Scope used on broad sweep | Misrepresents change blast radius | Omit scope on global changes |
 | Adding `!` without breaking footer | Leaves consumers without migration details | Always provide a `BREAKING CHANGE:` footer |
 | Fabricating co-author identity | Injects false attribution into permanent git log | Omit trailer when no identity is provided |
-| Merging formatting and logic | Hides critical logic changes during code review | Split into a `style:` or `refactor:` commit first |
+| Merging formatting and logic | Hides logic changes during code review | Split into a `style:` or `refactor:` commit first |

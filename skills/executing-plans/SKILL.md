@@ -23,8 +23,8 @@ Implementation plans define structured tasks with explicit file paths, full code
 | Execution style | Direct sequential edits | Orchestrated delegation |
 
 When the user specifies an execution mode, apply it directly. When the mode is not specified:
-- Choose Mode 1 for plans with 1 to 3 tightly coupled tasks where context continuity is essential.
-- Choose Mode 2 for plans with 4 or more modular tasks where context preservation is critical.
+- Choose Mode 1 for plans with 1 to 3 tightly coupled tasks where context continuity is required.
+- Choose Mode 2 for plans with 4 or more modular tasks where context preservation is required.
 - Ask the user if task boundaries allow either approach and preference is ambiguous.
 
 ## Pre-execution verification
@@ -104,7 +104,7 @@ Dispatch a fresh subagent for each task using the template at `prompts/implement
 - The implementer follows test-driven development, executes tests, commits changes, and self-reviews.
 - The implementer reports one of four lifecycle statuses:
   - DONE. Implementation complete and tested. Proceed directly to spec compliance review.
-  - DONE_WITH_CONCERNS. Implementation complete but with doubts. Read concerns, resolve critical issues, then proceed to review.
+  - DONE_WITH_CONCERNS. Implementation complete but with doubts. Read concerns, resolve blockers, then proceed to review.
   - NEEDS_CONTEXT. Information is missing. Provide the necessary context and re-dispatch.
   - BLOCKED. Implementer cannot proceed. Assess whether to supply context, upgrade model strength, or escalate to the user.
 - Never dispatch parallel implementers on shared files or overlapping branches. Consult `references/parallel-dispatch.md` for domain partitioning criteria and parallel prompt templates when dispatching subagents across disjoint domains.
@@ -114,7 +114,7 @@ Dispatch a fresh subagent for each task using the template at `prompts/implement
 Every completed task must pass two independent reviews before acceptance:
 
 1. Spec compliance review. Dispatch a reviewer subagent using `prompts/spec-reviewer-prompt.md`. The reviewer inspects actual git diffs line by line against requirements without trusting implementer claims. If missing features or scope creep are identified, instruct the implementer to fix them before proceeding.
-2. Code quality review. After spec compliance passes, dispatch a reviewer using `prompts/code-quality-reviewer-prompt.md`. The reviewer evaluates single responsibility, interface clarity, test rigor, and maintainability. The implementer resolves any critical or important findings.
+2. Code quality review. After spec compliance passes, dispatch a reviewer using `prompts/code-quality-reviewer-prompt.md`. The reviewer evaluates single responsibility, interface clarity, test rigor, and maintainability. The implementer resolves all blocker and high-priority findings.
 
 Repeat the review loop until both reviewers approve the changes. Never skip either review stage.
 

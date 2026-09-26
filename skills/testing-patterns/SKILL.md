@@ -57,7 +57,7 @@ Construct fixtures through fluent test data builders following Google DAMP (Desc
 3. Chain override methods such as `withStatus()` or `withTier()` to declare only attributes required by the specific test.
 4. Inject sequential counters or random identifiers into emails, primary keys, and tenant identifiers to maintain test isolation during parallel execution.
 
-Completion criterion. Tests construct domain fixtures through fluent builders, declaring only behavior-critical fields while running deterministically in parallel.
+Completion criterion. Tests construct domain fixtures through fluent builders, declaring only fields required for the test scenario while running deterministically in parallel.
 
 ### Step 4. Network and dependency isolation
 

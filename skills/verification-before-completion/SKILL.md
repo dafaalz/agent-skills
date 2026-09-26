@@ -41,10 +41,10 @@ Skip any step = lying, not verifying
 
 | Claim | Requires | Not Sufficient |
 |---|---|---|
-| Tests pass | Test command output: 0 failures | Previous run, "should pass" |
-| Linter clean | Linter output: 0 errors | Partial check, extrapolation |
-| Build succeeds | Build command: exit 0 | Linter passing, logs look good |
-| Bug fixed | Test original symptom: passes | Code changed, assumed fixed |
+| Tests pass | Test command output showing 0 failures | Previous run, "should pass" |
+| Linter clean | Linter output showing 0 errors | Partial check, extrapolation |
+| Build succeeds | Build command returning exit 0 | Linter passing, logs look good |
+| Bug fixed | Test verifying original symptom passes | Code changed, assumed fixed |
 | Regression test works | Red-green cycle verified | Test passes once |
 | Agent completed | VCS diff shows changes | Agent reports "success" |
 | Requirements met | Line-by-line checklist | Tests passing |
@@ -75,31 +75,36 @@ Skip any step = lying, not verifying
 
 ## Key patterns
 
-**Tests:**
+### Tests
+
 ```
 ✅ [Run test command] [See: 34/34 pass] "All tests pass"
 ❌ "Should pass now" / "Looks correct"
 ```
 
-**Regression tests (TDD Red-Green):**
+### Regression tests (TDD red-green)
+
 ```
 ✅ Write → Run (pass) → Revert fix → Run (MUST FAIL) → Restore → Run (pass)
 ❌ "I've written a regression test" (without red-green verification)
 ```
 
-**Build:**
+### Build
+
 ```
 ✅ [Run build] [See: exit 0] "Build passes"
 ❌ "Linter passed" (linter doesn't check compilation)
 ```
 
-**Requirements:**
+### Requirements
+
 ```
 ✅ Re-read plan → Create checklist → Verify each → Report gaps or completion
 ❌ "Tests pass, phase complete"
 ```
 
-**Agent delegation:**
+### Agent delegation
+
 ```
 ✅ Agent reports success → Check VCS diff → Verify changes → Report actual state
 ❌ Trust agent report
@@ -112,7 +117,7 @@ Run these git checks before making any completion claim:
 
 1. Execute `git status --short` to verify all touched files.
 2. Inspect deleted files marked with `D`.
-   - Core files must never be deleted without an explicit user prompt: `CODEBASE.md`, `AGENTS.md`, `CLAUDE.md`, `README.md`, and `.env.example`.
+   - Core files must never be deleted without an explicit user prompt. Protected files include `CODEBASE.md`, `AGENTS.md`, `CLAUDE.md`, `README.md`, and `.env.example`.
    - If any core documentation file was deleted inadvertently, restore it immediately using `git checkout -- <file>`.
 3. Confirm that untracked temporary files, scratch scripts, or dump files are either cleaned up or added to `.gitignore`.
 
@@ -125,9 +130,9 @@ Run linters against modified files to prevent shipping formatting bugs or breaki
    - For JavaScript or TypeScript, check `package.json` for `eslint`, `biome`, or `prettier`.
 2. Scope execution to modified files:
    - Identify touched files using `git diff --name-only`.
-   - Run the linter strictly against those files (for example: `vendor/bin/pint --test path/to/File.php` or `npx eslint path/to/File.tsx`).
+   - Run the linter strictly against those files, such as `vendor/bin/pint --test path/to/File.php` or `npx eslint path/to/File.tsx`.
    - Do not execute full-repository scans that pull in pre-existing legacy errors outside the active scope.
-3. If no linter is configured in project manifests, state "Linter: none configured" in the verification report without failing the gate.
+3. If no linter is configured in project manifests, record "none configured" under linter status in the verification report without failing the gate.
 
 ## Automated web performance and accessibility gate
 
@@ -136,7 +141,7 @@ For web applications with automated auditing configured, consult `references/lig
 ## Why this matters
 
 From 24 failure memories:
-- your human partner said "I don't believe you", which broke trust
+- Your human partner said "I don't believe you", which broke trust
 - Undefined functions shipped and crashed in production
 - Missing requirements shipped with incomplete features
 - Time wasted on false completion, redirect, and rework
@@ -144,7 +149,7 @@ From 24 failure memories:
 
 ## When to apply
 
-**ALWAYS before:**
+Always verify before:
 - ANY variation of success or completion claims
 - ANY expression of satisfaction
 - ANY positive statement about work state
@@ -152,7 +157,7 @@ From 24 failure memories:
 - Moving to next task
 - Delegating to agents
 
-**Rule applies to:**
+The rule applies to:
 - Exact phrases
 - Paraphrases and synonyms
 - Implications of success
