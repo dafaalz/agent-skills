@@ -76,6 +76,8 @@ git pull
 git merge <feature-branch>
 ```
 
+If merge conflicts occur, consult `references/resolving-conflicts.md` to resolve per hunk, verify with test runners, and complete the merge cleanly.
+
 Run the project test suite against the merge result. If tests pass, delete the feature branch:
 
 ```bash

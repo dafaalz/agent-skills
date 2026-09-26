@@ -10,7 +10,7 @@ Turn ideas into validated designs before writing code or plans.
 Check the project context first. For architecture and refactoring work, research external standards, run a codebase gap analysis, and compare trade-offs. For new features, ask clarifying questions one at a time and present the design in stages. Once the user approves the approach, write the design specification and hand off to implementation planning.
 
 <HARD-GATE>
-Present the design and secure explicit user approval before writing code, scaffolding projects, or invoking implementation skills. Do not take implementation actions before user approval. This rule applies to every task, regardless of scope.
+Present the design and secure explicit user approval before writing code, generating project templates, or invoking implementation skills. Do not take implementation actions before user approval. This rule applies to every task, regardless of scope.
 </HARD-GATE>
 
 ## Workflow selection
@@ -100,8 +100,8 @@ Completion criterion. All ambiguities and decision branches resolved through exp
 ### Step 3. Approach exploration
 
 Propose 2 to 3 approaches with tradeoffs, lead with a recommendation, and obtain user confirmation before writing detailed specifications. Evaluate data scaling and reload persistence against `references/architecture-scalability.md`.
-- Protect Single Responsibility Principle and modular boundaries: If a user proposal merges unrelated domains or causes lifecycle regressions, run a targeted web search via `search_web` to verify industry conventions, present a grounded counter-argument citing the reference, and propose a clean decoupled alternative.
-- Propose contrasting design directions for open-ended UI tasks. When user requests for frontend or visual design lack defined aesthetic direction, avoid open-ended taste questions. Present three differentiated directions chosen from contrasting design schools: Information Architecture (rational, data-dense, e.g. Pentagram or Vignelli), Editorial Minimalist (whitespace, refined typography, e.g. Dieter Rams or MUJI), Modern Tool (hairline details, dark mode, single accent, e.g. Linear or Raycast), Motion Experimental (generative, kinetic, e.g. Active Theory), Brutalist (raw, unpolished high contrast, e.g. Are.na), or Warm Humanist (approachable, organic, e.g. Stripe Press). Never recommend three options from the same design school.
+- Protect Single Responsibility Principle and modular boundaries. If a user proposal merges unrelated domains or causes lifecycle regressions, run a targeted web search via `search_web` to verify industry conventions, present a grounded counter-argument citing the reference, and propose a clean decoupled alternative.
+- Propose contrasting design directions for open-ended UI tasks. When user requests for frontend or visual design lack defined aesthetic direction, avoid open-ended taste questions. Present three differentiated directions chosen from contrasting design schools, such as Information Architecture (rational, data-dense, e.g. Pentagram or Vignelli), Editorial Minimalist (whitespace, refined typography, e.g. Dieter Rams or MUJI), Modern Tool (hairline details, dark mode, single accent, e.g. Linear or Raycast), Motion Experimental (generative, kinetic, e.g. Active Theory), Brutalist (raw, unpolished high contrast, e.g. Are.na), or Warm Humanist (approachable, organic, e.g. Stripe Press). Never recommend three options from the same design school.
 
 Completion criterion. The user selects a preferred approach.
 
@@ -122,7 +122,7 @@ Completion criterion. The user explicitly confirms that the design direction mat
 
 ### Step 2. Write the design document
 
-Save the design specification to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` or the user-specified path.
+Save the design specification to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` or the user-specified path. Consult `references/domain-modeling.md` for domain entity alignment and ADR selection filters.
 
 Follow the Architecture Decision Record structure:
 - Title. Short descriptive title.

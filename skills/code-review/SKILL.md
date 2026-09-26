@@ -15,6 +15,8 @@ Follow these core principles:
 - Review early, review often. Request review after each discrete task or major feature to prevent compounding defects.
 - Verify before implementing. Never accept reviewer suggestions blindly. Check codebase truth and test suites first.
 - Technical correctness over social comfort. Maintain skepticism. Push back with concrete facts when suggestions degrade architecture.
+- Structural audit depth. Consult `references/architectural-lenses.md` for classic engineering lenses and logic defect categories.
+- Comment hygiene. Consult `references/comment-hygiene.md` to prune AI conversational narration while preserving critical business context.
 
 ## Phase 1. Requesting code review
 

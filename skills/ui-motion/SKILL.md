@@ -9,7 +9,7 @@ Design, build, audit, and optimize hardware-accelerated user interface motion.
 
 ## Overview
 
-UI motion engineering delivers hardware-accelerated, physically grounded interface motion that preserves utility, enhances spatial orientation, and avoids decorative bloat. Every motion must pass frequency gating, use the most performant execution layer, respect user accessibility preferences, and operate under strict duration budgets.
+UI motion engineering delivers hardware-accelerated, physically grounded interface motion that preserves utility, improves spatial orientation, and avoids decorative bloat. Every motion must pass frequency gating, use the most performant execution layer, respect user accessibility preferences, and operate under strict duration budgets.
 
 Consult deep reference documents in references/ for recipes, gesture physics, mobile native environments, vocabulary mapping, Google rendering standards, and audit playbooks.
 
@@ -130,7 +130,7 @@ Follow this duration budget reference:
 | Modals and sheet drawers            | 200 to 400ms     |
 | Marketing or explanatory animations | Can exceed 400ms |
 
-Keep functional UI animations under 300ms. A 180ms dropdown feels significantly more responsive than a 400ms dropdown.
+Keep functional UI animations under 300ms. A 180ms dropdown feels faster and more responsive than a 400ms dropdown.
 
 ### 6. Accessibility and SSR hydration safety
 

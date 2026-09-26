@@ -11,6 +11,7 @@ Read the reference guides before initiating targeted sweeps:
 * `references/exploratory-charters.md` for session charters, boundary value analysis, equivalence partitions, state transitions, and error guessing.
 * `references/bug-report-template.md` for defect reproduction templates, technical evidence capture, severity triage, and release sign-off verdicts.
 * `references/quality-gate-checklist.md` for pipeline latency limits, flaky test quarantine protocols, differential mutation thresholds, performance budgets, and security scans.
+* `references/lighthouse-ci.md` for automated Core Web Vitals performance gating, median-of-N collection, and CI assertions.
 
 ## Workflow
 

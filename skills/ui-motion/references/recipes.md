@@ -333,7 +333,7 @@ if (Math.abs(currentOffset) >= SWIPE_THRESHOLD || velocity > 0.11) {
 }
 ```
 
-Key rules:
+Apply these drag interaction rules:
 - Call `element.setPointerCapture(event.pointerId)` on start.
 - Update `element.style.transform` directly, never via parent CSS custom properties.
 - Apply elastic boundary resistance if pulled beyond normal constraints.
@@ -342,7 +342,7 @@ Key rules:
 
 ## 14. Sonner component design rules
 
-Core principles for production notification components:
+Follow these production notification principles:
 - **Zero configuration DX.** Work immediately with reasonable defaults without wrapper boilerplate.
 - **Opinionated defaults.** Supply tested easing curves and typography out of the box.
 - **Invisible edge handling.** Pause auto-dismiss timers when document visibility changes to hidden. Fill layout gaps with pseudo-elements to preserve hover continuity across stacked items.
@@ -444,7 +444,87 @@ Companion global CSS stylesheet rule:
 }
 ```
 
-Key rules:
+Apply these hydration rules:
 * Never return alternate JSX node tags before initial client hydration settles.
 * The `!important` rule overrides inline styles at the browser compositor level immediately, preventing flash of invisible content even before JavaScript executes.
+
+---
+
+## 19. Tactile spring pill tab indicator
+
+Floating pill indicator that glides between active tabs using layout projection and physical damping:
+
+```jsx
+import * as React from 'react';
+import { motion } from 'motion/react';
+
+export function TabBar({ tabs, activeId, onSelect }: TabBarProps) {
+  return (
+    <div className="flex gap-1 p-1 bg-neutral-100 rounded-lg relative">
+      {tabs.map((tab) => {
+        const isActive = tab.id === activeId;
+        return (
+          <button
+            key={tab.id}
+            onClick={() => onSelect(tab.id)}
+            className="relative px-3 py-1.5 text-sm font-medium transition-colors z-10"
+          >
+            {isActive && (
+              <motion.div
+                layoutId="activeTabPill"
+                className="absolute inset-0 bg-white rounded-md shadow-sm -z-10"
+                transition={{
+                  type: 'spring',
+                  stiffness: 400,
+                  damping: 32,
+                  mass: 0.8
+                }}
+              />
+            )}
+            {tab.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+```
+
+Apply these spring physics rules:
+* Keep mass under 1.0 to prevent sluggish pill dragging.
+* Use `layoutId` across sibling elements to trigger compositor hardware projection automatically.
+
+---
+
+## 20. Tactile swipe dismiss with velocity exit
+
+Card dismiss gesture with resistance and velocity-based threshold:
+
+```jsx
+import * as React from 'react';
+import { motion, useMotionValue, useTransform } from 'motion/react';
+
+export function SwipeCard({ onDismiss, children }: SwipeCardProps) {
+  const x = useMotionValue(0);
+  const opacity = useTransform(x, [-150, 0, 150], [0, 1, 0]);
+
+  return (
+    <motion.div
+      style={{ x, opacity }}
+      drag="x"
+      dragConstraints={{ left: 0, right: 0 }}
+      dragElastic={0.6}
+      onDragEnd={(_, info) => {
+        if (Math.abs(info.offset.x) > 120 || Math.abs(info.velocity.x) > 500) {
+          onDismiss();
+        }
+      }}
+      transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+```
+
 

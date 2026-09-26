@@ -33,7 +33,7 @@ Gather evidence to explain what failed and why before touching production code.
 1. **Error inspection.** Read stack traces, error messages, and logs in full. Identify line numbers, file paths, and error codes without skipping warnings.
    - Completion criterion. Exact error text, file path, failing line number, and initial call site identified in notes.
 
-2. **Reproduction.** Execute the minimal command, script, or test case that triggers the defect deterministically.
+2. **Reproduction.** Execute the minimal command, script, or test case that triggers the defect deterministically. Consult `references/reproduction-and-loops.md` for fast feedback harness patterns, input minimization, and secret redaction rules.
    - Completion criterion. A single command or test triggers the failure consistently across consecutive runs.
 
 3. **Change audit.** Inspect git history and environment changes. Run `git diff` against the last known working commit. Check recent dependency updates and configuration changes.

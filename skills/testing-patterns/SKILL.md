@@ -13,6 +13,7 @@ Read the reference guides for domain-specific execution details:
 * For browser user journeys, Playwright locators, and session reuse, read `references/e2e-patterns.md`.
 * For test fixture generation, fluent builders, and tenant isolation, read `references/test-data-builders.md`.
 * For seam boundary and mock isolation pitfalls, read `references/tdd-anti-patterns.md`.
+* For pre-commit gates, Husky setup, and lint-staged automation, read `references/pre-commit-hooks.md`.
 
 ## Workflow
 

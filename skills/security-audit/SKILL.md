@@ -69,6 +69,7 @@ Consult specific reference guides on demand based on target architecture:
 | Web and authentication | `references/web-protocol-and-auth.md` | HTTP framing, cookies, sessions, JWT, OAuth 2.1, OIDC, SAML |
 | Client-side and browser | `references/client-side.md` | DOM XSS, prototype pollution, Trusted Types, CSP, postMessage |
 | Cloud and deployment | `references/cloud-and-deployment.md` | Cloud IAM, Kubernetes, containers, IMDSv2, ingress, secrets |
+| Credentials and secret hygiene | `references/credentials-hygiene.md` | Safe verification, token masking, zero exposure inspection |
 | Supply chain and release | `references/supply-chain-and-release.md` | Dependencies, CI workflows, SLSA provenance, build inputs |
 | AI, LLM, and agents | `references/ai-and-llm.md` | Prompt assembly, RAG context, MCP servers, tool-call loops |
 | Memory safety and binary | `references/memory-safety-and-binary.md` | C, C++, Rust unsafe, FFI, parsers, allocators, race conditions |

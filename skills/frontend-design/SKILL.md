@@ -9,7 +9,7 @@ Author high-craft visual interfaces, establish token architectures, and eliminat
 
 ## Overview
 
-Frontend design provides a unified engineering runbook for visual craft, token architecture, component mechanics, and anti-slop safeguards. It replaces generic AI defaults such as neon gradients, generic serif headings on dashboards, centered three-card rows, and fabricated metrics with intentional design systems. Every interface must feature authentic content, stable layout scaffolding, accessible interaction models, and verified production libraries.
+Frontend design provides a unified engineering runbook for visual craft, token architecture, component mechanics, and anti-slop safeguards. It replaces generic AI defaults such as neon gradients, generic serif headings on dashboards, centered three-card rows, and fabricated metrics with intentional design systems. Every interface must feature authentic content, stable layout structure, accessible interaction models, and verified production libraries.
 
 Consult reference documents in references/ on demand for deep implementation patterns.
 
@@ -52,7 +52,7 @@ Anchor layouts to neutral bases with at most one restrained accent color.
 - Systematic color spaces. Construct palette steps using OKLCH scales for uniform perceived lightness across tints and shades. Consult references/custom-theme.md.
 - Surface elevation. Differentiate elevation layers using discrete surface lightness steps and subtle borders. Never stack semi-transparent white overlays or neon drop shadows.
 
-### 3. Layout scaffolding
+### 3. Layout structure
 
 Construct responsive structural grids with modern CSS and dynamic viewport units.
 
@@ -76,7 +76,7 @@ Deliver verifiable production content with authentic brand media.
 
 Select an intentional macrostructure that matches project content density and narrative role:
 
-1. Bento grid. Multi-cell asymmetric dashboard or product overview combining stat callouts, interactive previews, and feature highlights.
+1. Bento grid. Multi-cell asymmetric dashboard or product overview combining stat callouts, interactive previews, and feature callouts.
 2. Split studio. High-contrast two-column arrangement with sticky media preview alongside scrolling explanatory narrative.
 3. Marquee hero. Expansive typographic header paired with flowing preview ribbons or ticker metrics.
 4. Long document. Structured editorial layout with margin notes, fluid typography, and sticky table of contents.
@@ -87,7 +87,7 @@ Classify aesthetic direction into one of four visual genres:
 - Editorial. High typographic contrast, generous white space, restrained palettes, and literary discipline.
 - Modern minimal. Precision geometry, crisp monochrome tones, subtle micro-borders, and high functional density.
 - Atmospheric. Deep dark surfaces, diffused backdrops, focused illumination, and tactile depth.
-- Playful. Expressive type, tactile physical feedback, vibrant accents, and organic rounded forms.
+- Playful. Expressive type, tactile physical feedback, bold accents, and organic rounded forms.
 
 ## Component mechanics and interaction states
 
@@ -98,6 +98,7 @@ Implement full lifecycle interaction states and tactile feedback for all compone
 3. Form validation timing. Delay error messages until input blur, then validate live on subsequent input. Position validation messages directly adjacent to invalid fields.
 4. Concentric card nesting. Ensure nested badges, buttons, and preview containers use mathematically concentric radii to prevent visual pinching.
 5. Hardware-accelerated motion. Animate exclusively via transform and opacity. Restrict spring physics transitions to motion-enabled elements and respect prefers-reduced-motion queries.
+6. Asynchronous network resilience. Handle race conditions with AbortController, retry idempotent requests with exponential backoff, and provide optimistic mutations with rollback. Consult `references/api-resilience.md`.
 
 ## Execution workflow
 
@@ -150,7 +151,7 @@ Route execution to dedicated reference runbooks based on task requirements:
 1. Generating ./DESIGN.md. Follow references/design-template.md to author a canonical specification covering dials, palette tokens, typography rules, component specs, and anti-patterns.
 2. Curated UI primitives and libraries. Consult references/recommended-libraries.md to map functional requirements to verified single-purpose packages like Base UI, cmdk, Sonner, input-otp, NumberFlow, Virtuoso, Zustand, and CVA.
 3. Creative Awwwards-style WebGL and GSAP scenes. Consult references/creative-motion-webgl.md when choreographing smooth scroll, GSAP ScrollTrigger timelines, and Three.js canvas lifecycles with offscreen pause constraints.
-4. Pre-built UI components and macrostructures. Browse references/components/ for tested component patterns (navbars, bento cards, hero callouts, footer statements) and references/macrostructures/ for holistic page templates.
+4. Pre-built UI components and macrostructures. Browse references/components/ for tested component patterns (navbars, bento cards, hero callouts, footer statements) and references/macrostructures/ for full-page templates.
 5. Micro-interactions and gesture physics. Consult references/ui-patterns.md for button press feedback, bento card mechanics, and cursor interactions. For spring physics, gesture tracking, and frame rate audits, activate the ui-motion skill.
 
 ## Pre-flight anti-slop audit checklist
@@ -166,7 +167,7 @@ Verify all items before declaring frontend implementation complete:
 | Viewport height | Full-height wrappers use min-h-[100dvh] instead of h-screen |
 | Mobile collapse | Asymmetric grids collapse to single column below 768px |
 | Concentric radii | Inner radii match outer radii minus padding and border offset |
-| Copy integrity | Zero fabricated metrics, zero AI buzzwords like seamless or elevate |
+| Copy integrity | Zero fabricated metrics, zero promotional buzzwords or exaggerated claims |
 | Asset authenticity | Real SVG or PNG assets, genuine photography, zero faux browser frames |
 | Emojis | Zero raw unicode emojis used in UI labels, copy, or markup |
 | Libraries | Selected single-purpose packages verified against package.json |
