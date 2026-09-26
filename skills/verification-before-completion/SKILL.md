@@ -129,6 +129,10 @@ Run linters against modified files to prevent shipping formatting bugs or breaki
    - Do not execute full-repository scans that pull in pre-existing legacy errors outside the active scope.
 3. If no linter is configured in project manifests, state "Linter: none configured" in the verification report without failing the gate.
 
+## Automated web performance and accessibility gate
+
+For web applications with automated auditing configured, consult `references/lighthouse-ci.md` to run Lighthouse CI assertions against production builds.
+
 ## Why this matters
 
 From 24 failure memories:

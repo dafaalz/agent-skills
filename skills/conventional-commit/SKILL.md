@@ -16,6 +16,7 @@ Commit the working tree as atomic commits following the Conventional Commits 1.0
 4. Never commit without reading the diff. The commit message must describe actual changes on disk.
 5. Consult `references/commit-types.md` for standard commit types. Never invent custom types or fake scopes.
 6. Never amend, rebase, or force-push commits created in previous sessions.
+7. Consult `references/resolving-conflicts.md` to resolve merge or rebase conflicts before staging.
 
 ## Workflow
 

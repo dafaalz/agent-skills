@@ -107,7 +107,7 @@ Dispatch a fresh subagent for each task using the template at `prompts/implement
   - DONE_WITH_CONCERNS. Implementation complete but with doubts. Read concerns, resolve critical issues, then proceed to review.
   - NEEDS_CONTEXT. Information is missing. Provide the necessary context and re-dispatch.
   - BLOCKED. Implementer cannot proceed. Assess whether to supply context, upgrade model strength, or escalate to the user.
-- Never dispatch parallel implementers on shared files or overlapping branches.
+- Never dispatch parallel implementers on shared files or overlapping branches. Consult `references/parallel-dispatch.md` for domain partitioning criteria and parallel prompt templates when dispatching subagents across disjoint domains.
 
 ### Step 3. Two-stage review cycle
 
@@ -161,13 +161,13 @@ Track progress directly within the plan file:
 
 Coordinate with related workflow skills:
 - `writing-plans` creates the structured implementation plan in `docs/superpowers/plans/` that this skill executes.
-- `tdd` provides red, green, refactor mechanics for individual tasks.
+- `testing-patterns` provides red, green, refactor mechanics and test charter patterns for individual tasks.
 - `code-review` provides templates and evaluation rubrics for code reviewers.
-- `finishing-a-development-branch` completes development after all tasks pass.
+- `verification-before-completion` conducts final verification of test outputs and git state.
 
 ## Handoff to completion
 
 After all tasks in the plan are completed and verified:
 1. Verify that every checkbox in the plan file is marked `- [x]`.
 2. Run the complete automated test suite to ensure system integrity.
-3. Announce transition to `finishing-a-development-branch` to conduct final review, present merge options, and handle branch cleanup.
+3. Announce transition to `verification-before-completion` to conduct final test verification and prepare the branch for pull request creation.
