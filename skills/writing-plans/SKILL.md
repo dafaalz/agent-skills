@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: Use when creating phased implementation plans with test-first tasks from a design specification before writing code.
+description: Use when creating phased implementation plans with test-first tasks from a design specification before writing code. Don't use for initial design ideation, exploratory research, or direct code execution.
 ---
 
 # Writing implementation plans
@@ -92,14 +92,14 @@ Every plan must start with this header block:
 Structure each task with explicit file lists, step checkboxes, complete code, and test commands:
 
 ````markdown
-### Task N: [Component Name]
+### Task N. [Component name]
 
-**Files:**
-- Create: `exact/path/to/file.py`
-- Modify: `exact/path/to/existing.py:123-145`
-- Test: `tests/exact/path/to/test.py`
+**Files**
+- Create `exact/path/to/file.py`
+- Modify `exact/path/to/existing.py:123-145`
+- Test `tests/exact/path/to/test.py`
 
-- [ ] **Step 1: Write the failing test**
+- [ ] **Step 1. Write the failing test**
 
 ```python
 def test_specific_behavior():
@@ -107,24 +107,24 @@ def test_specific_behavior():
     assert result == expected
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [ ] **Step 2. Run test to verify it fails**
 
-Run: `pytest tests/path/test.py::test_name -v`
-Expected: FAIL with "function not defined"
+Run `pytest tests/path/test.py::test_name -v`
+Expected failure with "function not defined"
 
-- [ ] **Step 3: Write minimal implementation**
+- [ ] **Step 3. Write minimal implementation**
 
 ```python
 def function(input):
     return expected
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [ ] **Step 4. Run test to verify it passes**
 
-Run: `pytest tests/path/test.py::test_name -v`
-Expected: PASS
+Run `pytest tests/path/test.py::test_name -v`
+Expected status: PASS
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 5. Commit**
 
 ```bash
 git add tests/path/test.py src/path/file.py
