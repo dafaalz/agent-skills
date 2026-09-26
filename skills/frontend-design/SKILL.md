@@ -1,6 +1,6 @@
 ---
 name: frontend-design
-description: Use when building frontend interfaces, styling layouts with Tailwind CSS, establishing visual tokens, generating DESIGN.md, or selecting UI libraries.
+description: Use when building frontend interfaces, styling layouts with Tailwind CSS, establishing visual tokens, generating DESIGN.md, or selecting UI libraries. Don't use for backend API implementation, database migrations, or server configuration.
 ---
 
 # Frontend design

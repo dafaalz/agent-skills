@@ -1,6 +1,6 @@
 ---
 name: ui-ux-review
-description: Use when auditing user interfaces and user experience, web accessibility standards, CSS layout architecture, cognitive friction, or design token compliance.
+description: Use when auditing user interfaces and user experience, web accessibility standards, CSS layout architecture, cognitive friction, or design token compliance. Don't use for backend logic review, database schema auditing, or build pipeline debugging.
 ---
 
 # UI and UX review

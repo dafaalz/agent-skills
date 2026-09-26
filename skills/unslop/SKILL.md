@@ -1,6 +1,6 @@
 ---
 name: unslop
-description: Use when drafting prose, reviewing text for AI patterns, editing documentation, rewriting generic AI output, or cutting LLM writing habits.
+description: Use when drafting prose, reviewing text for AI patterns, editing documentation, rewriting generic AI output, or cutting LLM writing habits. Don't use for functional code refactoring, schema migrations, or terminal command optimization.
 ---
 
 # Unslop

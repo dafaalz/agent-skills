@@ -1,6 +1,6 @@
 ---
 name: testing-patterns
-description: Use when writing automated tests, creating test fixtures, configuring test mocks or testcontainers, implementing contract tests, or refactoring test suites.
+description: Use when writing automated tests, creating test fixtures, configuring test mocks or testcontainers, implementing contract tests, or refactoring test suites. Don't use for manual QA testing plans, load testing scripts, or visual regression screenshot testing.
 ---
 
 # Testing patterns

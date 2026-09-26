@@ -1,6 +1,6 @@
 ---
 name: technical-writing
-description: Use when writing or reviewing human-facing documentation, RFCs, README files, PR descriptions, or technical guides.
+description: Use when writing or reviewing human-facing documentation, RFCs, README files, PR descriptions, or technical guides. Don't use for drafting internal agent instructions, prompt runbooks, or skill documentation.
 ---
 
 # Technical writing

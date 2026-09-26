@@ -1,6 +1,6 @@
 ---
 name: brainstorming
-description: Use when scoping new features, exploring architectural requirements, planning refactors, stress-testing design decisions, or designing greenfield components before writing implementation plans or code.
+description: Use when scoping new features, exploring architectural requirements, planning refactors, stress-testing design decisions, or designing greenfield components before writing implementation plans or code. Don't use for direct implementation, writing code, or generating commit messages.
 ---
 
 # Brainstorming ideas into designs

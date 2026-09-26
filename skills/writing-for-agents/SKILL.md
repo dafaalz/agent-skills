@@ -1,6 +1,6 @@
 ---
 name: writing-for-agents
-description: Use when drafting or editing agent instructions, AGENTS.md, CLAUDE.md, prompt runbooks, context pointers, or skill documentation.
+description: Use when drafting or editing agent instructions, AGENTS.md, CLAUDE.md, prompt runbooks, context pointers, or skill documentation. Don't use for human marketing copy, general technical writing, or user-facing product manuals.
 ---
 
 # Writing for agents

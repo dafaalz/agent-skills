@@ -1,6 +1,6 @@
 ---
 name: codebase-design
-description: Use when designing module interfaces, evaluating abstraction depth, identifying code seams, or turning shallow pass-through wrappers into deep modules.
+description: Use when designing module interfaces, evaluating abstraction depth, identifying code seams, or turning shallow pass-through wrappers into deep modules. Don't use for syntax styling, single-line bug fixes, or minor formatting changes.
 ---
 
 # Codebase design

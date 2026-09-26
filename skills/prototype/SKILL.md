@@ -1,6 +1,6 @@
 ---
 name: prototype
-description: Use when prototyping divergent visual or interaction variants for a UI component, or comparing interactive UI explorations.
+description: Use when prototyping divergent visual or interaction variants for a UI component, or comparing interactive UI explorations. Don't use for production release hardening or performance auditing.
 disable-model-invocation: true
 ---
 

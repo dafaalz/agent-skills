@@ -1,6 +1,6 @@
 ---
 name: upsert-codebase-docs
-description: Use when creating or updating AGENTS.md and CODEBASE.md documentation files for a project, auditing documentation drift against git changes, or bootstrapping agent instructions for new repositories.
+description: Use when creating or updating AGENTS.md and CODEBASE.md documentation files for a project, auditing documentation drift against git changes, or bootstrapping agent instructions for new repositories. Don't use for writing user guides, product changelogs, or external API documentation.
 ---
 
 # Upsert codebase docs

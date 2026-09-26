@@ -1,6 +1,6 @@
 ---
 name: laravel
-description: Use when building, modifying, reviewing, testing, or debugging Laravel applications, Eloquent queries, Artisan commands, Blade or Livewire components, Inertia adapters, Form Requests, migrations, or queue jobs.
+description: Use when building, modifying, reviewing, testing, or debugging Laravel applications, Eloquent queries, Artisan commands, Blade or Livewire components, Inertia adapters, Form Requests, migrations, or queue jobs. Don't use for non-PHP stacks, static sites, or plain WordPress themes.
 ---
 
 # Laravel

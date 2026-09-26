@@ -1,6 +1,6 @@
 ---
 name: copy-web-design
-description: Use when reverse-engineering, deconstructing, benchmarking, or replicating web designs, design tokens, layout structures, animations, or components from URLs or screenshots.
+description: Use when reverse-engineering, deconstructing, benchmarking, or replicating web designs, design tokens, layout structures, animations, or components from URLs or screenshots. Don't use for backend architecture or database design.
 ---
 
 # Copy web design
