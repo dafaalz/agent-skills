@@ -93,6 +93,13 @@ class TestConsolidation(unittest.TestCase):
         self.assertIn("EXPO_PUBLIC_", content)
         self.assertIn("VITE_", content)
 
+    def test_protocols_covers_payment_and_raw_body(self):
+        target = os.path.join(SKILLS_DIR, "security-audit", "references", "protocols-rpc-and-messaging.md")
+        with open(target, "r", encoding="utf-8") as f:
+            content = f.read()
+        self.assertIn("express.raw", content)
+        self.assertIn("Stripe Price IDs", content)
+
 
 if __name__ == "__main__":
     unittest.main()

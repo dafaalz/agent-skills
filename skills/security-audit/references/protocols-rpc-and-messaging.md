@@ -61,8 +61,16 @@ A stream, subscription, batch, or bulk message is authorized once, then later it
 ### Callback and webhook integrity verification
 
 Audit incoming and outgoing webhook integrations:
-- Verify that webhook receivers enforce constant-time HMAC signature verification (e.g. `crypto.timingSafeEqual`) across payload bytes.
+- Verify that webhook receivers enforce constant-time HMAC signature verification across payload bytes.
+- Enforce raw body handling for signature calculation. Parsing JSON bodies before signature evaluation destroys byte fidelity and invalidates signature checks. Webhook endpoints must consume raw bodies via `express.raw({ type: 'application/json' })` or `await request.text()`.
 - Verify that incoming webhooks enforce timestamp validation and freshness replay windows to prevent message replaying.
+
+### Payment workflow and transaction integrity
+
+Audit checkout sessions, payment processing, and subscription lifecycle:
+- Reject client-submitted prices or quantities from request bodies. Enforce server-side product and price lookups using authoritative provider Price IDs, such as Stripe Price IDs.
+- Bind checkout session metadata exclusively on the server to prevent privilege escalation or tenant impersonation.
+- Verify subscription tier and entitlement server-side against database records synchronized by verified webhooks rather than trusting client-provided state or stale login-time session tokens.
 
 ## Broker and queue isolation attack classes
 
