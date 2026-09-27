@@ -85,6 +85,14 @@ class TestConsolidation(unittest.TestCase):
                 f"Missing required file: {skill_name}/{rel_path}"
             )
 
+    def test_credentials_hygiene_covers_client_prefixes(self):
+        target = os.path.join(SKILLS_DIR, "security-audit", "references", "credentials-hygiene.md")
+        with open(target, "r", encoding="utf-8") as f:
+            content = f.read()
+        self.assertIn("NEXT_PUBLIC_", content)
+        self.assertIn("EXPO_PUBLIC_", content)
+        self.assertIn("VITE_", content)
+
 
 if __name__ == "__main__":
     unittest.main()

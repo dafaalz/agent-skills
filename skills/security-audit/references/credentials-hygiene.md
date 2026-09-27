@@ -37,3 +37,25 @@ Scan the working directory before committing code:
    git diff --staged | grep -Ei "(api[_-]?key|secret|password|bearer|private[_-]?key)"
    ```
 3. If an API key was committed previously, revoke and rotate the credential immediately. Overwriting history alone does not neutralize a leaked secret.
+
+## 4. Client-side build and bundle prefix hygiene
+
+Client framework prefixes inline environment variables into public browser bundles and mobile binary packages at build time:
+
+| Framework | Prefix | Exposure mode |
+|---|---|---|
+| Next.js | `NEXT_PUBLIC_` | Inlined into client JavaScript bundles |
+| Vite | `VITE_` | Inlined into static frontend output |
+| Expo / React Native | `EXPO_PUBLIC_` | Baked into packaged mobile application binaries |
+| Create React App | `REACT_APP_` | Inlined into client build artifacts |
+
+### Credential placement boundaries
+- Safe client values: public analytics identifiers, Stripe publishable keys (`pk_live_*`, `pk_test_*`), Firebase client configurations (`apiKey`, `projectId`), and Supabase anonymous keys (`anon`).
+- Forbidden client values: Supabase `service_role` keys, Stripe secret keys (`sk_live_*`), database connection strings, third-party API private keys, JWT signing keys, and OAuth client secrets.
+
+### Search heuristics for leaked client variables
+Scan repository configurations for secret tokens bound to public prefixes:
+```bash
+grep -rEi "(NEXT_PUBLIC_|VITE_|EXPO_PUBLIC_|REACT_APP_)[A-Z0-9_]*(SECRET|KEY|TOKEN|PASSWORD|PRIVATE)" .
+```
+
