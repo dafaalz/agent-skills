@@ -139,6 +139,90 @@ Pad content away from physical obstructions using CSS environment variables:
 }
 ```
 
+### Mobile drawer transitions and focus orchestration
+
+Mobile drawers, bottom sheets, and slide-over panels present distinct timing challenges between visibility changes, CSS transitions, and browser focus management.
+
+#### Engine isolation
+
+Never mix CSS transition utility classes such as `transition` or `duration-300` with JavaScript animation libraries or touch drag scripts on the same element. Mixing both engines creates conflicting property mutations and frame drops. Assign full transform control either to CSS classes or to JavaScript transforms.
+
+#### Reflow flush requirement
+
+When revealing an off-screen element, removing `hidden` or `display: none` in the same execution turn as removing `translate-y-full` skips the transition in WebKit and Blink. Browsers coalesce DOM mutations and apply final visible coordinates without animating the entry.
+
+Scheduling class changes via `requestAnimationFrame` remains unreliable under heavy main thread load. Force an immediate synchronous layout calculation between removing `hidden` and releasing the transform offset class. Evaluating `void element.offsetHeight` forces the rendering engine to recalculate geometry so subsequent transform class removals animate smoothly from off-screen coordinates.
+
+#### State retention on exit
+
+When dismissing a drawer, retain the off-screen transform class after hiding the element. Never strip dismissal classes when applying `hidden`. Keeping dismiss classes on hidden elements guarantees subsequent open operations start from their off-screen baseline rather than flashing into view.
+
+#### Focus timing and virtual keyboard layout shifts
+
+Focusing interactive elements while a drawer moves across the viewport causes visual defects because browsers scroll moving elements into view and jump the viewport. Auto-focusing a text input on mobile devices triggers the virtual software keyboard immediately. The keyboard shrinks visual viewport height (`100dvh`) and disrupts the entrance animation.
+
+Enforce these focus rules on mobile drawers:
+1. Defer calling `.focus()` until the entry transition completes fully. Add 10ms of buffer past the CSS transition duration.
+2. Always pass `{ preventScroll: true }` into `.focus()` to prevent browsers from scrolling the window during focus assignment.
+3. On touch viewports matching `(pointer: coarse)` or screen widths below 640px, never auto-focus text inputs. Focus the modal container or the close button instead. Allow users to tap input fields explicitly when ready.
+
+#### Standard reference implementation
+
+```javascript
+class MobileDrawer {
+  constructor(element, durationMs = 300) {
+    this.element = element;
+    this.durationMs = durationMs;
+    this.focusTimer = null;
+  }
+
+  open() {
+    clearTimeout(this.focusTimer);
+
+    // 1. Reveal element while keeping parked off-screen coordinates
+    this.element.classList.remove('hidden');
+
+    // 2. Force layout reflow before releasing offset classes
+    void this.element.offsetHeight;
+
+    // 3. Trigger transition by removing off-screen class
+    this.element.classList.remove('translate-y-full');
+
+    // 4. Orchestrate focus after animation completes
+    const isTouch = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 640;
+    this.focusTimer = setTimeout(() => {
+      if (isTouch) {
+        // Focus container or close button to protect virtual keyboard viewport
+        const closeBtn = this.element.querySelector('[data-drawer-close]');
+        if (closeBtn) {
+          closeBtn.focus({ preventScroll: true });
+        } else {
+          this.element.focus({ preventScroll: true });
+        }
+      } else {
+        // Desktop viewports can focus the first interactive control
+        const input = this.element.querySelector('input, textarea, select, button');
+        if (input) {
+          input.focus({ preventScroll: true });
+        }
+      }
+    }, this.durationMs + 10);
+  }
+
+  close() {
+    clearTimeout(this.focusTimer);
+
+    // 1. Move back off-screen using hardware acceleration
+    this.element.classList.add('translate-y-full');
+
+    // 2. Hide element after transition completes and retain parked coordinates
+    setTimeout(() => {
+      this.element.classList.add('hidden');
+    }, this.durationMs);
+  }
+}
+```
+
 ---
 
 ## 2. React Native and Expo motion architecture
@@ -284,3 +368,6 @@ Validate mobile implementations against this checklist:
 | Runtime thread | Gesture handlers trigger zero React re-renders and invoke no JS callbacks per frame |
 | Haptics | Vibrations fire on the visual state frame and execute at most once per user gesture |
 | Native feel | Tested on physical hardware rather than browser responsive emulation |
+| Drawer transitions | Layout reflow flushed with `void el.offsetHeight` before removing offset classes |
+| Focus timing | Focus deferred past transition duration with `{ preventScroll: true }` |
+| Virtual keyboard | No auto-focusing text inputs on coarse pointer viewports |

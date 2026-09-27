@@ -84,6 +84,8 @@ CSS transitions outperform JavaScript under load because they execute on the GPU
 
 For complex headless UI primitives (toasts, drawers, command menus), rely on battle-tested libraries such as Sonner or Vaul to manage ARIA attributes and focus traps properly.
 
+Never mix CSS transition utility classes (`transition`, `duration-*`) with JavaScript animation libraries on the same node. Assign full control either to CSS classes or to JavaScript transforms.
+
 Completion criterion. The cheapest capable tool selected, preferring compositor CSS transitions before JavaScript animation libraries.
 
 ### Step 4. Hardware acceleration and property scoping
@@ -100,6 +102,8 @@ Completion criterion. The cheapest capable tool selected, preferring compositor 
 ```
 
 - **Avoid parent CSS variable updates during gestures.** Setting custom properties on parent elements triggers style recalculation across all child elements. Apply inline transforms directly to the target element.
+- **Force layout reflow before unhiding off-screen transforms.** Trigger `void element.offsetHeight` between removing `hidden` and releasing offset classes (`translate-y-full`) to prevent skipped initial frames in WebKit and Blink.
+- **Retain parked off-screen coordinates during exit.** Keep dismiss classes on hidden elements so subsequent entries start from their off-screen baseline.
 
 Completion criterion. Motion styles animate `transform` and `opacity` exclusively with valid trigger-anchored transform origins.
 
@@ -166,6 +170,8 @@ Include accessibility and pointer checks in all delivered animation styles:
 
 Never branch conditionally on `useReducedMotion()` in JSX before initial hydration. Tag swapping (`if (reduce) return <div>` versus `<motion.div>`) triggers React 19 hydration mismatches and traps server-rendered `opacity: 0` in permanent invisibility. Use identical DOM trees with `[data-motion-enter]` attribute contracts and CSS `!important` overrides.
 
+Defer mobile focus past transition completion. Delay `.focus({ preventScroll: true })` until the entry transition completes (duration + 10ms). Never auto-focus text inputs on touch viewports (`pointer: coarse` or `< 640px`) to prevent virtual keyboard layout jumps. Focus the container or close button instead.
+
 Completion criterion. Styles include `@media (prefers-reduced-motion: reduce)` overrides without conditional JSX tag branching.
 
 ## Review format
@@ -202,6 +208,11 @@ Verify code against this checklist before delivering. Every item represents an a
 | Hard stops at drag boundaries                                      | Elastic boundary resistance                                             |
 | Pure distance-only swipe dismissals                                | Velocity-based dismissal calculation                                    |
 | JSX branching on `useReducedMotion()`                              | Attribute contract `[data-motion-enter]` with `!important` CSS override |
+| Mixing CSS transitions with JS transform engines on one node       | Choose one animation engine exclusively                                 |
+| Toggling off-screen classes in RAF without reflow                  | Call void el.offsetHeight before class release                          |
+| Stripping off-screen classes when hiding modals or drawers        | Retain dismiss classes while element is hidden                          |
+| Invoking .focus() on transforming elements mid-flight              | Defer focus past transition duration with { preventScroll: true }       |
+| Auto-focusing text fields on mobile modal drawers                  | Focus modal container or close button to protect viewport               |
 
 ## Quick verification checklist
 
