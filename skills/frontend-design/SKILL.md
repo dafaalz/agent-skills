@@ -141,8 +141,9 @@ Evaluate output against anti-slop criteria before completing work.
 - Score implementation on Philosophy, Hierarchy, Execution, Specificity, Restraint, and Variety.
 - Verify mobile responsiveness at 320px, 375px, 414px, and 768px.
 - Confirm zero uninstalled packages, zero fake metrics, and zero banned fonts.
+- Apply `references/impeccable-delta.md` checks 1 to 5 plus drift check 4 against project DESIGN.md and active CSS.
 
-Completion criterion. Interface satisfies all checklist checks with scores of 3 or higher across all evaluation criteria.
+Completion criterion. Interface satisfies all checklist checks with scores of 3 or higher across all evaluation criteria and delta checks 1 to 5 pass.
 
 ## Specialized workflow pointers
 
