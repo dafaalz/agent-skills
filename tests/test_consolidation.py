@@ -100,6 +100,13 @@ class TestConsolidation(unittest.TestCase):
         self.assertIn("express.raw", content)
         self.assertIn("Stripe Price IDs", content)
 
+    def test_mobile_covers_keychain_and_proxy(self):
+        target = os.path.join(SKILLS_DIR, "security-audit", "references", "desktop-mobile-and-local-ipc.md")
+        with open(target, "r", encoding="utf-8") as f:
+            content = f.read()
+        self.assertIn("AsyncStorage", content)
+        self.assertIn("expo-secure-store", content)
+
 
 if __name__ == "__main__":
     unittest.main()

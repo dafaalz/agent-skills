@@ -100,6 +100,10 @@ The app checks a file path then follows replacement, symlink, mount, or normaliz
 
 A keychain or keystore item, token file, backup, log, clipboard, notification preview, or local configuration is readable by another app, profile, or user with less authority. Plaintext readable only by the same intended OS account is not automatically a vulnerability; state the lower-trust reader and credential power.
 
+For mobile applications:
+- Prohibit plaintext token persistence via unencrypted stores like `AsyncStorage`. Mandate encrypted hardware-backed storage via `expo-secure-store` or `react-native-keychain`.
+- Prohibit embedding third-party API secret keys inside mobile client applications. Bytecode compilation does not protect secrets against binary extraction. Mandate backend proxy routing for all third-party services.
+
 ## Universal moves
 
 - Enumerate every process, app component, local endpoint, URI scheme, file association, webview origin, and helper. Record OS identity, runtime privilege, caller, and callable operation.
