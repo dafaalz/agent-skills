@@ -76,8 +76,9 @@ Establish review boundaries, blast radius, and user intent before inspecting cod
 4. Check for existing design guidelines (`AGENTS.md`, `DESIGN.md`, Storybook rules).
 5. Identify primary user goals, baseline mental models, and optimal step counts.
 6. Record excluded files, third-party redirects, and out-of-scope backend processes.
+7. Write or load `references/operate-brief.md` for operate and read routes before inspecting code.
 
-Completion criterion. Target surfaces, active styling engine, project guidelines, user goals, and optimal step counts confirmed.
+Completion criterion. Target surfaces, active styling engine, project guidelines, user goals, optimal step counts, and operate brief confirmed.
 
 ### Step 2. UI mechanics audit
 
@@ -116,8 +117,9 @@ Consolidate findings into a structured report using `references/report-format.md
 5. Project impact on usability metrics including Task Completion Rate (TCR), Lostness, and Drop-off rate.
 6. Cap findings at a maximum of 12 items to prevent cognitive fatigue and prioritize blockers.
 7. Assign an `Approve` or `Changes Requested` final verdict.
+8. Run finish review in fresh context with request, answers, artifact path, screenshots, direction contract, and hook findings as inputs. Inherit no transcript.
 
-Completion criterion. Formatted report with categorized findings, Before-After-Why evidence tables, concrete resolutions, and final verdict.
+Completion criterion. Formatted report with categorized findings, Before-After-Why evidence tables, concrete resolutions, final verdict, and isolated review inputs.
 
 ## Five-dimension design critique scorecard
 
