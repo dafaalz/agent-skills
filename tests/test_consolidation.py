@@ -49,6 +49,7 @@ REQUIRED_REFERENCES = [
     ("s13n", "references/divergence-taxonomy.md"),
     ("i18n", "references/intl-language.md"),
     ("summarize", "SKILL.md"),
+    ("security-audit", "references/baas-and-fullstack-frameworks.md"),
 ]
 
 
