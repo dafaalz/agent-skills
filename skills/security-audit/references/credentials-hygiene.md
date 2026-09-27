@@ -50,8 +50,8 @@ Client framework prefixes inline environment variables into public browser bundl
 | Create React App | `REACT_APP_` | Inlined into client build artifacts |
 
 ### Credential placement boundaries
-- Safe client values: public analytics identifiers, Stripe publishable keys (`pk_live_*`, `pk_test_*`), Firebase client configurations (`apiKey`, `projectId`), and Supabase anonymous keys (`anon`).
-- Forbidden client values: Supabase `service_role` keys, Stripe secret keys (`sk_live_*`), database connection strings, third-party API private keys, JWT signing keys, and OAuth client secrets.
+- Safe client values include public analytics identifiers, Stripe publishable keys (`pk_live_*`, `pk_test_*`), Firebase client configurations (`apiKey`, `projectId`), and Supabase anonymous keys (`anon`).
+- Forbidden client values include Supabase `service_role` keys, Stripe secret keys (`sk_live_*`), database connection strings, third-party API private keys, JWT signing keys, and OAuth client secrets.
 
 ### Search heuristics for leaked client variables
 Scan repository configurations for secret tokens bound to public prefixes:
