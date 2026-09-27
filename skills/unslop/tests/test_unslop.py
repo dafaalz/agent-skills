@@ -51,16 +51,17 @@ class TestUnslopCompliance(unittest.TestCase):
         self.assertTrue(os.path.isdir(REFERENCES_DIR), "references/ directory must exist")
         indonesian_ref = os.path.join(REFERENCES_DIR, "indonesian-patterns.md")
         self.assertTrue(os.path.exists(indonesian_ref), "indonesian-patterns.md must exist")
-
-        with open(indonesian_ref, "r", encoding="utf-8") as f:
-            ref_content = f.read()
-
-        self.assertNotIn("\u2014", ref_content, "Em dash found in indonesian-patterns.md")
-        self.assertNotIn("\u2013", ref_content, "En dash found in indonesian-patterns.md")
+        slop_ref = os.path.join(REFERENCES_DIR, "slop-patterns.md")
+        self.assertTrue(os.path.exists(slop_ref), "slop-patterns.md must exist")
 
         emojis = ["❌", "✅", "🚀", "💡", "⚠️", "📌"]
-        for emoji in emojis:
-            self.assertNotIn(emoji, ref_content, f"Emoji {emoji} found in indonesian-patterns.md")
+        for ref_path in [indonesian_ref, slop_ref]:
+            with open(ref_path, "r", encoding="utf-8") as f:
+                ref_content = f.read()
+            self.assertNotIn("\u2014", ref_content, f"Em dash found in {os.path.basename(ref_path)}")
+            self.assertNotIn("\u2013", ref_content, f"En dash found in {os.path.basename(ref_path)}")
+            for emoji in emojis:
+                self.assertNotIn(emoji, ref_content, f"Emoji {emoji} found in {os.path.basename(ref_path)}")
 
     def test_sentence_case_headings(self):
         allowed_proper_nouns = {
