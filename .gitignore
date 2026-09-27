@@ -27,3 +27,6 @@ Icon
 # Python cache
 __pycache__/
 *.py[cod]
+
+# Agent documentation & planning artifacts
+docs/
