@@ -107,6 +107,12 @@ class TestConsolidation(unittest.TestCase):
         self.assertIn("AsyncStorage", content)
         self.assertIn("expo-secure-store", content)
 
+    def test_skill_registers_baas_reference(self):
+        target = os.path.join(SKILLS_DIR, "security-audit", "SKILL.md")
+        with open(target, "r", encoding="utf-8") as f:
+            content = f.read()
+        self.assertIn("baas-and-fullstack-frameworks.md", content)
+
 
 if __name__ == "__main__":
     unittest.main()

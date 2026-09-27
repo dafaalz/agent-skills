@@ -77,6 +77,7 @@ Consult specific reference guides on demand based on target architecture:
 | Desktop, mobile, and IPC | `references/desktop-mobile-and-local-ipc.md` | Deep links, webview bridges, Electron, IPC daemons, helpers |
 | Protocols, RPC, and messaging | `references/protocols-rpc-and-messaging.md` | gRPC, Protobuf, GraphQL transports, webhooks, message queues |
 | Resource exhaustion | `references/resource-exhaustion-and-availability.md` | ReDoS, amplification, memory leaks, queue starvation |
+| BaaS and fullstack frameworks | `references/baas-and-fullstack-frameworks.md` | Next.js, Supabase, Firebase, Convex, Prisma, Server Actions |
 
 ## Full audit workflow
 
