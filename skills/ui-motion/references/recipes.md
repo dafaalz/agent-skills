@@ -525,6 +525,131 @@ export function SwipeCard({ onDismiss, children }: SwipeCardProps) {
     </motion.div>
   );
 }
+---
+
+## 21. Enterprise productive and expressive timing tokens
+
+Enterprise platforms divide motion into two explicit tiers:
+
+```css
+:root {
+  /* Productive motion tokens (data grids, menus, dropdowns, forms) */
+  --duration-fast-01: 70ms;
+  --duration-fast-02: 110ms;
+  --duration-moderate-01: 150ms;
+  --duration-moderate-02: 240ms;
+  --ease-productive: cubic-bezier(0.2, 0, 0.38, 0.9);
+
+  /* Expressive motion tokens (modals, landing page cards, milestone toasts) */
+  --duration-slow-01: 400ms;
+  --duration-slow-02: 700ms;
+  --ease-expressive: cubic-bezier(0, 0, 0.3, 1);
+}
 ```
 
+Apply productive tokens to repetitive daily workflow components. Reserve expressive tokens for infrequent milestone events.
+
+---
+
+## 22. Safe reduced-motion duration collapse (0.01ms)
+
+Setting `animation: none !important` or `transition: none !important` suppresses browser `transitionend` and `animationend` events. When asynchronous JavaScript libraries or modal dialogs wait on `transitionend` promises before unmounting or resolving state, `transition: none` hangs the application logic indefinitely.
+
+Collapse the duration to a sub-millisecond value instead of canceling the event:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+```
+
+This guarantees `transitionend` and `animationend` events fire immediately on the next event loop tick, resolving async promises without visual motion.
+
+---
+
+## 23. Off-thread vector animation runtime (dotLottie and Rive)
+
+Complex vector graphics, interactive brand illustrations, and animated micro-icons consume significant CPU memory when rendered on the main DOM thread.
+
+Transfer vector rendering to an isolated Web Worker via `OffscreenCanvas`:
+
+```jsx
+import * as React from 'react';
+import { DotLottieWorker } from '@lottiefiles/dotlottie-web';
+
+export function WorkerVectorIcon({ src }: { src: string }) {
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+
+  React.useEffect(() => {
+    if (!canvasRef.current) return;
+
+    const dotLottie = new DotLottieWorker({
+      canvas: canvasRef.current,
+      src,
+      autoplay: true,
+      loop: true,
+      renderConfig: {
+        devicePixelRatio: Math.min(window.devicePixelRatio, 2),
+      },
+    });
+
+    return () => {
+      dotLottie.destroy();
+    };
+  }, [src]);
+
+  return <canvas ref={canvasRef} width={120} height={120} className="w-12 h-12" />;
+}
+```
+
+Worker canvas rendering offloads parsing and rasterization passes from the browser main thread, preserving 60Hz and 120Hz frame rates during background React reconciliations.
+
+---
+
+## 24. Consecutive warm-start tooltips
+
+When hovering across a toolbar, the first tooltip requires a deliberate delay (300ms) to avoid visual flicker. Once any tooltip opens, adjacent tooltips must appear immediately without open delay or entrance motion:
+
+```jsx
+import * as React from 'react';
+
+const TooltipGroupContext = React.createContext<{
+  hasActiveTooltip: boolean;
+  setHasActiveTooltip: (active: boolean) => void;
+}>({
+  hasActiveTooltip: false,
+  setHasActiveTooltip: () => {},
+});
+
+export function TooltipGroup({ children }: { children: React.ReactNode }) {
+  const [hasActiveTooltip, setHasActiveTooltip] = React.useState(false);
+  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  function handleStateChange(isOpen: boolean) {
+    if (isOpen) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      setHasActiveTooltip(true);
+    } else {
+      timeoutRef.current = setTimeout(() => {
+        setHasActiveTooltip(false);
+      }, 400); // 400ms grace period before resetting initial delay
+    }
+  }
+
+  return (
+    <TooltipGroupContext.Provider value={{ hasActiveTooltip, setHasActiveTooltip: handleStateChange }}>
+      <div className="flex gap-1">{children}</div>
+    </TooltipGroupContext.Provider>
+  );
+}
+```
+
+In the tooltip item, conditionally set entrance duration to 0ms when `hasActiveTooltip` is true. This makes toolbar exploration instantaneous while protecting the interface against accidental hover triggers.
 
