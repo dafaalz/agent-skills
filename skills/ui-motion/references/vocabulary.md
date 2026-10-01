@@ -20,6 +20,12 @@ Use this table to map user descriptions to concrete animation patterns:
 | Smooth reveal of image or container on viewport entry | Scroll reveal | Content unmasks once as it enters screen viewports | Animate `clip-path: inset(0 0 100% 0)` to `inset(0 0 0 0)` once via IntersectionObserver |
 | Elements snap between values without bouncing | Critically damped spring | Physical spring settling cleanly at the target endpoint without oscillating | Spring configuration with damping ratio `1.0` and response `0.3s` to `0.4s` |
 | Bouncy settling on thrown objects | Under-damped spring | Physical spring exhibiting controlled overshoot after momentum handoffs | Spring configuration with damping ratio `0.8` and response `0.3s` to `0.4s` |
+| Snappy task motion in enterprise dashboards | Productive motion | Minimal duration transition designed for high-frequency utility | Use 70ms to 240ms duration with asymmetric ease-out curves |
+| Fluid brand transition on landing pages or modals | Expressive motion | Stylized animation guiding user attention during significant state changes | Use 350ms to 500ms duration with emphasized curves or controlled spring bounce |
+| Desktop title bar dragging follows cursor with zero lag | Non-client drag region | OS window manager handles hit-testing directly without JavaScript IPC | Apply `-webkit-app-region: drag` and exclude buttons with `no-drag` |
+| Toolbar tooltips open instantly after the first one is open | Warm-start tooltip | Skip delay and entrance transition when cursor travels across sibling triggers | Set `transition-duration: 0ms` while tooltip group has an active target |
+| Gesture updates stay 120fps during heavy JS parsing | UI thread isolation | Touch callbacks and transforms calculate directly on platform UI thread | Use Reanimated 4 worklets, Compose graphicsLayer lambdas, or compositor transforms |
+| Screen movement causes dizziness or vestibular discomfort | Optical flow conflict | Large-area motion triggers mismatch between retinal signals and inner ear | Replace 3D scaling and parallax scrolling with 2D opacity crossfades |
 
 ---
 
@@ -41,6 +47,16 @@ When multiple terms appear similar, use these structural distinctions:
 
 - **Shared element transition.** Animates an element across distinct pages or routes, creating visual continuity between thumbnail and full screen detail views.
 - **Layout animation.** Animates positional and dimensional adjustments within a single view when DOM sibling nodes insert, remove, or reorder.
+
+### Productive motion versus Expressive motion
+
+- **Productive motion.** Applied to everyday task workflows, dropdowns, buttons, toggles, and data tables. Keeps durations under 240ms, avoids overshoot, and prioritizes efficiency.
+- **Expressive motion.** Applied to landmark transitions, milestone celebrations, modal dialogues, and onboarding. Uses durations between 300ms and 500ms with spatial trajectory and subtle spring dynamics.
+
+### Off-Main-Thread Animation (OMTA) versus Main-thread animation
+
+- **OMTA.** Animations running exclusively on the browser GPU compositor thread (transforms and opacity). Immune to JavaScript thread freezes or heavy DOM rendering.
+- **Main-thread animation.** Animations modifying layout properties (`width`, `height`, `top`, `left`, `margin`) or driven by JavaScript intervals. Vulnerable to dropped frames under CPU workload.
 
 ---
 
