@@ -51,13 +51,20 @@ Animate `transform` and `opacity` exclusively to remain on the compositor thread
 * Heavy JavaScript animation loops blocking presentation delay and degrading Interaction to Next Paint (INP) beyond the 200ms threshold.
 * Indiscriminate `will-change` declarations causing layer explosion and VRAM exhaustion.
 * Display list invalidations in Chromium cc pipeline from simultaneous DOM mutations during active motion.
+* WebKit layer backing store memory saturation exceeding 16,777,216 pixels per canvas or the 256MB WebContent iOS watchdog ceiling.
+* Firefox Gecko OMTA dropping hardware acceleration when box-model properties animate concurrently on the same DOM element.
 
-### 6. Accessibility and SSR hydration safety
+### 6. Accessibility, WCAG 2.2, and vestibular safety
 Audit candidate code against these constraints:
-* Presence of `@media (prefers-reduced-motion: reduce)` fallbacks.
-* Absence of conditional JSX tag branching (`if (reduce) return <div>` versus `<motion.div>`) that triggers React 19 hydration mismatches and permanently locks server-rendered `opacity: 0` elements into invisibility.
-* Standardized attribute contract hooks (`[data-motion-enter]`) backed by `!important` CSS overrides.
-* Hover transitions gated behind `@media (hover: hover) and (pointer: fine)` to protect touch devices.
+* **WCAG 2.2 SC 2.2.2 (Pause, Stop, Hide).** Any autonomous motion, scrolling, or auto-updating content lasting longer than 5000ms must supply accessible controls to pause, stop, or hide. Auto-updating data streams carry zero grace period.
+* **WCAG 2.2 SC 2.3.1 (Three Flashes or Below Threshold).** Visual transitions must never flash more than 3 times in any 1-second period across any screen area exceeding 87,296 contiguous pixels.
+* **WCAG 2.2 SC 2.3.3 (Animation from Interactions).** Non-essential spatial animations triggered by user interaction must respect user disablement. Essential animations (such as direct manipulation drag displacement) remain exempt.
+* **Vestibular optical flow protection.** Replace full-screen 3D zooms, rotational vortexes, and aggressive parallax scrolling with gentle 2D opacity crossfades to prevent inner ear otolith conflict.
+* **Safe 0.01ms duration collapse.** Avoid blanket `animation: none !important` resets that suppress `transitionend` events and hang asynchronous JavaScript promises. Use `0.01ms` duration collapse instead.
+* **Presence of `@media (prefers-reduced-motion: reduce)` fallbacks.**
+* **Absence of conditional JSX tag branching** (`if (reduce) return <div>` versus `<motion.div>`) that triggers React 19 hydration mismatches and permanently locks server-rendered `opacity: 0` elements into invisibility.
+* **Standardized attribute contract hooks** (`[data-motion-enter]`) backed by `!important` CSS overrides.
+* **Hover transitions gated** behind `@media (hover: hover) and (pointer: fine)` to protect touch devices.
 
 ### 7. Cohesion and tokens
 Easing curves and duration scales must live as centralized tokens. Audit for duplicated cubic-bezier definitions, isolated bouncy interactions inside rigid data tools, simultaneous group introductions lacking stagger, and abrupt crossfades.
