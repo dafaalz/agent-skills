@@ -113,6 +113,23 @@ When an animation solver requires relative velocity, normalize by remaining disp
 relativeVelocity = gestureVelocity / (targetValue - currentValue)
 ```
 
+### WAAPI gesture interruption with commitStyles
+
+Calling `animation.cancel()` on an active Web Animations API instance resets the element instantly to its stylesheet baseline, causing an abrupt jump. Preserve the live presentation geometry by invoking `commitStyles()` immediately before cancellation:
+
+```js
+function interruptAnimation(animation, element) {
+  // 1. Snapshot live computed styles directly into inline style attributes
+  animation.commitStyles();
+
+  // 2. Cancel the animation player cleanly without visual snapback
+  animation.cancel();
+
+  // 3. Query the retained transform coordinate for continuous retargeting
+  const currentTransform = element.style.transform;
+}
+```
+
 ## 6. Spring physics calibration
 
 Use spring physics rather than fixed-duration easing curves for interactive UI components. Configure springs with damping ratio and response duration.
@@ -128,14 +145,27 @@ Production parameter reference:
 | Drawers and bottom sheets | 0.8 to 1.0 | 0.3 |
 | Momentum flick or card swipe | 0.8 | 0.4 |
 
-Spring configuration alternatives:
+Spring configuration alternatives across platforms:
 
 ```js
-/* Apple style, predictable UI feel */
-{ type: "spring", duration: 0.5, bounce: 0.2 }
+/* Web (Motion) */
+{ type: "spring", duration: 0.4, bounce: 0.15 }
 
-/* Traditional physics, granular parameter control */
-{ type: "spring", mass: 1, stiffness: 100, damping: 10 }
+/* iOS SwiftUI */
+.spring(response: 0.35, dampingFraction: 0.85, blendDuration: 0.15)
+
+/* Android Jetpack Compose */
+spring(dampingRatio = 0.8f, stiffness = 380f)
+
+/* Windows 11 Composition (WinUI 3) */
+springAnimation.DampingRatio = 0.8f;
+springAnimation.Period = TimeSpan.FromMilliseconds(250);
+
+/* Linux Libadwaita (GTK4) */
+adw_spring_params_new(1.0, 1.0, 1.0) /* mass 1.0, stiffness 1.0, damping 1.0 (critically damped) */
+
+/* Flutter */
+SpringSimulation(SpringDescription(mass: 1, stiffness: 100, damping: 15), start, end, velocity)
 ```
 
 Keep bounce values between 0.1 and 0.3. Avoid heavy bounce in standard forms, data tables, or dashboards. Reserve bounce for playful actions or swipe dismissals.
