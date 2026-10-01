@@ -11,7 +11,7 @@ Design, build, audit, and optimize hardware-accelerated user interface motion.
 
 UI motion engineering delivers hardware-accelerated, physically grounded interface motion that preserves utility, improves spatial orientation, and avoids decorative bloat. Every motion must pass frequency gating, use the most performant execution layer, respect user accessibility preferences, and operate under strict duration budgets.
 
-Consult deep reference documents in references/ for recipes, gesture physics, mobile native environments, vocabulary mapping, Google rendering standards, and audit playbooks.
+Consult deep reference documents in references/ for recipes, gesture physics, mobile native environments, desktop platform pipelines, vocabulary mapping, Google rendering standards, and audit playbooks.
 
 ## Workflow router
 
@@ -24,6 +24,7 @@ Identify user intent and route execution immediately:
 5. **Mobile web and native platform motion.** Consult [references/mobile-web-and-native.md](references/mobile-web-and-native.md) for mobile Safari viewport sizing (`100dvh`), 300ms tap delay elimination, 16px input auto-zoom prevention, touch overscroll boundaries, and React Native Reanimated worklet UI thread isolation.
 6. **Translating informal animation vocabulary.** Consult [references/vocabulary.md](references/vocabulary.md) when the user describes an animation informally or by sensation rather than technical names.
 7. **Browser compositor and Google rendering standards.** Consult [references/google-standards.md](references/google-standards.md) when diagnosing Chromium layer explosion, auditing Core Web Vitals (INP and CLS) frame budgets, adopting Material Design 3 motion tokens, or implementing Android physics-based fling and spring animations.
+8. **Desktop native and platform motion.** Consult [references/desktop-and-platform.md](references/desktop-and-platform.md) for Windows 11 DWM compositor tokens, Mica backdrop rules, macOS AppKit `NSAnimationContext` atomic batching, Electron and Tauri non-client title bar dragging without IPC loop latency, and Linux Wayland buffer sync.
 
 ## Execution invariants
 
