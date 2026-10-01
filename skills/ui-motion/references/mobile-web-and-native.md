@@ -355,7 +355,54 @@ useKeyboardHandler({
 
 ---
 
-## 3. Verification criteria
+## 3. Jetpack Compose and Flutter Impeller native pipelines
+
+### Jetpack Compose draw-phase isolation
+
+Reading animated state in Compose during composition triggers recomposition of the entire composable tree on every frame.
+
+Isolate animated properties to the Draw phase using the lambda version of `Modifier.graphicsLayer`:
+
+```kotlin
+// Bad: triggers full recomposition on every animation frame
+val translationY by animateFloatAsState(targetValue)
+Box(modifier = Modifier.translationY(translationY))
+
+// Good: isolates updates strictly to the RenderNode draw phase
+val translationY = remember { Animatable(0f) }
+Box(
+    modifier = Modifier.graphicsLayer {
+        this.translationY = translationY.value
+    }
+)
+```
+
+Never read animated state values inside the parent composable body. Confining state reads inside `graphicsLayer { ... }` skips Recomposition and Layout passes, sending transforms directly to the hardware rendering pipeline.
+
+### Flutter Impeller rendering pipeline and VSYNC synchronization
+
+Flutter Impeller replaces Skia by pre-compiling all shaders ahead of time to eliminate runtime shader compilation jank:
+- **Avoid unbounded `saveLayer` calls.** Every `saveLayer` invocation creates a temporary offscreen framebuffer texture. Stacking multiple `BackdropFilter` widgets or dynamic opacity groups saturates mobile GPU fill rate.
+- **VSYNC synchronization.** Bind custom physics simulations to `TickerProvider` to synchronize calculations with the native display frame clock (16.67ms on 60Hz, 8.33ms on 120Hz).
+- **Direct momentum injection.** Pass pointer velocity directly to `SpringSimulation` when releasing drag gestures without artificial deceleration clamps.
+
+---
+
+## 4. Operating system accessibility flag synchronization
+
+Native mobile runtimes expose system accessibility preferences that must gate animations across native code:
+
+| Platform | Native API check | Recommended action |
+|---|---|---|
+| iOS | `UIAccessibility.isReduceMotionEnabled` | Substitute spatial transforms with alpha crossfades |
+| Android | `ValueAnimator.areAnimatorsEnabled()` | Check `Settings.Global.TRANSITION_ANIMATION_SCALE`, collapse durations when 0 |
+| Windows | `UISettings.AnimationsEnabled` | Listen to `AnimationsEnabledChanged` event and disable decorative transitions |
+
+When bridging native preferences to web views or hybrid shells, query these APIs during application bootstrap and forward status flags to JavaScript via root attributes (`data-reduce-motion="true"`).
+
+---
+
+## 5. Verification criteria
 
 Validate mobile implementations against this checklist:
 
@@ -366,6 +413,9 @@ Validate mobile implementations against this checklist:
 | Input zoom | Input text size is at least 16px on coarse pointer devices |
 | Tap highlight | WebKit tap highlight color is transparent |
 | Runtime thread | Gesture handlers trigger zero React re-renders and invoke no JS callbacks per frame |
+| Compose phase | Animated values read inside `Modifier.graphicsLayer { ... }` lambda |
+| Flutter Impeller | Zero unbounded `saveLayer` calls during interactive scroll or drag |
+| OS motion flag | Native `isReduceMotionEnabled` or `areAnimatorsEnabled()` checked and synchronized |
 | Haptics | Vibrations fire on the visual state frame and execute at most once per user gesture |
 | Native feel | Tested on physical hardware rather than browser responsive emulation |
 | Drawer transitions | Layout reflow flushed with `void el.offsetHeight` before removing offset classes |
