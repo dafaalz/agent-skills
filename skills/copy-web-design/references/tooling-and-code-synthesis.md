@@ -125,6 +125,13 @@ Synthesize extracted designs to one of two target stacks based on project constr
 * Media: Native `<picture>` tags with AVIF and WebP sources, reinforced by CSS `aspect-ratio`.
 * JavaScript: Vanilla ES Modules with zero runtime framework dependencies.
 
+### Target C. Standalone Single-File HTML Mirrors
+* Script CDN mapping: map dynamic npm dependencies to equivalent public CDN script tags placed in `<head>` before the inline application script.
+* DOM coordinate bindings: replace reactive state hooks (`useLayoutEffect`, `useState`) with direct element measurement properties (`offsetLeft`, `offsetTop`, `offsetWidth`, `offsetHeight`) and register dynamic repositioning callbacks to `window.resize`.
+* Scroll containment: add `data-lenis-prevent="true"` to dialog elements and call `lenisInstance.stop()` on modal show, followed by `lenisInstance.start()` on modal dismiss.
+* Automation safety: avoid running inline shell strings containing unescaped `${...}` JavaScript template expressions. Use quoted heredocs (`python3 - << 'EOF'`) or write standalone script files to prevent shell variable substitution.
+* Syntax audit: validate standalone HTML `<script>` contents using `node -e` parsing before declaring task completion.
+
 ---
 
 ## Synthesis Execution Steps

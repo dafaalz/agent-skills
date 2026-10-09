@@ -79,8 +79,14 @@ Synthesize the final production code into the target framework:
 2. Sanitize vector assets. Process all inline SVGs through DOMPurify and SVGO, replacing fixed fills with `currentColor`.
 3. Audit accessibility. Run Axe-core checks. Verify keyboard tab order, modal focus traps, and visible focus rings (`:focus-visible`).
 4. Validate performance. Run automated Lighthouse audits. Confirm zero Cumulative Layout Shift, passing Largest Contentful Paint, and low Interaction to Next Paint.
+5. Replicate standalone single-file HTML mockups. When exporting or synchronizing framework code (React, Next.js) to a single-file HTML document:
+   - Audit external runtime dependencies. Map npm packages to matching public CDN scripts placed before application logic, such as Lenis smooth scroll (`https://unpkg.com/lenis@1.1.18/dist/lenis.min.js`) and GSAP core with ScrollTrigger (`https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js`).
+   - Convert reactive state hooks to explicit DOM computations. Calculate coordinates for active indicators and sliding pills using `offsetLeft`, `offsetTop`, `offsetWidth`, and `offsetHeight`. Recalculate positions inside a window resize listener.
+   - Enforce modal scroll containment. Add `data-lenis-prevent="true"` to modal dialogs and scroll containers. Call `lenis.stop()` when opening a modal and call `lenis.start()` when closing it.
+   - Prevent shell interpolation during automated edits. Never execute inline shell commands containing unescaped `${...}` JavaScript expressions. Write scripts using quoted heredocs (`python3 - << 'EOF'`) or dedicated Python runner files.
+   - Verify script execution. Run `node -e` syntax checks on extracted script blocks to confirm zero syntax errors before declaring completion.
 
-Completion criterion. Working production components passing all Axe-core accessibility checks and Core Web Vitals performance gates.
+Completion criterion. Working production components passing all Axe-core accessibility checks and Core Web Vitals performance gates, with standalone HTML mirrors verifying CDN script parity, modal scroll locks, and passing Node.js script syntax checks.
 
 ## Quick audit checklist
 
@@ -93,4 +99,8 @@ Run this check before completing any replication task:
 | DOM semantics | Converted from divitis to HTML5 landmarks with verified accessibility tree |
 | Layout stability | Explicit aspect-ratio on all media elements with zero Cumulative Layout Shift |
 | Motion budgets | Durations under 250ms, compositor-only GPU properties, and reduced-motion supported |
+| Standalone parity | External libraries load matching public CDN scripts in the document head |
+| Shell safety | Automated file edits use quoted heredocs or script files without variable interpolation errors |
+| Modal scroll lock | Modals pause smooth scroll instances and contain localized scroll events |
+| Script validation | Inline script tags pass Node.js syntax parsing with exit code 0 |
 | Quality gates | Zero console errors, passing Axe-core accessibility tests, and clean code formatting |
