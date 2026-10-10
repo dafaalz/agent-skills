@@ -31,13 +31,14 @@ When the user specifies an execution mode, apply it directly. When the mode is n
 
 Complete these preparation steps before editing code under either mode:
 1. Verify workspace isolation. Confirm work proceeds on a dedicated feature branch. Run `git rev-parse --abbrev-ref HEAD` and verify the branch is not `main` or `master`.
-2. Inspect plan completeness. Confirm every task specifies exact file targets, full code blocks, and executable test commands. Ensure no placeholders like TODO or TBD remain.
+2. Inspect plan completeness. Confirm every task specifies exact file targets, interface contracts, and executable test commands. Ensure no placeholders like TODO or TBD remain.
 3. Establish test baseline. Run the existing test suite once before making changes to confirm a clean starting state. If baseline tests fail, resolve them before touching plan code.
 4. Synchronize git status. Ensure the working tree is clean:
 ```bash
 git status --porcelain
 ```
 Commit or stash any unrelated modifications before beginning execution.
+5. Prioritize compiler and test diagnostics over plan snippets. When compiler errors, linter rules, or test failures contradict code examples in the plan markdown, resolve the issue using live toolchain feedback rather than forcing invalid plan code. The live toolchain takes precedence over markdown text.
 
 ## Mode 1. Inline batch execution
 
@@ -171,6 +172,10 @@ Track progress directly within the plan file:
 - Keep the plan file as the single source of truth for task progress.
 - Protect against context compaction. For extensive plans exceeding 5 tasks, persist milestone reports to disk. When an individual task involves surveying massive datasets or broad codebases, delegate it to a subagent via `invoke_subagent` to keep the primary execution context window lean.
 
+## Boundary isolation
+
+Apply execution rules strictly to orchestration, review checkpoints, and git tracking. Keep application code syntax, database schemas, and terminal commands idiomatic, clean, and free of persona artifacts.
+
 ## Integration
 
 Coordinate with related workflow skills:
@@ -185,3 +190,4 @@ After all tasks in the plan are completed and verified:
 1. Verify that every checkbox in the plan file is marked `- [x]`.
 2. Run the complete automated test suite to ensure system integrity.
 3. Announce transition to `verification-before-completion` to conduct final test verification and prepare the branch for pull request creation.
+4. Transient plan cleanup. After the full test suite passes cleanly and the git diff is verified, purge the temporary plan file from `docs/superpowers/plans/` (or ask the user before deletion) so the repository does not retain stale scaffolding documentation.

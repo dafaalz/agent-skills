@@ -1,18 +1,18 @@
 ---
 name: writing-plans
-description: Use when creating phased implementation plans with test-first tasks from a design specification before writing code. Don't use for initial design ideation, exploratory research, or direct code execution.
+description: Create phased implementation plans with test-first tasks from a design specification before writing code. Use when creating phased implementation plans with test-first tasks from a design specification before writing code. Don't use for initial design ideation, exploratory research, or direct code execution.
 ---
 
 # Writing implementation plans
 
-Turn validated design specifications into phased implementation plans before writing code. Every task in the plan must produce working, testable software with clear file targets, complete code blocks, and deterministic verification commands.
+Turn validated design specifications into phased implementation plans before writing code. Every task in the plan must produce working, testable software with clear file targets, behavioral test assertions, interface contracts, and deterministic verification commands.
 
 Assume the implementer has no prior context of the codebase and requires explicit technical direction for every change.
 
 Announce the following message at session start:
 `I am using the writing-plans skill to create the implementation plan.`
 
-Save plans to `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md` unless the user specifies a different path.
+Save plans to `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md` as transient scaffolding artifacts unless the user specifies a different path. Implementation plans are transient execution scaffolding. After implementation is complete and verified, the plan file should be purged to keep the repository clean.
 
 ## Workflow
 
@@ -40,17 +40,17 @@ Draft the implementation plan using the templates in the reference section below
   3. Write minimal implementation code to pass the test.
   4. Run the test and confirm success.
   5. Commit changes with a descriptive message.
-- Provide exact file paths and complete code blocks for every step. Do not use placeholders, ellipses, or vague instructions.
-- Specify exact execution commands with expected outputs for every test step.
-- Ensure tasks remain self-contained. Repeat shared code rather than referencing previous tasks, because tasks may be executed in isolation.
+- Provide exact file paths, exported signatures, and test assertion contracts. Do not guess application implementation details that the compiler and language server validate.
+- Specify exact execution commands with expected exit codes or failure messages for every test step.
+- Ensure tasks remain self-contained with explicit inputs, outputs, and behavioral boundaries.
 
-Completion criterion. A drafted plan document containing the mandatory header, granular test-driven tasks, complete code blocks, and exact verification commands.
+Completion criterion. A drafted plan document containing the mandatory header, granular test-driven tasks, interface contracts, and exact verification commands.
 
 ### Step 3. Plan self-review and validation
 
 Audit the drafted plan against the source specification:
 - Verify specification coverage. Skim each section of the specification and verify that an explicit task implements it. Add tasks for any missing requirements.
-- Scan for placeholders. Confirm that the plan contains zero instances of TODO, TBD, vague validation rules, or code steps lacking full code blocks.
+- Scan for placeholders. Confirm that the plan contains zero instances of TODO, TBD, vague validation rules, or undefined target interfaces.
 - Verify signature consistency. Confirm that function names, argument lists, and types match across all tasks.
 - Optional reviewer subagent. For automated validation, dispatch a subagent using the prompt in `plan-document-reviewer-prompt.md`. Fix all identified defects directly in the plan file.
 
@@ -76,20 +76,20 @@ Every plan must start with this header block:
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use subagent-driven-development (recommended) or executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers.** REQUIRED SUB-SKILL. Use subagent-driven-development (recommended) or executing-plans to implement this plan task by task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** [One sentence describing what this builds]
+**Goal.** [One sentence describing what this builds]
 
-**Architecture:** [2-3 sentences about approach]
+**Architecture.** [2 to 3 sentences about approach]
 
-**Tech Stack:** [Key technologies/libraries]
+**Tech stack.** [Key technologies and libraries]
 
 ---
 ```
 
 ### Task structure template
 
-Structure each task with explicit file lists, step checkboxes, complete code, and test commands:
+Structure each task with explicit file lists, step checkboxes, interface contracts, and test commands:
 
 ````markdown
 ### Task N. [Component name]
@@ -110,7 +110,7 @@ def test_specific_behavior():
 - [ ] **Step 2. Run test to verify it fails**
 
 Run `pytest tests/path/test.py::test_name -v`
-Expected failure with "function not defined"
+Expected failure with missing implementation or failed assertion.
 
 - [ ] **Step 3. Write minimal implementation**
 
@@ -122,7 +122,7 @@ def function(input):
 - [ ] **Step 4. Run test to verify it passes**
 
 Run `pytest tests/path/test.py::test_name -v`
-Expected status: PASS
+Expected status: 0 errors, all assertions pass.
 
 - [ ] **Step 5. Commit**
 
@@ -132,17 +132,16 @@ git commit -m "feat: add specific feature"
 ```
 ````
 
-### Code completeness standards
+### Task and interface precision standards
 
-Every step must provide the complete implementation details:
-- Write full code blocks. Never write comments like `# implement later`, `# add validation`, or `// TODO`.
-- Specify exact file paths and line ranges. Avoid relative guesswork.
-- Define exact test commands with expected failure messages and passing output.
-- Repeat code in full rather than referencing previous tasks. Tasks must remain self-contained for agents reading them independently.
-- Define all imported symbols, functions, and types within the plan.
+Every step must provide precise contract specifications without duplicating full implementation code in markdown:
+- Specify exact file paths and function signatures. Do not write placeholders like `// TODO`.
+- Define test assertions and expected inputs and outputs rather than speculative application bodies.
+- Rely on the compiler, linter, and test runner for syntax validation during execution.
+- Define imported symbols, method signatures, and error types within the plan.
 
 ### Goal-driven execution standards
 
 Transform abstract requirements into concrete, verifiable test goals:
 - Convert open-ended instructions into testable gates. For example, "add input validation" becomes "write tests asserting failure on invalid inputs, then make them pass".
-- Pair every multi-step action with an explicit verification check (`1. [Step] -> verify: [command or check]`). Strong success criteria enable autonomous verification loops without constant clarification.
+- Pair every multi-step action with an explicit verification check specifying the exact test command and expected outcome. Strong success criteria enable autonomous verification loops without constant clarification.

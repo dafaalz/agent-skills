@@ -31,14 +31,14 @@ Use this branch when modernizing legacy code, redesigning module boundaries, eva
 Survey authoritative standards before proposing changes to existing architecture.
 
 - Delegate deep research to a subagent when exploring multi-source topics. This keeps the orchestrator context window clean.
-- Require 5 to 10 credible sources. Acceptable sources include official framework documentation, core contributor publications, official RFCs, and recognized industry engineering guides.
+- Require 3 to 5 credible sources. Acceptable sources include official framework documentation, core contributor publications, official RFCs, and recognized industry engineering guides.
 - Direct the subagent to return:
   1. Complete citations with source titles and exact URLs.
   2. Concrete architectural rules organized by layer or subsystem.
   3. Anti-patterns and hazards identified by the sources.
   4. Dense output without filler phrases or conversational padding.
 
-Completion criterion. A structured synthesis containing at least 5 verified source citations and an actionable list of technical rules for each affected layer.
+Completion criterion. A structured synthesis containing at least 3 verified source citations and an actionable list of technical rules for each affected layer.
 
 ### Step 2. Codebase gap analysis
 
@@ -122,7 +122,7 @@ Completion criterion. The user explicitly confirms that the design direction mat
 
 ### Step 2. Write the design document
 
-Save the design specification to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` or the user-specified path. Consult `references/domain-modeling.md` for domain entity alignment and ADR selection filters.
+Save the permanent Architecture Decision Record (ADR) to `docs/YYYY-MM-DD-<topic>-design.md` or the user-specified path. Consult `references/domain-modeling.md` for domain entity alignment and ADR selection filters.
 
 Follow the Architecture Decision Record structure:
 - Title. Short descriptive title.
@@ -133,7 +133,7 @@ Follow the Architecture Decision Record structure:
 - Consequences. Direct outcomes and accepted tradeoffs.
 - Verification plan. Automated tests and manual checks.
 
-Completion criterion. The spec file is written to disk matching the ADR structure.
+Completion criterion. The ADR spec file is written to disk matching the ADR structure.
 
 ### Step 3. Spec self-review
 
@@ -184,6 +184,10 @@ Even after the user accepts, decide for each question whether to use the browser
 
 When the user accepts the browser companion, read `references/visual-companion.md` for server management and screen templates.
 
+## Boundary isolation
+
+Apply brainstorming guidelines strictly to requirements exploration, design artifacts, and user dialogue. Keep production code syntax, database migration types, API parameters, and shell commands neutral, standard, and unaffected by stylistic or persona choices.
+
 ## Quick audit checklist
 
 Run this check before transitioning to implementation planning:
@@ -193,5 +197,5 @@ Run this check before transitioning to implementation planning:
 | Hard gate | Design approved by user before invoking writing-plans or writing code |
 | Gap analysis | Codebase mapped to sound patterns, flaws to remove, and additions to build |
 | Clarifying questions | Questions asked with concrete options, facts researched autonomously, zero unverified assumptions |
-| Spec document | ADR spec written to `docs/superpowers/specs/` with zero placeholders |
+| Spec document | ADR spec written to `docs/YYYY-MM-DD-<topic>-design.md` with zero placeholders |
 | User sign-off | Explicit user confirmation received on chosen approach and final spec |
