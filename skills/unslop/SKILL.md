@@ -65,7 +65,8 @@ Keep code syntax, database schemas, API parameters, variable names, terminal com
 
 - **Cut puffery.** Replace promotional fluff with verifiable events, measurements, or actions. Write "built in 2024" instead of "a testament to modern innovation".
 - **Name specific sources.** Attribute facts to an exact person, repository, document, or dataset. Avoid weasel attributions like "experts agree" or "studies show". If no verifiable source exists, delete the claim.
-- **Apply the portability test.** If a sentence fits any company, person, or product unchanged, cut it or replace it with specific technical traits.
+- **Apply the portability test.** If a sentence could appear unchanged in documentation for another project or company, it provides no concrete value. Cut the claim or anchor it to specific system invariants, endpoints, or numbers.
+- **Describe mechanism instead of feel.** Avoid subjective statements like "types that follow your schema" or "the database stays close at hand". State the mechanical contract or measured delta directly, such as code generation validating against schema definitions or query execution timing under 2ms. If a statement cannot be rewritten as a verifiable instruction, mechanism, or metric, delete it.
 - **Show, don't tell.** Remove commentary that tells the reader what to think or notice, such as "this distinction matters" or "the key point is".
 - **Cut faux-insight setups.** Delete posturing like "what most people get wrong" or "here is what nobody tells you". State the claim directly.
 - **Eliminate colon reveals.** Rewrite dramatic reveals like "the best part: it works offline" into standard declarative sentences.
@@ -139,12 +140,22 @@ Translate abstract metaphors into concrete system components:
 - "vector" becomes "method" or "direction"
 - "paradigm" becomes "pattern" or "approach"
 - "scaffolding" becomes "template" or "boilerplate"
+- "substrate" becomes "base" or "foundation"
+- "wedge" becomes "entry point" or "addition"
+- "bedrock" becomes "core platform" or "runtime"
+- "harness" becomes "test suite" or "runner"
+- "ratchet" becomes "tightening limit" or state the exact metric rule
+- "evacuate" becomes "migrate" or "move"
+- "flywheel" or "north star" becomes the specific operational metric or objective
+- "gold-plating" becomes "unneeded scope" or "speculative work"
 
 ### Style and typography
 
 - **Ban em dashes and en dashes.** Replace em dashes, en dashes, and hyphens acting as dashes with periods or commas. Split complex thoughts into two separate sentences.
 - **Restrict colons.** Use colons only to introduce an explicit list, a table, or a code block. Never use colons as connectors in the middle of sentences, as pseudo-labels like Note or Summary, or for dramatic colon reveals.
 - **Limit bold styling.** Use bold styling only for lead-ins and critical warnings. Keep standard text, acronyms, and proper nouns in normal weight.
+- **Convert redundant inline-header lists.** Catch bold labels that merely restate the following sentence clause, such as bolding Performance followed by Performance improved. Convert them to fluid prose. Keep bold lead-ins only when they end in a period, name the topic, and are followed by genuinely distinct detail.
+- **Prevent over-compression.** Write complete sentences with necessary articles and active verbs. Avoid telegram-style fragments, symbol-speak, and shorthand arrows that require decoding, such as parser fails bad date, exit 2, no write. Expand into clear prose, such as the parser rejects invalid dates, returns exit code 2, and writes no data to disk.
 - **Use sentence case headings.** Capitalize only the first word and proper nouns in headings.
 - **Remove decorative elements.** Strip emojis from headings and bullet lists. Convert curly quotes to straight quotes.
 
@@ -157,6 +168,7 @@ Translate abstract metaphors into concrete system components:
 - **Use active voice.** Place the actor before the action. Change "the file is loaded by the runner" to "the runner loads the file". In Indonesian, change "file dimuat oleh runner" to "runner memuat file".
 - **Cut bolstering adverbs.** Delete adverbs that prop up weak verbs. Replace "runs very quickly" with "completes in under 5ms". Replace "significantly improves" with the measured metric. In Indonesian, replace "sangat krusial" with "wajib" or state the exact failure condition.
 - **Avoid negative listing and fake-strong verbs.** Replace "Not X. Not Y. Z" by stating Z directly. Replace "serves as a hub for" with direct active verbs like "tracks" or "routes".
+- **Eliminate mannered prose.** Replace literary flourishes, philosophical aphorisms, rhetorical fragments, and personified code with literal descriptions. Instead of writing "the plan holds the truth" or "wire it or delete it", state the functional execution rule directly. Replace figurative verbs like "rides along" or "stands on" with direct technical relationships like "invokes" or "depends on".
 
 ## Quick audit checklist
 
@@ -171,7 +183,10 @@ Run this check before finishing any writing task:
 | Colon usage | Colons appear only before lists, tables, or code blocks with zero colon reveals |
 | Pseudo-labels | Zero connector labels like Note, Summary, Catatan, or Ringkasan |
 | Voice preservation | Authentic tone, bluntness, and cadence preserved without forced corporate flattening |
-| Portability test | Generic claims either eliminated or anchored with concrete facts |
+| Portability and mechanism | Every statement names a mechanical contract, metric, or invariant rather than an emotional impression |
+| Inline headers | Zero bold labels that redundantly repeat the subsequent sentence clause |
+| Compression | Zero telegram-style shorthand fragments or symbol-speak chains |
+| Mannered prose | Zero personified code, philosophical aphorisms, or literary fragments |
 | Structure | Zero faux-insight setups, zero fake-profound kickers, and zero trailing -ing clauses |
 | Active voice | Every action sentence names the active subject |
 | Adverbs | Zero bolstering or empty adverbs |
