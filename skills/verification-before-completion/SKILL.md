@@ -1,43 +1,21 @@
 ---
 name: verification-before-completion
-description: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs, requiring fresh verification command output before making assertions. Don't use for initial exploratory brainstorming or rough drafting phases.
+description: Require fresh terminal verification evidence before claiming tasks are complete. Use when about to claim work is complete, fixed, or passing, before committing or creating PRs, requiring fresh verification command output before making assertions. Don't use for initial exploratory brainstorming or rough drafting phases.
 ---
 
 # Verification before completion
 
-## Overview
-
-Claiming work is complete without verification is dishonesty, not efficiency.
-
-**Core principle.** Evidence before claims, always.
-
-**Violating the letter of this rule is violating the spirit of this rule.**
-
-## The iron law
+Execute verification commands and confirm terminal exit codes before asserting completion. Do not assert that code compiles or tests pass without running the relevant command in the active turn.
 
 ```
 NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
 ```
 
-If you haven't run the verification command in this message, you cannot claim it passes.
-
-## The gate function
-
-BEFORE claiming any status or expressing satisfaction:
-
-1. Identify. Determine what command proves this claim.
-2. Run. Execute the full command freshly and completely.
-3. Read. Inspect full output, check exit codes, and count failures.
-4. Verify. Confirm whether output proves the claim.
-   - If not, state actual status with evidence.
-   - If yes, state claim with evidence attached.
-5. Claim. Make the claim only after evidence is verified.
-
-Skip any step = lying, not verifying.
+Never rely on cached assertions, previous turn outputs, or assumptions. Run the verification command in the current turn before stating that the task is finished.
 
 ## Workflow
 
-Follow these five steps before claiming completion:
+Follow these five steps in sequence before claiming completion:
 
 ### Step 1. Command identification
 
@@ -71,7 +49,7 @@ Completion criterion. The user receives a factual statement backed by terminal e
 
 ## Common failures
 
-| Claim | Requires | Not Sufficient |
+| Claim | Requires | Not sufficient |
 |---|---|---|
 | Tests pass | Test command output showing 0 failures | Previous run, "should pass" |
 | Linter clean | Linter output showing 0 errors | Partial check, extrapolation |
@@ -83,65 +61,47 @@ Completion criterion. The user receives a factual statement backed by terminal e
 
 ## Red flags
 
-- Using "should", "probably", "seems to"
-- Expressing satisfaction before verification ("Great!", "Perfect!", "Done!", etc.)
-- About to commit, push, or open a PR without verification
-- Trusting agent success reports
-- Relying on partial verification
-- Thinking "just this once"
-- Tired and wanting work over
-- **ANY wording implying success without having run verification**
+- Using "should", "probably", or "seems to".
+- Expressing satisfaction before verification ("Great!", "Perfect!", "Done!").
+- Preparing to commit, push, or open a PR without running tests.
+- Trusting agent success reports without inspecting diffs.
+- Relying on partial verification.
+- Any wording implying success without having run verification.
 
 ## Rationalization prevention
 
 | Excuse | Reality |
 |---|---|
-| "Should work now" | RUN the verification |
-| "I'm confident" | Confidence ≠ evidence |
-| "Just this once" | No exceptions |
-| "Linter passed" | Linter ≠ compiler |
+| "Should work now" | Run the verification command directly |
+| "I'm confident" | Confidence is not evidence |
+| "Just this once" | Zero exceptions |
+| "Linter passed" | Linter is not a compiler |
 | "Agent said success" | Verify independently |
-| "I'm tired" | Exhaustion ≠ excuse |
-| "Partial check is enough" | Partial proves nothing |
-| "Different words so rule doesn't apply" | Spirit over letter |
+| "I'm tired" | Exhaustion does not excuse verification |
+| "Partial check is enough" | Partial check proves nothing |
+| "Different words so rule does not apply" | Procedural invariants apply to all claims |
 
 ## Key patterns
 
 ### Tests
-
-```
-✅ [Run test command] [See: 34/34 pass] "All tests pass"
-❌ "Should pass now" / "Looks correct"
-```
+- Valid action: Execute the test command, verify clean output (such as 34 of 34 passed), then report that tests pass.
+- Prohibited action: Asserting "should pass now" or "looks correct" without running the test command.
 
 ### Regression tests (TDD red-green)
-
-```
-✅ Write → Run (pass) → Revert fix → Run (MUST FAIL) → Restore → Run (pass)
-❌ "I've written a regression test" (without red-green verification)
-```
+- Valid action: Write the test, run it to confirm it passes with the fix, temporarily revert the fix to confirm the test fails, and restore the fix.
+- Prohibited action: Claiming regression coverage without verifying the failure step.
 
 ### Build
-
-```
-✅ [Run build] [See: exit 0] "Build passes"
-❌ "Linter passed" (linter doesn't check compilation)
-```
+- Valid action: Run the build command and verify exit code 0 before asserting compilation success.
+- Prohibited action: Claiming the build passes based solely on a passing linter.
 
 ### Requirements
-
-```
-✅ Re-read plan → Create checklist → Verify each → Report gaps or completion
-❌ "Tests pass, phase complete"
-```
+- Valid action: Re-read the plan or issue, create an itemized checklist, verify each item with evidence, and report completion status.
+- Prohibited action: Concluding a feature is complete merely because test suites pass.
 
 ### Agent delegation
-
-```
-✅ Agent reports success → Check VCS diff → Verify changes → Report actual state
-❌ Trust agent report
-```
-
+- Valid action: When an agent reports success, inspect the version control diff directly, verify the changes, and report the confirmed state.
+- Prohibited action: Forwarding agent success claims without independent diff verification.
 
 ## Git state and documentation preservation gate
 
@@ -169,36 +129,3 @@ Run linters against modified files to prevent shipping formatting bugs or breaki
 ## Automated web performance and accessibility gate
 
 For web applications with automated auditing configured, consult `references/lighthouse-ci.md` to run Lighthouse CI assertions against production builds.
-
-## Why this matters
-
-From 24 failure memories:
-- Your human partner said "I don't believe you", which broke trust
-- Undefined functions shipped and crashed in production
-- Missing requirements shipped with incomplete features
-- Time wasted on false completion, redirect, and rework
-- Violates the rule that honesty is a core value
-
-## When to apply
-
-Always verify before:
-- ANY variation of success or completion claims
-- ANY expression of satisfaction
-- ANY positive statement about work state
-- Committing, PR creation, task completion
-- Moving to next task
-- Delegating to agents
-
-The rule applies to:
-- Exact phrases
-- Paraphrases and synonyms
-- Implications of success
-- ANY communication suggesting completion or correctness
-
-## The bottom line
-
-**No shortcuts for verification.**
-
-Run the command. Read the output. THEN claim the result.
-
-This is non-negotiable.
