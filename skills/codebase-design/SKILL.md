@@ -42,7 +42,7 @@ Completion criterion. User preference recorded and the matching design branch in
 Formulate the interface and identify module boundaries using deep module principles.
 
 1. Apply the deletion test. Imagine deleting the module. If complexity vanishes, the module is a shallow pass-through wrapper and should be merged or deleted. If complexity reappears across multiple callers, the module earns its keep. Consult `references/codebase-health-and-hotspots.md` for git churn hotspot detection, deletion test execution, and architecture diagrams.
-2. Minimize interface surface. Reduce public methods, simplify parameters, and hide implementation details internally.
+2. Minimize interface surface and reject line count metrics. Measure depth by leverage gained per unit of interface learned, never by lines of code ratio. Rewarding code volume encourages artificial bloat. Reduce public methods, simplify parameters, and design functions to return pure values rather than producing mutating side effects.
 3. Classify dependencies across seams. Consult `references/deepening.md` to classify external touchpoints into in-process, local-substitutable, remote owned, or true external.
 4. Enforce seam discipline. Follow the rule that one adapter represents a hypothetical seam, while two adapters represent a real seam. Do not introduce interface ports unless at least two concrete adapters exist.
 5. Simplicity first and YAGNI discipline. Never introduce abstractions, generics, or configurability layers for single-use code. Build the minimum interface that solves the confirmed problem. If an interface introduces more boilerplate than the implementation logic it wraps, inline or simplify it.
@@ -77,7 +77,7 @@ Use these architectural terms consistently:
 | Term | Definition | Avoid substituting |
 |---|---|---|
 | Module | A discrete unit with an interface and an implementation | Component, service, unit |
-| Interface | Everything a caller must know to use the module correctly, including types, invariants, and errors | API, signature |
+| Interface | Everything a caller must know to use the module correctly, including types, invariants, ordering constraints, error modes, configuration, and performance traits | API, signature |
 | Implementation | Internal code body hidden behind the interface | Adapter |
 | Depth | Abstraction power at the interface, maximizing behavior while minimizing surface area | Lines of code ratio |
 | Seam | The location where behavior can be altered without editing the caller | Boundary |

@@ -26,6 +26,7 @@ Invoke two or three sub-agents in parallel using the `invoke_subagent` tool. Ass
 - Agent 1. Minimize interface footprint. Aim for one to three entry points total. Maximize leverage by hiding configuration, orchestration, and parameter assembly inside the module.
 - Agent 2. Maximize compositional flexibility. Decouple inputs and execution hooks to support varied callers, plugins, and custom adapters across the seam.
 - Agent 3. Optimize for the primary caller. Design the default pathway to execute with zero boilerplate, while keeping secondary capabilities behind optional parameter overrides.
+- Agent 4. Ports and adapters architecture. Isolate cross-seam dependencies when crossing network boundaries, external platforms, or third party services.
 
 Provide each sub-agent with the problem frame, relevant file paths, and domain terminology from `AGENTS.md` or `CODEBASE.md`.
 
@@ -46,6 +47,6 @@ Present the candidate interfaces side by side with their tradeoff matrix to the 
 
 - Display each candidate signature with sample caller usage.
 - Explain the key architectural tradeoff of each variant.
-- Provide a concrete recommendation pointing to the variant offering the highest leverage.
+- Provide a decisive, opinionated recommendation pointing to the strongest variant. Propose a hybrid design if combining key elements from multiple candidates yields higher leverage, rather than presenting a passive menu.
 
 Wait for user selection. Once the user approves a design or combines traits from multiple candidates, return to Step 3 of the main `SKILL.md` workflow.
