@@ -69,42 +69,45 @@ app/
 └── Services/                      # Pure business logic and transactions
 ```
 
-### 5. Compact schema notation
-Do not copy full SQL DDL or verbose migration dumps. Use single-line entity notation listing primary keys, foreign keys, and critical domain attributes:
+### 5. Schema source of truth and CLI introspection
+Do not maintain static tables enumerating database columns in markdown, as they drift upon migration changes. Record the authoritative schema locations on disk and provide verified CLI commands to inspect live entity models:
+
 ```markdown
 <!-- BEGIN AUTO GENERATED: DATABASE_SCHEMA -->
-users (id PK, email unique, password_hash, role enum[admin|user], is_active bool)
-profiles (id PK, user_id FK -> users.id, full_name, phone nullable)
-posts (id PK, author_id FK -> users.id, title, slug unique, content, status enum[draft|published])
-comments (id PK, post_id FK -> posts.id, user_id FK -> users.id, body)
+Schema source of truth:
+- Primary migrations: `database/migrations/` (or ORM schema at `prisma/schema.prisma`, `db/schema.rb`)
+- Model definitions: `app/Models/` (or `src/entities/`)
+
+Introspection commands:
+- Inspect model schema: `php artisan model:show <ModelName>` (or equivalent ORM CLI)
+- Inspect database status: `php artisan db:show`
 <!-- END AUTO GENERATED: DATABASE_SCHEMA -->
 ```
-If the schema contains more than 15 tables, summarize the top 10 core tables here and place the complete table list in `.agents/references/database-schema.md`.
 
-### 6. Compact routing matrix
-Do not enumerate every repetitive sub-route. Summarize routes in a compact table showing HTTP method, path pattern, handler class, and middleware guards:
+### 6. Routing entrypoints and dispatch index
+Do not copy full routing tables into markdown. Direct agents to primary route definition files and provide live route discovery commands:
+
 ```markdown
 <!-- BEGIN AUTO GENERATED: ROUTING_MATRIX -->
-| METHOD | PATH | HANDLER | GUARDS |
-|---|---|---|---|
-| POST | /api/v1/auth/login | AuthController@login | guest |
-| POST | /api/v1/auth/logout | AuthController@logout | auth:sanctum |
-| GET | /api/v1/posts | PostController@index | auth:sanctum, role:all |
-| POST | /api/v1/posts | PostController@store | auth:sanctum, role:admin |
-| GET,PUT,DELETE | /api/v1/posts/{id} | PostController | auth:sanctum, role:admin |
+Routing entrypoints:
+- API routes: `routes/api.php` (or `src/app/api/`, `controllers/`)
+- Web routes: `routes/web.php`
+
+Discovery commands:
+- List active routes: `php artisan route:list` (or framework router CLI)
+- Filter specific endpoints: `php artisan route:list --path=api/v1/posts`
 <!-- END AUTO GENERATED: ROUTING_MATRIX -->
 ```
-If routes exceed 25 endpoints, group related CRUD resources into single rows or move full endpoint documentation to `.agents/references/routes.md`.
 
 ## Subsystem documentation pointer rules
 
 When a repository contains rich features requiring deep explanation:
 1. Create a dedicated markdown document inside `.agents/references/`.
 2. Name the file cleanly in kebab-case, such as `.agents/references/auth-flow.md` or `.agents/references/audio-engine.md`.
-3. Add a dedicated pointer row or subsection in `CODEBASE.md`:
+3. Add a dedicated pointer row or subsection in `CODEBASE.md`. Include permanent ADR files found in `docs/` or `docs/adr/`:
 ```markdown
 ## Subsystems and deep references
 - [auth-flow.md](file://.agents/references/auth-flow.md) covers authentication and session lifecycle.
 - [audio-engine.md](file://.agents/references/audio-engine.md) covers audio DSP and synthesis engine.
-- [database-schema.md](file://.agents/references/database-schema.md) covers complete database schema catalog.
+- [Architecture Decision Records (ADRs)](file://docs/) permanent records of architectural decisions and rejected alternatives.
 ```

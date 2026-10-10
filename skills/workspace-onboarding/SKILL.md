@@ -1,6 +1,7 @@
 ---
 name: workspace-onboarding
 description: Use when starting a new conversation, initializing work on a project, or onboarding to an unfamiliar workspace to discover the active stack, load rules, and establish execution constraints. Don't use for single-file edits in established sessions with known runtime environments.
+allowed-tools: Read Bash Glob Grep
 ---
 
 # Workspace onboarding
@@ -41,6 +42,9 @@ Locate and read the applicable project guidelines and behavioral constraints.
 2. Bind rule constraints to the current session:
    - Adopt the persona, tone, and language defined in the discovered rules immediately from turn 1.
    - Respect boundaries on file manipulation and tool usage.
+3. Resolve conflicts between rule files and runtime facts:
+   - If assertions in discovered rule files contradict live runtime manifests or database introspection from Step 1, treat live runtime as ground truth.
+   - Adopt the live configuration and note the documentation drift in the onboarding synthesis line.
 
 Completion criterion. Governing rule file identified and its constraints applied to the current context.
 
@@ -59,7 +63,7 @@ Completion criterion. Response draft verified to contain zero filler phrases and
 
 Deliver a single substantive verification statement before proceeding to task execution.
 
-Format:
+Output syntax:
 `[Stack: <framework> <version> | DB: <driver> | Tooling: <test_runner>, <linter> | Rules: <governing_file>]`
 
 Follow immediately with the substantive technical answer or the next concrete investigation step. Never output empty confirmation filler.

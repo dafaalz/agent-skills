@@ -1,11 +1,12 @@
 ---
 name: upsert-codebase-docs
 description: Use when creating or updating AGENTS.md and CODEBASE.md documentation files for a project, auditing documentation drift against git changes, or bootstrapping agent instructions for new repositories. Don't use for writing user guides, product changelogs, or external API documentation.
+allowed-tools: Read Write Edit Glob Grep Bash
 ---
 
 # Upsert codebase docs
 
-Create and maintain high signal documentation files for AI coding agents and developers. This skill governs the generation and incremental synchronization of `AGENTS.md` and `CODEBASE.md`.
+Create and maintain concise operational documentation files for AI coding agents and developers. This skill governs the generation and incremental synchronization of `AGENTS.md` and `CODEBASE.md`.
 
 ## Principles and constraints
 
@@ -102,8 +103,8 @@ Assemble technical architectural reference in `CODEBASE.md` strictly within the 
    - Technology Stack table listing layer, technology, and operational boundaries.
    - Architecture Data Flow diagram using clean ASCII text showing request-to-response paths.
    - Annotated Directory Layout highlighting key feature directories and functional ownership.
-   - Compact Schema Notation for database entities (one line per table showing primary keys, foreign keys, and critical columns).
-   - Compact Routing Matrix mapping essential HTTP verbs, endpoints, handlers, and guards.
+   - Schema source of truth pointers and CLI introspection commands for database entities.
+   - Routing entrypoints and CLI discovery commands for HTTP endpoints.
 2. In Mode B, execute delimited synchronization:
    - Locate auto-generated blocks bounded by `<!-- BEGIN AUTO GENERATED: <SECTION> -->` and `<!-- END AUTO GENERATED: <SECTION> -->`.
    - Refresh content inside the delimiters with latest code state while leaving surrounding narrative untouched.
@@ -112,7 +113,7 @@ Assemble technical architectural reference in `CODEBASE.md` strictly within the 
    - Ensure directory `.agents/references/` exists by running `mkdir -p .agents/references`.
    - If a single domain requires more than 30 lines of technical description, move it into `.agents/references/<domain>.md` and leave a context pointer in `CODEBASE.md`.
 
-Completion criterion. `CODEBASE.md` written to disk with updated staleness date, compact notation, delimited blocks, and total line count not exceeding 250 lines.
+Completion criterion. `CODEBASE.md` written to disk with updated staleness date, source of truth pointers, delimited blocks, and total line count not exceeding 250 lines.
 
 ### Step 6. Verification and unslop audit
 
@@ -143,4 +144,4 @@ Completion criterion. Both files satisfy all audit criteria with zero violations
 | Delimiters | Auto-generated sections in `CODEBASE.md` wrapped in HTML comment bounds |
 | Style and punctuation | Zero em dashes, zero mid-sentence colons, sentence case headings |
 | Concrete rules | Every negative constraint paired with an immediate positive action |
-| Truth grounding | All paths, commands, and schemas match repository reality |
+| Truth grounding | All paths, commands, and pointers match repository reality |
