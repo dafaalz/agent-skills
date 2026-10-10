@@ -26,6 +26,8 @@ Identify user intent and route execution immediately:
 7. **Browser compositor and Google rendering standards.** Consult [references/google-standards.md](references/google-standards.md) when diagnosing Chromium layer explosion, auditing Core Web Vitals (INP and CLS) frame budgets, adopting Material Design 3 motion tokens, or implementing Android physics-based fling and spring animations.
 8. **Desktop native and platform motion.** Consult [references/desktop-and-platform.md](references/desktop-and-platform.md) for Windows 11 DWM compositor tokens, Mica backdrop rules, macOS AppKit `NSAnimationContext` atomic batching, Electron and Tauri non-client title bar dragging without IPC loop latency, and Linux Wayland buffer sync.
 9. **Kinetic typography and shimmer.** Consult [references/kinetic-typography-and-shimmer.md](references/kinetic-typography-and-shimmer.md) for character stagger sequences, blur filter boundaries, text-clip gradient shimmer, webfont loading synchronization, and CDP visual test capture timing.
+10. **Creative and editorial storytelling.** Consult [references/creative-and-editorial.md](references/creative-and-editorial.md) for RAF LERP pointer inertia, dynamic spotlight cards, windowed parallax, clip-path curtain wipes, and SVG grain.
+11. **Canvas scrubbing and smooth scroll.** Consult [references/canvas-and-scroll-scrubbing.md](references/canvas-and-scroll-scrubbing.md) for Lenis synchronization, 2D canvas frame sequences, DPR capping, predictive caching, and sliding pill tabs.
 
 ## Execution invariants
 
@@ -92,7 +94,7 @@ Completion criterion. The cheapest capable tool selected, preferring compositor 
 
 ### Step 4. Hardware acceleration and property scoping
 
-- **Animate `transform` and `opacity` exclusively.** They skip layout recalculation and paint passes, running on the compositor thread. Properties like `width`, `height`, `margin`, `padding`, `top`, and `left` force expensive layout thrashing. Allow `height` only on accordions where transform cannot match the behavior.
+- **Animate `transform` and `opacity` exclusively.** They skip layout recalculation and paint passes, running on the compositor thread. Properties like `width`, `height`, `margin`, `padding`, `top`, and `left` force expensive layout thrashing. Allow `height` only on accordions where transform cannot match the behavior. Allow `clip-path: inset()` on creative editorial curtain reveals.
 - **Never use `scale(0)`.** Start entry transitions from `scale(0.95)` with zero opacity.
 - **Set `transform-origin` at the trigger.** Anchor popovers, dropdowns, and tooltips to their trigger using `var(--transform-origin)`. Modals remain exempt and stay centered.
 - **Use percentage values in `translate()`.** A value like `translateY(100%)` scales with the element dimensions instead of a fragile pixel count.
@@ -109,8 +111,9 @@ Completion criterion. The cheapest capable tool selected, preferring compositor 
 - **Avoid parent CSS variable updates during gestures.** Setting custom properties on parent elements triggers style recalculation across all child elements. Apply inline transforms directly to the target element.
 - **Force layout reflow before unhiding off-screen transforms.** Trigger `void element.offsetHeight` between removing `hidden` and releasing offset classes (`translate-y-full`) to prevent skipped initial frames in WebKit and Blink.
 - **Retain parked off-screen coordinates during exit.** Keep dismiss classes on hidden elements so subsequent entries start from their off-screen baseline.
+- **Orchestrate modal and dialog exit transitions.** Never unmount or apply `hidden` synchronously on dismiss or action execution. Retain dismiss animation classes (`scale(0.95)`, `opacity: 0`), wait for transition duration completion before setting `hidden`, and restore focus to the trigger element.
 
-Completion criterion. Motion styles animate `transform` and `opacity` exclusively with valid trigger-anchored transform origins.
+Completion criterion. Motion styles animate `transform` and `opacity` exclusively with valid trigger-anchored transform origins and orchestrated exit transitions.
 
 ### Step 5. Easing curves and duration calibration
 
@@ -118,13 +121,10 @@ Standard browser easings lack punch. Use these tokens:
 
 ```css
 --ease-out: cubic-bezier(0.23, 1, 0.32, 1); /* strong ease-out for UI entries */
---ease-in-out: cubic-bezier(
-  0.77,
-  0,
-  0.175,
-  1
-); /* strong ease-in-out for on-screen movement */
+--ease-in-out: cubic-bezier(0.77, 0, 0.175, 1); /* on-screen movement and curtain wipes */
 --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1); /* iOS drawer curve */
+--ease-quintic: cubic-bezier(0.22, 1, 0.36, 1); /* weighted editorial showcases, hero entries */
+--ease-expo: cubic-bezier(0.16, 1, 0.3, 1); /* kinetic text stagger, high-velocity reveals */
 ```
 
 Apply these easing selection rules:
@@ -145,9 +145,10 @@ Follow this duration budget reference:
 | Tooltips and small popovers         | 125 to 200ms     |
 | Dropdowns and selects               | 150 to 250ms     |
 | Modals and sheet drawers            | 200 to 400ms     |
+| Creative editorial storytelling     | 600 to 1400ms    |
 | Marketing or explanatory animations | Can exceed 400ms |
 
-Keep functional UI animations under 300ms. A 180ms dropdown feels faster and more responsive than a 400ms dropdown.
+Keep functional UI animations under 300ms. Reserve 600 to 1400ms for creative editorial entrances.
 
 Completion criterion. Custom cubic bezier tokens and duration budgets under 300ms assigned without using `ease-in`.
 
@@ -218,18 +219,19 @@ Verify code against this checklist before delivering. Every item represents an a
 | Stripping off-screen classes when hiding modals or drawers        | Retain dismiss classes while element is hidden                          |
 | Invoking .focus() on transforming elements mid-flight              | Defer focus past transition duration with { preventScroll: true }       |
 | Auto-focusing text fields on mobile modal drawers                  | Focus modal container or close button to protect viewport               |
-| Text blur filters above 12px                                       | Max 6 to 8px blur or opacity and translateY only                         |
+| Text blur filters above 12px on functional UI                      | Max 6 to 8px blur (editorial display headlines exempt)                  |
 | Unsynchronized remote webfonts during text entrances               | Priority local woff2 webfonts to eliminate FOUT and CLS                  |
 | Capturing visual test snapshots mid-flight                         | Await full stagger duration before screenshot capture                    |
+| Unmounting or hiding dialogs synchronously on dismiss               | Retain exit transition classes and await duration completion             |
 
 ## Quick verification checklist
 
-| Check             | Passing condition                                                            |
-| ----------------- | ---------------------------------------------------------------------------- |
-| Frequency gate    | Interaction frequency verified, keyboard actions execute with 0ms delay      |
-| Purpose           | Exactly one sanctioned purpose declared                                      |
-| Acceleration      | Only `transform` and `opacity` animated (except documented accordion height) |
-| Curves and timing | Custom cubic bezier or spring parameters used, durations under 300ms         |
+| Check             | Passing condition                                                                   |
+| ----------------- | ----------------------------------------------------------------------------------- |
+| Frequency gate    | Interaction frequency verified, keyboard actions execute with 0ms delay             |
+| Purpose           | Exactly one sanctioned purpose declared                                             |
+| Acceleration      | Only `transform`, `opacity`, or documented curtain `clip-path` animated             |
+| Curves and timing | Custom tokens used; under 300ms for functional UI, under 1400ms for editorial       |
 | Origin            | Anchored popovers expand from triggers, modals expand from center            |
 | Accessibility     | `prefers-reduced-motion` and pointer media queries included                  |
 | Self-containment  | Output provides working code first, followed by gate result and parameters   |

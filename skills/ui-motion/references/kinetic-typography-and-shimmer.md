@@ -59,9 +59,10 @@ Heavy blur radius values above 12px cause these defects:
 - Headless testing or automated visual regression tools capture distorted blobs if snapshots fire before blur reaches zero.
 
 Rules for typography blur motion:
-- Cap blur radius at 6px to 8px. Never exceed 12px on text elements.
+- For functional UI and subheadings under 32px, cap blur radius at 6px to 8px. Never exceed 12px.
 - Pair blur reduction directly with opacity ramps.
-- When animating text with custom display fonts or heavy weights (700+), drop `filter: blur` entirely and rely on `opacity` and `translateY`.
+- Large display headlines (above 40px) in creative hero sections are permitted optical blur-in values from 16px to 20px when paired with `scale(1.5)` to `scale(1.7)` and `cubic-bezier(0.22, 1, 0.36, 1)`. This models camera depth-of-field settling into focus.
+- When animating body copy, data tables, or dense UI, drop `filter: blur` entirely and rely on `opacity` and `translateY`.
 
 ```css
 /* Good. Sharp entrance without ink bleed */
