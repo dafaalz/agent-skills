@@ -93,6 +93,7 @@ Pair high-character sans with monospaced accents. Keep headings upright and roma
 - Body copy. Use the same sans family at weight 400 with relaxed line height between 1.6 and 1.65. Restrict line length to a maximum of 65 characters for readability.
 - Monospace tokens. Use Geist Mono or JetBrains Mono for code blocks, terminal snippets, technical tags, and timestamps. When Density exceeds level 7, render all numbers in monospace.
 - Prohibited typography. Avoid unconfigured default Inter on greenfield marketing and editorial layouts. When working in an existing codebase that already configures Inter as its brand typography, adopt the existing repository font. Never use generic system serifs like Times New Roman, Georgia, or Garamond on dashboards. Reserve modern editorial serifs exclusively for long-form literary publications.
+- Editorial pull quotes and marginalia. Structure pull quotes using semantic figure and blockquote containers with left accent borders and fluid clamp scaling. Compartmentalize marginalia columns into distinct structured sub-blocks (formal citations, contextual notes, archive tags) separated by subtle dividers rather than monolithic paragraphs.
 
 ### 2. Color token architecture
 
@@ -150,6 +151,7 @@ Implement full lifecycle interaction states and tactile feedback for all compone
 4. Concentric card nesting. Ensure nested badges, buttons, and preview containers use mathematically concentric radii to prevent visual pinching.
 5. Hardware-accelerated motion. Animate exclusively via transform and opacity. Restrict spring physics transitions to motion-enabled elements and respect prefers-reduced-motion queries.
 6. Asynchronous network resilience. Handle race conditions with AbortController, retry idempotent requests with exponential backoff, and provide optimistic mutations with rollback. Consult `references/api-resilience.md`.
+7. Target size minimum and keyboard focus. Guarantee interactive elements meet WCAG 2.2 SC 2.5.8 with a minimum hit area of 24x24px, with recommended 44px touch targets (min-h-[44px] or adequate padding and gap spacing). Configure visible focus indicators on all interactive targets using focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none.
 
 ## Specialized workflow pointers
 
@@ -179,3 +181,6 @@ Verify all items before declaring frontend implementation complete:
 | Emojis | Zero raw unicode emojis used in UI labels, copy, or markup |
 | Libraries | Selected single-purpose packages verified against package.json |
 | Motion bounds | Animations restricted to transform and opacity, reduced-motion fallbacks included |
+| Target sizes | Interactive elements maintain minimum 24x24px target size with 44px touch bounds |
+| Keyboard focus | Visible focus indicators configured via focus-visible:ring-2 focus-visible:ring-offset-2 |
+| Editorial quotes | Pull quotes use semantic figure or blockquote with structured multi-tier marginalia |
