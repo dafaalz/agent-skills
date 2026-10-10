@@ -25,6 +25,7 @@ Identify user intent and route execution immediately:
 6. **Translating informal animation vocabulary.** Consult [references/vocabulary.md](references/vocabulary.md) when the user describes an animation informally or by sensation rather than technical names.
 7. **Browser compositor and Google rendering standards.** Consult [references/google-standards.md](references/google-standards.md) when diagnosing Chromium layer explosion, auditing Core Web Vitals (INP and CLS) frame budgets, adopting Material Design 3 motion tokens, or implementing Android physics-based fling and spring animations.
 8. **Desktop native and platform motion.** Consult [references/desktop-and-platform.md](references/desktop-and-platform.md) for Windows 11 DWM compositor tokens, Mica backdrop rules, macOS AppKit `NSAnimationContext` atomic batching, Electron and Tauri non-client title bar dragging without IPC loop latency, and Linux Wayland buffer sync.
+9. **Kinetic typography and shimmer.** Consult [references/kinetic-typography-and-shimmer.md](references/kinetic-typography-and-shimmer.md) for character stagger sequences, blur filter boundaries, text-clip gradient shimmer, webfont loading synchronization, and CDP visual test capture timing.
 
 ## Execution invariants
 
@@ -214,6 +215,9 @@ Verify code against this checklist before delivering. Every item represents an a
 | Stripping off-screen classes when hiding modals or drawers        | Retain dismiss classes while element is hidden                          |
 | Invoking .focus() on transforming elements mid-flight              | Defer focus past transition duration with { preventScroll: true }       |
 | Auto-focusing text fields on mobile modal drawers                  | Focus modal container or close button to protect viewport               |
+| Text blur filters above 12px                                       | Max 6 to 8px blur or opacity and translateY only                         |
+| Unsynchronized remote webfonts during text entrances               | Priority local woff2 webfonts to eliminate FOUT and CLS                  |
+| Capturing visual test snapshots mid-flight                         | Await full stagger duration before screenshot capture                    |
 
 ## Quick verification checklist
 
