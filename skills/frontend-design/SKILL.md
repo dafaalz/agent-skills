@@ -13,6 +13,57 @@ Frontend design provides a unified engineering runbook for visual craft, token a
 
 Consult reference documents in references/ on demand for deep implementation patterns.
 
+## Execution workflow
+
+Follow these four steps in sequence:
+
+### Step 1. Environment audit and dial calibration
+
+Inspect package.json and project configuration before drafting UI code.
+
+- Detect existing design tokens, Tailwind configuration version, and installed packages.
+- Establish numeric ratings for Creativity, Density, Variance, and Motion dials.
+- Isolate interactive components with client hooks into memoized leaf components.
+
+Completion criterion. Target dependencies and dial values confirmed with zero unverified imports.
+
+### Step 2. Token locking and typography setup
+
+Declare colors, spacing, and typography as structured tokens.
+
+- Pick a curated theme from references/themes/ or construct an OKLCH scale following references/custom-theme.md.
+- Lock display, body, and monospace font families in Tailwind or CSS custom properties.
+- Establish semantic surface lightness steps for light and dark modes.
+
+Completion criterion. Complete token inventory defined in CSS custom properties with zero arbitrary color literals.
+
+### Step 3. Layout synthesis and component assembly
+
+Assemble complete semantic components matching project standards.
+
+- Build multi-column layouts using CSS Grid and dynamic viewport heights (min-h-[100dvh]).
+- Implement complete interaction states including skeleton loaders, empty states, and inline validation.
+- Animate visual elements exclusively using transform and opacity with spring physics.
+
+Completion criterion. Responsive layout assembled with full interaction states and hardware-accelerated transitions.
+
+### Step 4. Pre-flight verification and slop-test scoring
+
+Evaluate output against anti-slop criteria before completing work.
+
+- Score implementation on Philosophy, Hierarchy, Execution, Specificity, Restraint, and Variety.
+- Verify mobile responsiveness at 320px, 375px, 414px, and 768px.
+- Confirm zero uninstalled packages, zero fake metrics, and zero banned fonts.
+- Apply `references/impeccable-delta.md` checks 1 to 5 plus drift check 4 against project DESIGN.md and active CSS.
+
+Completion criterion. Interface satisfies all checklist checks with scores of 3 or higher across all evaluation criteria and delta checks 1 to 5 pass.
+
+## Boundary isolation
+
+Apply styling exclusively to markup, layout, and visual tokens:
+- Never modify, remove, or refactor component props, state hooks (`useState`, `useReducer`), side effects (`useEffect`), event handler callbacks, or API query wiring during visual restyling passes.
+- Maintain existing accessibility attributes (`aria-*`, `role`, tabindex, focus management) intact.
+
 ## Baseline dial calibration
 
 Calibrate interface constraints across four numerical dials on a 1 to 10 scale before drafting layouts or tokens:
@@ -41,7 +92,7 @@ Pair high-character sans with monospaced accents. Keep headings upright and roma
 - Display and headings. Use high-character sans families such as Geist, Satoshi, Outfit, or Cabinet Grotesk. Track tight (-0.025em), set fluid clamp scales, and compress line height between 1.1 and 1.2.
 - Body copy. Use the same sans family at weight 400 with relaxed line height between 1.6 and 1.65. Restrict line length to a maximum of 65 characters for readability.
 - Monospace tokens. Use Geist Mono or JetBrains Mono for code blocks, terminal snippets, technical tags, and timestamps. When Density exceeds level 7, render all numbers in monospace.
-- Prohibited typography. Never use Inter for display or body text. Never use generic system serifs like Times New Roman, Georgia, or Garamond on dashboards. Reserve modern editorial serifs exclusively for long-form literary publications.
+- Prohibited typography. Avoid unconfigured default Inter on greenfield marketing and editorial layouts. When working in an existing codebase that already configures Inter as its brand typography, adopt the existing repository font. Never use generic system serifs like Times New Roman, Georgia, or Garamond on dashboards. Reserve modern editorial serifs exclusively for long-form literary publications.
 
 ### 2. Color token architecture
 
@@ -100,51 +151,6 @@ Implement full lifecycle interaction states and tactile feedback for all compone
 5. Hardware-accelerated motion. Animate exclusively via transform and opacity. Restrict spring physics transitions to motion-enabled elements and respect prefers-reduced-motion queries.
 6. Asynchronous network resilience. Handle race conditions with AbortController, retry idempotent requests with exponential backoff, and provide optimistic mutations with rollback. Consult `references/api-resilience.md`.
 
-## Execution workflow
-
-Follow these four steps in sequence:
-
-### Step 1. Environment audit and dial calibration
-
-Inspect package.json and project configuration before drafting UI code.
-
-- Detect existing design tokens, Tailwind configuration version, and installed packages.
-- Establish numeric ratings for Creativity, Density, Variance, and Motion dials.
-- Isolate interactive components with client hooks into memoized leaf components.
-
-Completion criterion. Target dependencies and dial values confirmed with zero unverified imports.
-
-### Step 2. Token locking and typography setup
-
-Declare colors, spacing, and typography as structured tokens.
-
-- Pick a curated theme from references/themes/ or construct an OKLCH scale following references/custom-theme.md.
-- Lock display, body, and monospace font families in Tailwind or CSS custom properties.
-- Establish semantic surface lightness steps for light and dark modes.
-
-Completion criterion. Complete token inventory defined in CSS custom properties with zero arbitrary color literals.
-
-### Step 3. Layout synthesis and component assembly
-
-Assemble complete semantic components matching project standards.
-
-- Build multi-column layouts using CSS Grid and dynamic viewport heights (min-h-[100dvh]).
-- Implement complete interaction states including skeleton loaders, empty states, and inline validation.
-- Animate visual elements exclusively using transform and opacity with spring physics.
-
-Completion criterion. Responsive layout assembled with full interaction states and hardware-accelerated transitions.
-
-### Step 4. Pre-flight verification and slop-test scoring
-
-Evaluate output against anti-slop criteria before completing work.
-
-- Score implementation on Philosophy, Hierarchy, Execution, Specificity, Restraint, and Variety.
-- Verify mobile responsiveness at 320px, 375px, 414px, and 768px.
-- Confirm zero uninstalled packages, zero fake metrics, and zero banned fonts.
-- Apply `references/impeccable-delta.md` checks 1 to 5 plus drift check 4 against project DESIGN.md and active CSS.
-
-Completion criterion. Interface satisfies all checklist checks with scores of 3 or higher across all evaluation criteria and delta checks 1 to 5 pass.
-
 ## Specialized workflow pointers
 
 Route execution to dedicated reference runbooks based on task requirements:
@@ -162,7 +168,7 @@ Verify all items before declaring frontend implementation complete:
 | Check | Passing condition |
 |---|---|
 | Dials | Creativity, Density, Variance, and Motion dial ratings calibrated |
-| Typography | High-character sans paired with mono, roman headings without italics, zero Inter or generic serifs |
+| Typography | High-character sans paired with mono, roman headings without italics, zero generic serifs |
 | Color tokens | Single accent under 80% saturation, Zinc or Slate neutral, zero pure black (#000000) |
 | Elevation | Differentiated lightness steps and subtle borders, zero neon glow shadows |
 | Viewport height | Full-height wrappers use min-h-[100dvh] instead of h-screen |

@@ -96,11 +96,14 @@ Completion criterion. The cheapest capable tool selected, preferring compositor 
 - **Never use `scale(0)`.** Start entry transitions from `scale(0.95)` with zero opacity.
 - **Set `transform-origin` at the trigger.** Anchor popovers, dropdowns, and tooltips to their trigger using `var(--transform-origin)`. Modals remain exempt and stay centered.
 - **Use percentage values in `translate()`.** A value like `translateY(100%)` scales with the element dimensions instead of a fragile pixel count.
-- **In Framer Motion, specify full transform strings.** Shorthand props (`x`, `y`, `scale`) run through requestAnimationFrame on the main thread and drop frames under CPU load. Provide explicit transform strings:
+- **In Motion or Framer Motion, use hardware-accelerated transforms.** Motion v11 and higher executes independent transform values (`x`, `y`, `scale`) directly on the compositor thread via Web Animations API (WAAPI). On older Framer Motion versions, explicit transform strings bypass JavaScript main thread layout sync:
 
 ```jsx
-<motion.div animate={{ x: 100 }} />                          /* drops frames under load */
-<motion.div animate={{ transform: "translateX(100px)" }} />  /* hardware accelerated */
+/* Modern Motion (v11+) leverages WAAPI hardware acceleration natively */
+<motion.div animate={{ x: 100 }} />
+
+/* Legacy fallback if main thread CPU bottleneck occurs */
+<motion.div animate={{ transform: "translateX(100px)" }} />
 ```
 
 - **Avoid parent CSS variable updates during gestures.** Setting custom properties on parent elements triggers style recalculation across all child elements. Apply inline transforms directly to the target element.
@@ -203,7 +206,7 @@ Verify code against this checklist before delivering. Every item represents an a
 | `transform-origin: center` on anchored popover                     | `var(--transform-origin)` (dialog modals exempt)                        |
 | Keyframes on rapidly triggered elements                            | CSS transitions or springs                                              |
 | Animating `width`, `height`, `margin`, `padding`, `top`, or `left` | `transform` and `opacity`                                               |
-| Framer Motion shorthand props under load                           | Full `transform` string                                                 |
+| Non-accelerated JS transform loops                                 | WAAPI compositor execution or CSS transitions                           |
 | Ungated hover motion                                               | `@media (hover: hover) and (pointer: fine)`                             |
 | Missing `prefers-reduced-motion`                                   | Gentler variant preserving opacity                                      |
 | Everything entering simultaneously                                 | 30 to 80ms stagger                                                      |

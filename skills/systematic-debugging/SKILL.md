@@ -35,11 +35,11 @@ Gather evidence to explain what failed and why before touching production code.
 
 2. **Reproduction and feedback loop.** Build a tight, red-capable command that triggers the failure before reading source code to form theories.
    - Assert the user's exact symptom rather than an unrelated crash.
-   - Ensure the loop is fast, deterministic, and runnable unattended.
+   - Keep the loop fast, deterministic, and runnable unattended.
    - For non-deterministic bugs, raise the reproduction rate instead of giving up. Loop the trigger 100 times, add concurrency stress, narrow timing windows, or inject sleeps until reproducible above 50 percent.
    - Minimize the repro by pruning inputs, callers, and state one by one. The repro is minimal when every remaining element is load-bearing, where removing any single element turns the loop green.
    - If an automated loop cannot be built, stop immediately. Ask the user for environment access, redacted trace logs, or permission for temporary production probes. Do not guess without a loop.
-   - Consult `references/reproduction-and-loops.md` for harness patterns, minimization, and credential redaction.
+   - Consult `references/reproduction-and-loops.md` for test runner patterns, minimization, and credential redaction.
    - Completion criterion. One verified command executed and confirmed red against the user symptom across consecutive runs, or an explicit escalation blocker sent to the user.
 
 3. **Change audit.** Inspect git history and environment changes. Run `git diff` against the last known working commit. Check recent dependency updates and configuration changes.
@@ -48,7 +48,7 @@ Gather evidence to explain what failed and why before touching production code.
 4. **Boundary instrumentation.** If the fault spans multiple layers or services such as CI workflows, build scripts, API services, or databases, add diagnostic logging at each boundary. Log inputs, outputs, and environment variables across each boundary before running again.
    - Completion criterion. Diagnostic output isolates the exact boundary where expected state diverges.
 
-5. **Upstream data flow tracing.** If the error originates deep in the call stack, trace bad values backward to their origin. Consult `root-cause-tracing.md` in this directory for backward tracing instructions.
+5. **Upstream data flow tracing.** If the error originates deep in the call stack, trace bad values backward to their origin. Consult `references/root-cause-tracing.md` for backward tracing instructions.
    - Completion criterion. Code location that produced the initial invalid value identified.
 
 6. **Large-scale scope and context compaction defense.** If the investigation requires surveying massive logs, hundreds of database files, or multi-repository history:
@@ -82,7 +82,7 @@ Test assumptions with isolated probes.
 2. **Targeted probes and instrumentation.** Test hypotheses one variable at a time using the smallest possible probe.
    - Prefer breakpoints or REPL inspection when the runtime allows.
    - Tag every temporary log statement with a unique identifier like `[DEBUG-probe1]`. This makes teardown a single grep command.
-   - For performance regressions, establish a baseline measurement with a timing harness, profiler, or query plan before bisecting. Measure before modifying code.
+   - For performance regressions, establish a baseline measurement with a benchmark script, profiler, or query plan before bisecting. Measure before modifying code.
    - Completion criterion. Probe results confirm or disprove the lead hypothesis without touching unrelated code. If refuted, test the next ranked hypothesis.
 
 Phase 3 exit criterion. A single root cause hypothesis confirmed by probe data.
@@ -92,7 +92,7 @@ Phase 3 exit criterion. A single root cause hypothesis confirmed by probe data.
 Apply the targeted fix at the source.
 
 1. **Failing regression test and seam audit.** Write an automated test reproducing the root cause before changing implementation code.
-   - Ensure the test exercises the genuine call site seam. If available test seams are too shallow and provide false confidence, document the architectural seam limitation as an explicit finding.
+   - Verify the test exercises the genuine call site seam. If available test seams are too shallow and provide false confidence, document the architectural seam limitation as an explicit finding.
    - Follow the `test-driven-development` skill.
    - Completion criterion. Automated regression test fails against unfixed code at a verified architectural seam, or seam limitation is documented.
 
@@ -107,7 +107,7 @@ Apply the targeted fix at the source.
    - Re-run the Phase 1 reproduction loop against the original un-minimised scenario to confirm it passes.
    - Verify all regression tests and suite tests pass.
    - Run grep for the debug tag prefix to remove every temporary probe.
-   - Remove throwaway test harnesses from scratch storage.
+   - Remove throwaway test scripts from scratch storage.
    - Record the confirmed root cause hypothesis in the commit message for future maintainers.
    - Completion criterion. Regression and suite tests pass, original repro is verified green, and grep confirms zero remaining debug tags.
 
@@ -153,10 +153,10 @@ This instrumentation identifies the exact layer where data or environment variab
 
 ## Disclosed reference
 
-Consult these files in this directory for specialized debugging techniques:
-- `root-cause-tracing.md` for backward tracing through call stacks.
-- `defense-in-depth.md` for adding multi-layer validation after fixing root causes.
-- `condition-based-waiting.md` for replacing arbitrary sleeps with condition polling.
+Consult these files in `references/` for specialized debugging techniques:
+- `references/root-cause-tracing.md` for backward tracing through call stacks.
+- `references/defense-in-depth.md` for adding multi-layer validation after fixing root causes.
+- `references/condition-based-waiting.md` for replacing arbitrary sleeps with condition polling.
 
 Related skills to invoke during debugging:
 - `test-driven-development` for writing red regression tests before fixing code.
