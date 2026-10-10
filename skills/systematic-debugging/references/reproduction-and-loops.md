@@ -17,16 +17,26 @@ Choose the fastest deterministic harness available for the bug domain:
 9. **Differential loop.** Run the new implementation alongside the known working legacy implementation on identical inputs and assert parity.
 10. **Human in the loop script.** For hardware, terminal TTY, or interactive shell bugs, provide a deterministic one-line runner with clear pass and fail markers.
 
-## 2. Reproduction minimization
+## 2. Tightening feedback loops
 
-Never debug against large production payloads. Minimize reproduction cases following these rules:
+Treat the reproduction loop as an internal product. Tighten it using three rules:
 
-1. **Slice inputs by half.** Prune request bodies, arrays, and JSON objects until removing one more key stops triggering the failure.
-2. **Eliminate indirect dependencies.** Mock or strip external API gateways, caching layers, and asynchronous queue workers.
-3. **Isolate load bearing state.** Verify whether the fault depends on accumulated state or occurs on clean system startup.
-4. **Pin deterministic seeds.** Freeze pseudo-random number generators, clock timestamps, and database sequence IDs during the test run.
+1. **Speed.** Keep the feedback loop under 5 seconds. Skip unrelated startup, cache fixtures, and narrow test filters.
+2. **Signal sharpness.** Assert the specific bug symptom rather than generic process termination or non-zero exit codes.
+3. **Determinism.** Freeze time, seed pseudorandom number generators, isolate filesystem directories, and mock volatile external endpoints.
 
-## 3. Secret and credential redaction protocol
+For non-deterministic bugs, aim to increase reproduction rate instead of demanding immediate determinism. Loop the trigger 100 times, run concurrent workers, narrow timing windows, or add short sleeps. Raise the reproduction rate above 50 percent so hypotheses are testable.
+
+## 3. Reproduction minimization
+
+Never debug against full production payloads. Minimize reproduction cases following these rules:
+
+1. **Load-bearing isolation.** Prune inputs, callers, and configuration keys one by one. The reproduction scenario is minimal only when every remaining element is load-bearing, where removing any single remaining element makes the loop pass.
+2. **Eliminate indirect dependencies.** Mock external API gateways, caching layers, and asynchronous queue workers.
+3. **Isolate state.** Verify whether the fault requires accumulated state or reproduces on a clean process restart.
+4. **Pin deterministic seeds.** Freeze pseudorandom number generators, clock timestamps, and database sequence identifiers during the run.
+
+## 4. Secret and credential redaction protocol
 
 Protect secrets during diagnostic logging and terminal outputs:
 
@@ -40,10 +50,18 @@ Protect secrets during diagnostic logging and terminal outputs:
    - Passwords and database connection strings
    - Personally identifiable customer data
 
-## 4. Falsifiable hypotheses formulation
+## 5. Performance regression diagnostics
+
+For performance regressions, avoid arbitrary log statements:
+
+1. **Establish baseline measurements.** Build a dedicated timing harness using profilers, runtime timestamps, or database query execution plans.
+2. **Bisect against baseline.** Measure the latency delta between known-good and degraded commits under identical workloads.
+3. **Measure first, modify second.** Never commit code changes without verifying a measured latency reduction against the baseline.
+
+## 6. Falsifiable hypotheses and tagged instrumentation
 
 When the root cause remains non-obvious after reproduction:
 
-1. Formulate 3 to 5 distinct hypotheses ranked by likelihood.
-2. Each hypothesis must state an explicit mechanism, a predicted symptom, and a disproving test.
-3. If an experiment disproves a hypothesis, discard it completely before testing the next branch.
+1. **Ranked hypothesis formulation.** Formulate 3 to 5 distinct hypotheses ranked by likelihood before testing any of them. Single hypothesis generation anchors on the first plausible explanation.
+2. **Explicit prediction format.** Format each hypothesis as "If [cause] is the root issue, changing [variable] will [outcome]."
+3. **Tagged instrumentation.** Tag every temporary diagnostic log with a unique session prefix like `[DEBUG-probe1]`. Verify all tags are removed via grep before completing Phase 4.

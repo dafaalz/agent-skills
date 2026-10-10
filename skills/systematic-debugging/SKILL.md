@@ -33,8 +33,14 @@ Gather evidence to explain what failed and why before touching production code.
 1. **Error inspection.** Read stack traces, error messages, and logs in full. Identify line numbers, file paths, and error codes without skipping warnings.
    - Completion criterion. Exact error text, file path, failing line number, and initial call site identified in notes.
 
-2. **Reproduction.** Execute the minimal command, script, or test case that triggers the defect deterministically. Consult `references/reproduction-and-loops.md` for fast feedback harness patterns, input minimization, and secret redaction rules.
-   - Completion criterion. A single command or test triggers the failure consistently across consecutive runs.
+2. **Reproduction and feedback loop.** Build a tight, red-capable command that triggers the failure before reading source code to form theories.
+   - Assert the user's exact symptom rather than an unrelated crash.
+   - Ensure the loop is fast, deterministic, and runnable unattended.
+   - For non-deterministic bugs, raise the reproduction rate instead of giving up. Loop the trigger 100 times, add concurrency stress, narrow timing windows, or inject sleeps until reproducible above 50 percent.
+   - Minimize the repro by pruning inputs, callers, and state one by one. The repro is minimal when every remaining element is load-bearing, where removing any single element turns the loop green.
+   - If an automated loop cannot be built, stop immediately. Ask the user for environment access, redacted trace logs, or permission for temporary production probes. Do not guess without a loop.
+   - Consult `references/reproduction-and-loops.md` for harness patterns, minimization, and credential redaction.
+   - Completion criterion. One verified command executed and confirmed red against the user symptom across consecutive runs, or an explicit escalation blocker sent to the user.
 
 3. **Change audit.** Inspect git history and environment changes. Run `git diff` against the last known working commit. Check recent dependency updates and configuration changes.
    - Completion criterion. List of modified files, dependencies, and settings mapped against the failure symptom.
@@ -68,20 +74,27 @@ Phase 2 exit criterion. Structural and contextual differences between broken cod
 
 Test assumptions with isolated probes.
 
-1. **Falsifiable hypothesis.** Write a single hypothesis specifying the cause and the expected outcome. Format as "The failure occurs because [cause], and changing [variable] will [outcome]."
-   - Completion criterion. Written hypothesis documented in working notes.
+1. **Ranked falsifiable hypotheses.** Formulate 3 to 5 distinct hypotheses ranked by likelihood before testing any of them. Single hypothesis generation anchors on the first plausible idea and wastes investigation time.
+   - Format each hypothesis as an explicit prediction like "If [cause] is the root issue, changing [variable] will [outcome]."
+   - Share the ranked list with the user as a rapid checkpoint. Proceed with testing if the user is away.
+   - Completion criterion. List of 3 to 5 ranked falsifiable predictions recorded in working notes and presented to the user.
 
-2. **Targeted probe.** Make the smallest possible change to confirm or refute the hypothesis. Change one variable at a time. Do not apply a complete fix during this step.
-   - Completion criterion. Test or probe execution confirms or refutes the hypothesis. If refuted, return to Phase 1 with the new data.
+2. **Targeted probes and instrumentation.** Test hypotheses one variable at a time using the smallest possible probe.
+   - Prefer breakpoints or REPL inspection when the runtime allows.
+   - Tag every temporary log statement with a unique identifier like `[DEBUG-probe1]`. This makes teardown a single grep command.
+   - For performance regressions, establish a baseline measurement with a timing harness, profiler, or query plan before bisecting. Measure before modifying code.
+   - Completion criterion. Probe results confirm or disprove the lead hypothesis without touching unrelated code. If refuted, test the next ranked hypothesis.
 
-Phase 3 exit criterion. Root cause hypothesis confirmed by probe results.
+Phase 3 exit criterion. A single root cause hypothesis confirmed by probe data.
 
 ### Phase 4. Implementation and verification
 
 Apply the targeted fix at the source.
 
-1. **Failing regression test.** Write the simplest reproducible automated test case that exposes the root cause before changing implementation code. If testing frameworks are unavailable, create a standalone test script. Follow the `test-driven-development` skill.
-   - Completion criterion. Automated test fails with the expected error against unfixed code.
+1. **Failing regression test and seam audit.** Write an automated test reproducing the root cause before changing implementation code.
+   - Ensure the test exercises the genuine call site seam. If available test seams are too shallow and provide false confidence, document the architectural seam limitation as an explicit finding.
+   - Follow the `test-driven-development` skill.
+   - Completion criterion. Automated regression test fails against unfixed code at a verified architectural seam, or seam limitation is documented.
 
 2. **Surgical root cause fix.** Modify code strictly at the identified root cause.
    - Touch only what must be changed to fix the defect. Match existing indentation and conventions.
@@ -90,14 +103,19 @@ Apply the targeted fix at the source.
    - Clean up only orphan variables, imports, or functions created by the fix.
    - Completion criterion. Code edit confined strictly to the root cause with zero unrelated diff lines.
 
-3. **Verification.** Run the reproduction test and the broader test suite to confirm the fix works without regressions. Follow the `verification-before-completion` skill.
-   - Completion criterion. New test passes, all existing tests pass, and diagnostic logs confirm clean execution.
+3. **Verification and cleanup pass.** Validate the fix and purge temporary instrumentation. Follow the `verification-before-completion` skill.
+   - Re-run the Phase 1 reproduction loop against the original un-minimised scenario to confirm it passes.
+   - Verify all regression tests and suite tests pass.
+   - Run grep for the debug tag prefix to remove every temporary probe.
+   - Remove throwaway test harnesses from scratch storage.
+   - Record the confirmed root cause hypothesis in the commit message for future maintainers.
+   - Completion criterion. Regression and suite tests pass, original repro is verified green, and grep confirms zero remaining debug tags.
 
 4. **Failure loop limit.**
    - If fix 1 or fix 2 fails, return to Phase 1 to re-evaluate evidence.
    - If 3 fixes fail consecutively, stop immediately. Do not attempt a fourth fix. Question the architecture.
 
-Phase 4 exit criterion. Automated test passes, full test suite passes, and root cause is resolved at the source.
+Phase 4 exit criterion. Automated tests pass, original repro passes, debug tags are purged, and the root cause fix is verified without regressions.
 
 ## Escalation for repeated failures
 
