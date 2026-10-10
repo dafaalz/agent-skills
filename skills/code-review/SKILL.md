@@ -165,13 +165,17 @@ Verify necessity using this process:
 1. Search the codebase for actual call sites using grep or file search tools.
 2. If the feature has zero active callers, reject the abstraction and propose removing dead code instead.
 3. If active callers exist, implement the minimum clean logic required to satisfy those callers without speculative generalizations.
+4. Enforce the reuse hierarchy. Existing codebase helpers and standard library utilities beat writing custom wrappers or adding third-party dependencies.
+5. Protect essential boundaries. Never sacrifice trust boundary validation, error handling preventing data loss, security invariants, or accessibility in the name of YAGNI.
 
 ### Step 6. Surgical remediation and regression pass
 
 Execute accepted review changes methodically to avoid compound regressions:
 - Clarify ambiguous items first before touching code.
 - Fix blocking and critical bugs first, including broken tests and security concerns.
+- Grep all callers before editing shared functions to fix the root cause once across all call sites.
 - Apply simple localized fixes second, such as typos, imports, or boundary checks.
+- If taking an intentional shortcut with a known limit, mark it in code using `shortcut: <the limit>, <when to upgrade>`.
 - Address complex refactorings and structural modifications last.
 - Test each fix individually. Run targeted test suites immediately after modifying each file.
 - Execute full test suites and linters after all items are resolved to confirm zero regressions.

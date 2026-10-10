@@ -57,7 +57,7 @@ Completion criterion. Plan tasks partitioned into sequential batches of 1 to 3 r
 
 Execute each task in the active batch following red, green, refactor cycles:
 1. Run the failing test. Execute the test command specified in the plan task and confirm failure. Verify the failure matches expected missing functionality rather than broken imports or syntax.
-2. Implement minimum code. Write the minimal code necessary to make the test pass. Avoid speculative flexibility or unrequested abstractions.
+2. Implement minimum code. Write the minimal code necessary to make the test pass. Apply the reuse hierarchy in order: existing codebase helper or component first, standard library or platform feature second, installed dependency third, and minimum new code last. Never add a dependency for a few lines. Avoid speculative flexibility or unrequested abstractions.
 3. Run the passing test. Re-run the test command and verify all assertions pass cleanly.
 4. Clean up refactors. Remove orphan imports, unused variables, and temporary debugging logs.
 5. Update plan status. Change the task checkbox in the plan markdown file from `- [ ]` to `- [x]`.
@@ -171,6 +171,14 @@ Track progress directly within the plan file:
 - Synchronize plan file checkboxes with git commits after every completed task.
 - Keep the plan file as the single source of truth for task progress.
 - Protect against context compaction. For extensive plans exceeding 5 tasks, persist milestone reports to disk. When an individual task involves surveying massive datasets or broad codebases, delegate it to a subagent via `invoke_subagent` to keep the primary execution context window lean.
+
+### Minimalist implementation and reuse discipline
+
+Enforce surgical implementation across all tasks:
+- Caller discovery before editing. When modifying a shared function, method, or component, grep every caller in the codebase before editing. Fix the root cause once in the shared code instead of patching individual callers.
+- Shortest working diff. The shortest complete diff wins once all impacted callers, tests, and fixtures are updated.
+- Shortcut notation. If choosing a bounded implementation shortcut, document it inline using `shortcut: <the limit>, <when to upgrade>`.
+- Non-negotiable boundaries. Never cut validation at trust boundaries, error handling preventing data loss, security invariants, or accessibility in the name of minimalism.
 
 ## Boundary isolation
 

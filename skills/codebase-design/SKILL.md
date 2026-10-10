@@ -45,8 +45,9 @@ Formulate the interface and identify module boundaries using deep module princip
 2. Minimize interface surface and reject line count metrics. Measure depth by leverage gained per unit of interface learned, never by lines of code ratio. Rewarding code volume encourages artificial bloat. Reduce public methods, simplify parameters, and design functions to return pure values rather than producing mutating side effects.
 3. Classify dependencies across seams. Consult `references/deepening.md` to classify external touchpoints into in-process, local-substitutable, remote owned, or true external.
 4. Enforce seam discipline. Follow the rule that one adapter represents a hypothetical seam, while two adapters represent a real seam. Do not introduce interface ports unless at least two concrete adapters exist.
-5. Simplicity first and YAGNI discipline. Never introduce abstractions, generics, or configurability layers for single-use code. Build the minimum interface that solves the confirmed problem. If an interface introduces more boilerplate than the implementation logic it wraps, inline or simplify it.
-6. Align interface with test surface. Ensure callers and automated tests cross the same external seam. Do not leak internal test hooks into the public interface.
+5. Simplicity first and reuse hierarchy. Take the first option that fully works. Prioritize an existing codebase helper or pattern first, the standard library or platform feature second, an installed dependency third, and minimum new code last. Never add a dependency for a few lines. Never introduce abstractions, generics, or configurability layers for single-use code.
+6. Shortcut discipline and essential boundaries. When taking an intentional implementation shortcut, mark it in code using `shortcut: <the limit>, <when to upgrade>`. Never cut trust boundary validation, data loss error handling, security invariants, or accessibility in the name of minimalism.
+7. Align interface with test surface. Ensure callers and automated tests cross the same external seam. Do not leak internal test hooks into the public interface.
 
 Completion criterion. A written interface specification defining inputs, outputs, error states, and concrete seam placement.
 
@@ -96,4 +97,5 @@ Run this check before finishing the skill execution:
 | Seam discipline | No interface port created for single-adapter dependencies |
 | Test surface | Tests exercise the module through the same seam used by callers |
 | Progressive disclosure | Deepening and multi-agent rules loaded from `references/` |
+| Reuse hierarchy | Prioritizes existing helpers and platform features before new dependencies |
 | Pipeline handoff | Transition offered to `writing-plans` upon design approval |
