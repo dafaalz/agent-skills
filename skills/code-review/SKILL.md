@@ -13,14 +13,15 @@ Code review demands technical rigor rather than emotional performance or unverif
 
 Follow these core principles:
 - Review early, review often. Request review after each discrete task or major feature to prevent compounding defects.
+- Two-axis separation. Review changes independently across Standards (repo standards and baseline code smells) and Spec (originating issue or requirements). Run axes in parallel sub-agents to prevent context pollution.
 - Verify before implementing. Never accept reviewer suggestions blindly. Check codebase truth and test suites first.
 - Technical correctness over social comfort. Maintain skepticism. Push back with concrete facts when suggestions degrade architecture.
-- Structural audit depth. Consult `references/architectural-lenses.md` for classic engineering lenses and logic defect categories.
+- Structural audit depth. Consult `references/architectural-lenses.md` for classical engineering lenses, logic defects, and Fowler code smell baseline.
 - Comment hygiene. Consult `references/comment-hygiene.md` to prune AI conversational narration while preserving critical business context.
 
 ## Phase 1. Requesting code review
 
-Dispatch an isolated code reviewer subagent to catch defects before they cascade into downstream tasks. Provide precise context and git ranges without polluting the reviewer with conversational session history.
+Dispatch isolated reviewer sub-agents across Standards and Spec axes to catch defects before they cascade downstream. Provide precise git ranges and requirements without polluting reviewers with conversational session history.
 
 ### When to request review
 
@@ -31,44 +32,73 @@ Request code review under the following mandatory conditions:
 
 Request review optionally when encountering complex bug fixes, before significant refactoring, or when stuck and requiring an objective fresh perspective.
 
-### Step 1. Commit boundary extraction and reviewer dispatch
+### Step 1. Commit boundary extraction and pre-flight validation
 
-Follow this procedure to extract commit boundaries and dispatch the reviewer:
+Follow this procedure to extract commit boundaries and validate git references:
 
-1. Extract git commit SHAs:
+1. Identify the fixed point reference, such as a commit SHA, branch name, tag, or merge base. When unspecified, prompt the user for the reference.
+2. Resolve commit references:
 ```bash
-BASE_SHA=$(git rev-parse HEAD~1)
+git rev-parse --verify ${FIXED_POINT}
+BASE_SHA=$(git merge-base ${FIXED_POINT} HEAD)
 HEAD_SHA=$(git rev-parse HEAD)
 ```
-
-When reviewing across a feature branch, resolve `BASE_SHA` from the merge base with trunk:
+3. Inspect diff statistics and verify that the target diff is non-empty:
 ```bash
-BASE_SHA=$(git merge-base origin/main HEAD)
-HEAD_SHA=$(git rev-parse HEAD)
+git diff --stat ${BASE_SHA}...${HEAD_SHA}
 ```
+If `git rev-parse` fails or if the diff contains zero changes, stop execution immediately.
 
-2. Inspect the git diff statistics before dispatching:
-```bash
-git diff --stat ${BASE_SHA}..${HEAD_SHA}
-```
+Completion criterion. Target ref is verified with `git rev-parse`, merge base is resolved, and the diff is confirmed non-empty.
 
-3. Dispatch the code reviewer subagent using the template at `references/code-reviewer-prompt.md`. Populate all template variables:
-- `WHAT_WAS_IMPLEMENTED`. The exact feature, fix, or module completed.
-- `PLAN_OR_REQUIREMENTS`. The task specification or requirements reference.
-- `BASE_SHA`. Starting commit SHA for the diff range.
-- `HEAD_SHA`. Ending commit SHA for the diff range.
-- `DESCRIPTION`. Brief summary of architectural decisions and changed files.
+### Step 2. Spec and standards discovery
 
-Completion criterion. The code reviewer subagent is dispatched with verified commit SHA boundaries, diff stats, and requirements context.
+Identify the inputs for each review axis before dispatching sub-agents:
 
-### Step 2. Finding triage and priority ranking
+1. Identify specification sources in order of priority:
+- Issue references in commit messages matching patterns like `#123`, `Closes #45`, or GitLab `!67`.
+- Explicit path or URL passed by the user.
+- Spec files in `docs/` or `specs/` matching the branch or feature name.
+When no spec exists, ask the user. If unavailable, mark the Spec axis as skipped.
 
-Categorize all review findings into three priority tiers:
-- Critical. Bugs, security vulnerabilities, data loss risks, broken invariants, or failing tests. Fix these immediately before any further work.
-- Important. Architectural debt, missing error handling, test coverage gaps, or performance regressions. Address these before merging.
-- Minor. Style inconsistencies, naming improvements, or documentation polish. Track or address these after functional concerns pass.
+2. Identify standards sources:
+- Repo guideline files including `CODING_STANDARDS.md` or `CONTRIBUTING.md`.
+- Baseline Fowler code smells in `references/architectural-lenses.md` section 3. Repo standards always override the baseline.
 
-Completion criterion. Every review item is cataloged into Critical, Important, or Minor tier with confirmed file locations.
+Completion criterion. Specification text and repository standards files are located or explicitly marked unavailable.
+
+### Step 3. Two-axis parallel reviewer dispatch
+
+Dispatch the Standards and Spec reviewer sub-agents in parallel using templates in `references/code-reviewer-prompt.md`:
+
+1. Standards sub-agent receives:
+- The diff command `git diff ${BASE_SHA}...${HEAD_SHA}` and commit list from `git log ${BASE_SHA}..HEAD --oneline`.
+- Documented repo standard files.
+- The 12 Fowler code smells from `references/architectural-lenses.md`.
+- Instruction to report hard standard violations and smell heuristics under 400 words, skipping tooling-enforced lints.
+
+2. Spec sub-agent receives:
+- The diff command and commit list.
+- Specification text or path.
+- Instruction to report missing requirements, scope creep, and incorrect implementations with exact spec quotes under 400 words.
+
+If the specification is marked unavailable, dispatch only the Standards sub-agent.
+
+Completion criterion. Both sub-agents are dispatched concurrently with verified diff parameters and strict 400-word budget constraints.
+
+### Step 4. Independent axis aggregation and triage
+
+Aggregate findings from both sub-agents without merging or cross-ranking findings:
+
+1. Present findings under separate `## Standards` and `## Spec` markdown sections.
+2. Never rerank findings across axes. Code that follows all standards may still fail the specification, and code that implements the specification may violate repository conventions.
+3. Conclude with a single summary line reporting total findings per axis and the highest-severity issue within each separate axis.
+4. Categorize findings within each axis into three priority tiers:
+- Critical. Bugs, broken functionality, security risks, or violated specification invariants. Fix these immediately.
+- Important. Missing error handling, architectural debt, smell baseline issues, or test gaps. Address these before merging.
+- Minor. Style inconsistencies or documentation improvements. Address these after functional items pass.
+
+Completion criterion. Findings are rendered under distinct Standards and Spec sections with zero cross-axis reranking, each categorized by priority tier.
 
 ### Workflow integration
 
@@ -81,7 +111,7 @@ Align review cadence with development workflows:
 
 Review comments represent hypotheses to evaluate, not unilateral commands to execute. Process every piece of feedback through deliberate verification.
 
-### Step 3. Feedback verification and pushback loop
+### Step 5. Feedback verification and pushback loop
 
 Follow this six-step loop for every review item:
 1. Read. Process the entire review item without defensive or emotional reactions.
@@ -136,7 +166,7 @@ Verify necessity using this process:
 2. If the feature has zero active callers, reject the abstraction and propose removing dead code instead.
 3. If active callers exist, implement the minimum clean logic required to satisfy those callers without speculative generalizations.
 
-### Step 4. Surgical remediation and regression pass
+### Step 6. Surgical remediation and regression pass
 
 Execute accepted review changes methodically to avoid compound regressions:
 - Clarify ambiguous items first before touching code.
