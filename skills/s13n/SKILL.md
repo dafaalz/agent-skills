@@ -18,8 +18,8 @@ Resolve convention questions against this hierarchy, evaluated highest to lowest
 
 | Rank | Source | Authority | Action |
 | --- | --- | --- | --- |
-| 1 | Repository convention documents (`AGENTS.md`, `CLAUDE.md`, `CODEBASE.md`) | Absolute | Apply documented standard. Never ask user to vote against their own docs |
-| 2 | Enforced tooling configuration (`.editorconfig`, `eslint.config.js`, `ruff.toml`) | Absolute | Apply configured rules directly |
+| 1 | Enforced tooling configuration (`.editorconfig`, `eslint.config.js`, `ruff.toml`) | Absolute | Apply configured rules directly as executable truth |
+| 2 | Repository convention documents (`AGENTS.md`, `CLAUDE.md`, `CODEBASE.md`) | Authoritative | Apply documented standard when tooling does not yet enforce the pattern |
 | 3 | Dominant unambiguous pattern in code (such as 47 out of 48 files) | Tentative | Recommend majority but check git history for intentional migrations |
 | 4 | User confirmation | Authoritative | Ask via structured choice when patterns conflict |
 | 5 | Per-language standards in `references/std-*.md` | Advisory | Baseline default when the repository lacks conventions |
@@ -84,8 +84,8 @@ Resolve canonical patterns using the Precedence Hierarchy. When rank 1 and rank 
 When code patterns conflict and rank 1 or 2 does not specify a rule, present options to the user:
 - State the concern concisely in one line.
 - Present each variant with its file count and sample snippet.
-- Highlight the recommended variant with clear rationale.
-- Highlight counter-signals such as newer modules or recent commit ranges.
+- State the recommended variant with clear rationale.
+- Identify counter-signals such as newer modules or recent commit ranges.
 - Cap questions to at most four major divergences per round.
 
 Completion criterion. A confirmed canonical variant selected via convention documents, tool configs, or explicit user sign-off.

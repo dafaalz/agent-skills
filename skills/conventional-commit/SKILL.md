@@ -84,16 +84,16 @@ Completion criterion. Only the specific files or hunks for the target logical ch
 
 Determine whether the project or user prefers **oneline** or **multiline** commits:
 
-#### Format Options
+#### Format options
 
-1. **Oneline Mode (Single-line)**:
-   - Format: `<type>[optional scope]: <description>`
-   - Use when the subject line alone conveys complete intent, or when the user / repository standard requires compact commit history.
-   - Do NOT include empty lines, bodies, descriptions, or footers.
-   - Example: `feat(ui): add custom-select blade component`
+1. **Oneline mode (Single-line).**
+   - Syntax follows `<type>[optional scope]: <description>`.
+   - Use when the subject line alone conveys complete intent, or when the user or repository standard requires compact commit history.
+   - Do not include empty lines, bodies, descriptions, or footers.
+   - Sample commit: `feat(ui): add custom-select blade component`
 
-2. **Multiline Mode**:
-   - Format:
+2. **Multiline mode.**
+   - Syntax structure:
 
      ```text
      <type>[optional scope][!]: <description>
@@ -105,9 +105,7 @@ Determine whether the project or user prefers **oneline** or **multiline** commi
 
    - Use when detailing complex reason, migration guides, breaking changes (`BREAKING CHANGE:`), or tracking issue references (`Closes: #123`).
 
-#### Rules for message components
-
-Rules for message components:
+#### Message component rules
 
 - Type. Pick one standard type documented in `references/commit-types.md` (`feat`, `fix`, `refactor`, `perf`, `test`, `build`, `ci`, `docs`, `style`, `chore`, `revert`).
 - Scope. Add a scope only when changes are isolated to a single bounded module, package, or directory. Use lowercase kebab-case naming, such as `fix(auth):` or `feat(api):`. Omit the scope for repository-wide changes.
@@ -116,7 +114,7 @@ Rules for message components:
 - Body. Optional. Wrap at 72 characters. Explain the motivation and constraints rather than restating the diff.
 - Footers. Optional. Include issue references (`Closes: #123`) or migration guides (`BREAKING CHANGE: payload key renamed to data`).
 
-Optional co-author trailer:
+#### Optional co-author trailer
 
 - Include a co-author trailer only when the user requests it or repository guidelines require attribution.
 - Resolve identity strictly from real sources, including explicit user prompt, git configuration (`git config --get coauthor.name`), or existing repository history. If no real identity exists, omit the trailer.
@@ -130,13 +128,13 @@ Completion criterion. A commit message matching Conventional Commits syntax with
 
 ### Step 5. Commit
 
-#### For Oneline Commits (Single-line):
+#### Oneline commit command
 
 ```bash
 git commit -m "feat(ui): add custom-select blade component"
 ```
 
-#### For Multiline Commits:
+#### Multiline commit command
 
 Commit using a heredoc so multi-line messages and blank lines are preserved:
 
