@@ -41,7 +41,9 @@ Draft the document structure using Google Developer Style guidelines while plann
 - Write procedures as commands. State preconditions before actions, such as "To delete the document, click Delete."
 - Vary sentence length intentionally. Pair short punchy statements that land core facts with longer sentences that outline preconditions or technical consequences.
 - Put common cases first and edge cases second.
-- Make headings informative verb phrases for tasks or noun phrases for concepts.
+- Make headings informative verb phrases for tasks or noun phrases for concepts. Concept titles must accept an implicit "About" in front.
+- Cut pre-announcements that promise future features.
+- In tutorials, describe the exact visible result for every action, including prompt changes, expected stdout, or log lines.
 
 Completion criterion. An outline and initial draft written in second-person imperative style with varied sentence cadence.
 
@@ -56,6 +58,9 @@ Refine draft sentences using Simplified Technical English (STE) and Global Engli
 - Retain structural words like "that" when they eliminate misreadings.
 - Remove trailing "-ing" clauses. Replace them with independent clauses or distinct sentences.
 - Avoid slashes. Replace "and/or" with "a, b, or both".
+- Never form plurals using parentheses like "file(s)". Write the singular or plural noun directly.
+- Make text inside parentheses a complete grammatical unit or an independent sentence.
+- Ensure every directory tree claim or count matches repository state at the landing commit, and provide the command that regenerates it.
 
 Completion criterion. The text parses in exactly one way, with zero dangling modifiers and zero unanchored pronouns.
 
@@ -94,6 +99,9 @@ Pick one mode for each document:
 - Repeat articles across lists when items represent distinct things, such as "the client and the server".
 - Connect paired thoughts with explicit correlatives, such as "both...and" or "either...or".
 - Use periods instead of semicolons. Break long coordinate clauses into separate sentences.
+- Never form plurals with parentheses like "file(s)". Write the singular or plural noun directly.
+- Avoid slashes like "a/b" or "and/or". Write "a, b, or both".
+- Make text inside parentheses a complete grammatical unit or an independent sentence.
 
 ### Scope specifics
 
@@ -121,6 +129,7 @@ Run this check before finishing any human-facing technical text:
 | Cognitive load | Sentences contain one thought or one instruction, staying under 25 words |
 | Modifier position | Words like "only" and "not" sit immediately adjacent to their target |
 | Pronoun anchor | Every pronoun resolves to a single unambiguous referent without guesswork |
-| Codebase truth | All file paths, symbols, commands, and options exist in the repository |
+| Codebase truth | All file paths, symbols, commands, options, and counts exist and verify against repo state |
+| Structural syntax | Zero slashes like "and/or", zero parenthetical plurals like "(s)", and parentheses contain complete units |
 | Tone discipline | Zero condescending adverbs such as "simply" or "easy", and zero conversational padding |
 | Punctuation | Zero em dashes, zero en dashes, and colons appear only before lists, tables, or code |
