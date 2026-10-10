@@ -5,15 +5,15 @@ description: Use when writing or reviewing human-facing documentation, RFCs, REA
 
 # Technical writing
 
-Write clear technical documentation that an engineer understands on the first read. Apply four layers in sequence, from document structure down to individual words.
+Write clear technical documentation that an engineer understands on the first read. Combine the four Diátaxis documentation modes with ASD-STE100 Simplified Technical English (STE) precision standards.
 
 Follow three universal rules across every layer:
 
 - Cut every word that does no work. If the sentence survives without a word, remove it.
-- Use the short everyday word. Write "use" instead of "utilize", "help" instead of "facilitate", and "do" instead of "perform".
+- Use the short everyday word. Write "use" instead of "utilize", "help" instead of "facilitate", and "run" instead of "execute".
 - Preserve sentence quality above rigid rule compliance. If a rule makes a sentence sound artificial, rewrite the sentence or keep the plain phrasing.
 
-Use codebase truth for naming. Always write the exact symbol, file path, flag, or command name instead of synonyms or descriptive approximations. Avoid invented metaphors. Write terms developers say aloud, such as "move" or "delete".
+Use codebase truth for naming. Always write the exact symbol, file path, flag, or command name instead of synonyms or descriptive approximations. Code identifiers, endpoints, flags, and types function as Technical Names. Apply STE rules strictly to the surrounding prose. Consult `references/asd-ste100-rules.md` for detailed writing rules and vocabulary tables.
 
 ## Workflow
 
@@ -32,37 +32,43 @@ Never blend multiple modes in a single document. Link out to related modes inste
 
 Completion criterion. The document maps to one confirmed Diátaxis mode with explicit external links for out-of-scope material.
 
-### Step 2. Outline and cadence calibration
+### Step 2. Outline and structure calibration
 
-Draft the document structure using Google Developer Style guidelines while planning sentence rhythm.
+Draft the document structure using Google Developer Style guidelines and ASD-STE100 paragraph bounds.
 
 - Address the reader directly as "you" in the present tense.
 - State who performs each action. Prefer active voice. Use passive voice only when the actor is unknown or irrelevant.
-- Write procedures as commands. State preconditions before actions, such as "To delete the document, click Delete."
-- Vary sentence length intentionally. Pair short punchy statements that land core facts with longer sentences that outline preconditions or technical consequences.
+- Order procedural steps in strict chronological sequence.
+- State preconditions before actions, such as "To delete the document, click Delete."
+- Limit descriptive paragraphs to a maximum of six sentences. Begin each paragraph with an explicit topic sentence.
 - Put common cases first and edge cases second.
 - Make headings informative verb phrases for tasks or noun phrases for concepts. Concept titles must accept an implicit "About" in front.
 - Cut pre-announcements that promise future features.
 - In tutorials, describe the exact visible result for every action, including prompt changes, expected stdout, or log lines.
 
-Completion criterion. An outline and initial draft written in second-person imperative style with varied sentence cadence.
+Completion criterion. An outline and initial draft written in second-person imperative style with descriptive paragraphs under seven sentences.
 
 ### Step 3. Precision bounds and syntactic disambiguation
 
-Refine draft sentences using Simplified Technical English (STE) and Global English principles.
+Refine draft sentences using ASD-STE100 and Global English principles. Consult `references/asd-ste100-rules.md` for complete substitution tables.
 
-- Restrict each sentence to one instruction or one technical thought. Split sentences exceeding 25 words.
+- Limit procedural sentences to a maximum of 20 words.
+- Limit descriptive sentences to a maximum of 25 words.
+- Give exactly one instruction per sentence. Do not chain multiple actions with "and".
+- Limit noun clusters to a maximum of three nouns. Unpack clusters containing four or more nouns with prepositions.
+- Use only approved verb forms, which are simple present, simple past, simple future with "will", imperative, and past participles as adjectives.
+- Prohibit progressive tenses ending in "-ing" and gerunds acting as nouns. Write "The worker processes jobs", never "The worker is processing jobs".
+- Restrict modal auxiliary verbs to "can" for capability, "will" for future certainty, and "must" for mandatory requirements. Ban "should", "could", "would", and "may".
+- Replace unapproved verbs and synonyms. Replace "check" or "verify" with "make sure" or "examine". Replace "ensure" with "make sure". Replace "terminate" with "stop".
 - Place modifiers such as "only" and "not" immediately adjacent to the words they modify.
-- Unpack dense noun strings. Change "proto import budget check script" to "script that checks the proto import budget".
 - Anchor every pronoun. Ensure every instance of "it", "this", and "they" points to one obvious noun. Repeat the noun when any ambiguity exists.
-- Retain structural words like "that" when they eliminate misreadings.
 - Remove trailing "-ing" clauses. Replace them with independent clauses or distinct sentences.
-- Avoid slashes. Replace "and/or" with "a, b, or both".
+- Prohibit slashes. Replace "and/or" with "a, b, or both".
 - Never form plurals using parentheses like "file(s)". Write the singular or plural noun directly.
 - Make text inside parentheses a complete grammatical unit or an independent sentence.
 - Ensure every directory tree claim or count matches repository state at the landing commit, and provide the command that regenerates it.
 
-Completion criterion. The text parses in exactly one way, with zero dangling modifiers and zero unanchored pronouns.
+Completion criterion. Sentences comply with word count bounds, contain zero progressive verbs, zero ambiguous modals, zero noun clusters exceeding three words, and zero unanchored pronouns.
 
 ### Step 4. Final verification pass
 
@@ -70,7 +76,7 @@ Run the completed draft against the review checklist and codebase truth.
 
 - Confirm that every code symbol, file path, and command flag exists in the repository.
 - Verify that code formatting matches project conventions.
-- Audit the prose against the review checklist below.
+- Audit the prose against the quick reference checklist below.
 
 Completion criterion. The document passes every check on the review checklist with zero defects.
 
@@ -79,7 +85,7 @@ Completion criterion. The document passes every check on the review checklist wi
 Pick one mode for each document:
 
 - **Tutorial**. Teach through practical action. Guide the learner to build a working artifact from start to finish. Produce visible progress at every step. State the exact expected output after each command. Keep background explanations minimal and link out for deep context.
-- **How-to guide**. Solve a specific real-world problem for an experienced reader. Focus entirely on steps to the goal. Omit basic concept explanations. Allow forks and decisions based on the user's setup.
+- **How-to guide**. Solve a specific real-world problem for an experienced reader. Focus entirely on steps to the goal. Omit basic concept explanations. Allow forks and decisions based on the user setup.
 - **Reference**. Provide dry, systematic facts for lookup. Describe system capabilities, flags, configuration options, and error codes without opinion or persuasion. Mirror the underlying code architecture.
 - **Explanation**. Deliver understanding and architectural context. Explore design decisions, trade-offs, constraints, and alternative approaches. Discuss opinions and technical rationale here.
 
@@ -92,16 +98,21 @@ Pick one mode for each document:
 - Strip promotional vocabulary and corporate buzzwords.
 - Write links using descriptive destinations or page titles instead of phrases like "click here".
 
-### Syntactic rules
+### Safety instructions and notices
 
+Place safety notices immediately before the procedural step to which they apply:
+
+- **WARNING**. Use strictly for hazards that cause irreversible data loss, production outages, or security breaches. Open with an imperative command or condition stating the hazard, then state consequence and prevention.
+- **CAUTION**. Use for risks of service degradation, invalid runtime states, or build failures.
+- **NOTE**. Use for non-hazardous technical clarifications and prerequisites. Notes must never contain commands or imperative verbs.
+
+### Punctuation rules
+
+- Prohibit semicolons. Split coordinate clauses into separate sentences.
+- Restrict colons. Use colons strictly to introduce an explicit vertical list, a table, or a code block. Never use colons as connectors in running text.
+- Restrict hyphens. Use hyphens only in approved compound words or compound Technical Names. Never use hyphens as dashes to connect thoughts.
+- Prohibit slashes like "a/b" or "and/or". Write "a, b, or both".
 - Keep articles like "the" and "a" before nouns to prevent dual interpretations.
-- Write procedures as commands. Use "Run the test" instead of "The test should be run".
-- Repeat articles across lists when items represent distinct things, such as "the client and the server".
-- Connect paired thoughts with explicit correlatives, such as "both...and" or "either...or".
-- Use periods instead of semicolons. Break long coordinate clauses into separate sentences.
-- Never form plurals with parentheses like "file(s)". Write the singular or plural noun directly.
-- Avoid slashes like "a/b" or "and/or". Write "a, b, or both".
-- Make text inside parentheses a complete grammatical unit or an independent sentence.
 
 ### Scope specifics
 
@@ -116,7 +127,7 @@ Pick one mode for each document:
 
 ### Revision after applying standards
 
-> `budget.mjs` reads the committed budget from `budget.json` and counts the files that import protos. If the count exceeds the budget, CI fails. Run `budget.mjs --write` only to lower the budget.
+> `budget.mjs` reads the committed budget from `budget.json` and counts files that import protos. If the count exceeds the budget, the CI test fails. Run `budget.mjs --write` only when you must lower the budget count.
 
 ## Quick reference checklist
 
@@ -125,11 +136,17 @@ Run this check before finishing any human-facing technical text:
 | Check | Passing condition |
 |---|---|
 | Mode boundary | File adheres to exactly one Diátaxis mode with links for out-of-scope material |
+| Procedural length | Instructional sentences stay under 21 words (maximum 20 words) |
+| Descriptive length | Explanatory sentences stay under 26 words (maximum 25 words) |
+| Paragraph bound | Descriptive paragraphs contain at most six sentences with topic sentence first |
+| Noun clusters | Zero noun clusters containing more than three words |
+| Verb tenses | Only simple present, simple past, simple future with will, and imperative, with zero progressive -ing verbs |
+| Modal verbs | Modals restricted to can, will, and must, with zero instances of should or may |
 | Imperative mood | Every procedural step is an active command with preconditions stated first |
-| Cognitive load | Sentences contain one thought or one instruction, staying under 25 words |
+| Single action | Exactly one instruction per procedural sentence without compound and chains |
+| Safety tiers | WARNING, CAUTION, and NOTE follow strict severity definitions and precede actions |
 | Modifier position | Words like "only" and "not" sit immediately adjacent to their target |
 | Pronoun anchor | Every pronoun resolves to a single unambiguous referent without guesswork |
 | Codebase truth | All file paths, symbols, commands, options, and counts exist and verify against repo state |
-| Structural syntax | Zero slashes like "and/or", zero parenthetical plurals like "(s)", and parentheses contain complete units |
+| Punctuation | Zero semicolons, zero slashes, zero dashes, and colons appear only before lists, tables, or code |
 | Tone discipline | Zero condescending adverbs such as "simply" or "easy", and zero conversational padding |
-| Punctuation | Zero em dashes, zero en dashes, and colons appear only before lists, tables, or code |
