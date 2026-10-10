@@ -92,20 +92,48 @@ Vague authority claims that invent consensus without citing verifiable sources.
 
 | Banned term | Concrete replacement |
 |---|---|
+| additionally / furthermore | also, next, or start a new sentence |
+| crucial / vital / paramount | needed, required, or state the exact risk |
+| delve / dive deep | explore, inspect, read, analyze |
+| enduring / testament to | proves, demonstrates, lasts |
+| enhance / foster | improve, speed up, support |
+| garner / showcase | get, collect, show, display |
+| interplay / intricate | interaction, complex, detailed |
+| landscape (abstract) / realm | market, system, codebase, context |
+| pivotal / cornerstone | main, key, primary |
+| tapestry / substrate (abstract) | base, foundation, mix |
+| underscore / highlight | stress, show, prove |
+| vibrant / breathtaking | active, dense, or describe exact traits |
+| utilize / leverage / harness | use |
+| facilitate / empower | help, enable |
+| seamless / holistic | direct, unified, integrated |
+| elevate / supercharge | improve, accelerate |
+| embark / journey | begin, build, run |
+| paradigm shift / game changer | new pattern, state exact metric |
 | realm / sphere | field, area, domain, codebase |
 | beacon / lighthouse | guide, reference, standard |
 | multifaceted / nuanced | complex, varied, or name the factors |
 | meticulous / painstaking | detailed, thorough, checked |
-| elevate / supercharge | improve, speed up, optimize |
-| embark / journey | start, begin, implement |
-| harness / utilize | use, apply, run |
 | ever-evolving / dynamic | changing, active, updated |
-| game changer / revolutionary | new, faster, or state exact impact |
-| paradigm shift | change in approach, new pattern |
 | this is huge / changes everything | state the exact measurable benefit |
-| empower / streamline | help, simplify, shorten |
 | robust / resilient | stable, fault-tolerant, tested |
 | cutting-edge / state of the art | recent, modern, or state the release year |
+
+### Metaphor translations into concrete components
+
+Translate abstract metaphors into concrete system components:
+- "API surface" becomes "endpoints" or "exported functions"
+- "vector" becomes "method" or "direction"
+- "paradigm" becomes "pattern" or "approach"
+- "scaffolding" becomes "template" or "boilerplate"
+- "substrate" becomes "base" or "foundation"
+- "wedge" becomes "entry point" or "addition"
+- "bedrock" becomes "core platform" or "runtime"
+- "harness" becomes "test suite" or "runner"
+- "ratchet" becomes "tightening limit" or state the exact metric rule
+- "evacuate" becomes "migrate" or "move"
+- "flywheel" or "north star" becomes the specific operational metric or objective
+- "gold-plating" becomes "unneeded scope" or "speculative work"
 
 ### Often-empty adverbs
 

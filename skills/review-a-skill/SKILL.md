@@ -1,6 +1,6 @@
 ---
 name: review-a-skill
-description: Use when reviewing, auditing, benchmarking, or comparing agent skills against AgentSkills specifications, structural guidelines, or alternative implementations. Don't use for reviewing application source code, running CI test suites, or writing end-user documentation.
+description: Audit agent skills against AgentSkills specifications, structural execution standards, and anti-slop guidelines. Use when reviewing, auditing, benchmarking, or comparing agent skills against AgentSkills specifications, structural guidelines, or alternative implementations. Don't use for reviewing application source code, running CI test suites, or writing end-user documentation.
 ---
 
 # Review a skill
@@ -20,7 +20,7 @@ Identify the review scope and intake candidate artifacts:
 
 Load prerequisite skills and target files before auditing:
 
-1. Read both `unslop` (`/Users/groundfox/.gemini/config/skills/unslop/SKILL.md`) and `writing-for-agents` (`/Users/groundfox/.gemini/config/skills/writing-for-agents/SKILL.md`) directly using `view_file`. Never audit from memory or secondary summaries.
+1. Locate and read both `unslop` and `writing-for-agents` directly using `view_file` from the active skills root (such as `.agents/skills/`, `~/.agents/skills/`, `~/.gemini/config/skills/`, or the active repository `skills/` directory). Never audit from memory or secondary summaries.
 2. Load the target `SKILL.md` along with any disclosed files in `references/`. Check initial boundary constraints:
    - Directory naming. Confirm the directory name matches the `name` field in the YAML frontmatter using 1 to 64 lowercase alphanumeric characters and single hyphens.
    - Context budget. Confirm the main `SKILL.md` stays under 250 lines. Flag heavy documentation exceeding 100 lines that belongs in `references/`.
@@ -69,6 +69,10 @@ Synthesize findings into an actionable evaluation report:
 - Final checklist verification. Audit the candidate or proposed patch against the quick audit checklist below.
 
 Completion criterion. An evaluation report containing the dimensional comparison table or single-audit log, a direct verdict, and concrete drop-in patch recommendations.
+
+## Boundary isolation
+
+Execute skill reviews in read-only mode. Never alter application source code, database schemas, project dependencies, or test configurations during a skill audit. Apply recommendations as proposed patches or review reports.
 
 ## Dimensional evaluation rubric
 

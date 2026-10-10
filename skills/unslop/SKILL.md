@@ -1,6 +1,6 @@
 ---
 name: unslop
-description: Use when drafting prose, reviewing text for AI patterns, editing documentation, rewriting generic AI output, or cutting LLM writing habits. Don't use for functional code refactoring, schema migrations, or terminal command optimization.
+description: Strip AI slop patterns, eliminate filler, and restore authentic human cadence. Use when drafting prose, reviewing text for AI patterns, editing documentation, rewriting generic AI output, or cutting LLM writing habits. Don't use for functional code refactoring, schema migrations, or terminal command optimization.
 ---
 
 # Unslop
@@ -78,76 +78,10 @@ Keep code syntax, database schemas, API parameters, variable names, terminal com
 
 ### Plain vocabulary and substitutions
 
-Use plain words and direct verbs. Consult these substitution tables for banned AI vocabulary:
+Use plain words and direct verbs. Consult these reference guides for comprehensive substitution tables, structural patterns, and metaphor conversions:
 
-#### English substitution table
-
-| Banned term | Concrete replacement |
-|---|---|
-| additionally / furthermore | also, next, or start a new sentence |
-| crucial / vital / paramount | needed, required, or state the exact risk |
-| delve / dive deep | explore, inspect, read, analyze |
-| enduring / testament to | proves, demonstrates, lasts |
-| enhance / foster | improve, speed up, support |
-| garner / showcase | get, collect, show, display |
-| interplay / intricate | interaction, complex, detailed |
-| landscape (abstract) / realm | market, system, codebase, context |
-| pivotal / cornerstone | main, key, primary |
-| tapestry / substrate (abstract) | base, foundation, mix |
-| underscore / highlight | stress, show, prove |
-| vibrant / breathtaking | active, dense, or describe exact traits |
-| utilize / leverage / harness | use |
-| facilitate / empower | help, enable |
-| seamless / holistic | direct, unified, integrated |
-| elevate / supercharge | improve, accelerate |
-| embark / journey | begin, build, run |
-| paradigm shift / game changer | new pattern, state exact metric |
-
-#### Indonesian substitution table
-
-| Banned Indonesian term | Concrete replacement |
-|---|---|
-| dalam lanskap / menavigasi lanskap | pada industri, di pasar, dalam sistem, di codebase |
-| memainkan peran penting dalam | menentukan, menjadi kunci, mempercepat |
-| di mana / yang mana (relatif klausa) | buat kalimat baru atau sambung langsung ke nomina |
-| tidak hanya X, tetapi juga Y | sebut aksi X dan aksi Y dalam kalimat mandiri terpisah |
-| sebuah bukti nyata dari | membuktikan, menunjukkan, memvalidasi |
-| menyelami lebih dalam | memeriksa, menganalisis, menguji |
-| merupakan salah satu dari | salah satu, atau pasang predikat langsung |
-| krusial / vital / esensial | wajib, dibutuhkan, atau sebut dampak bila gagal |
-| membuka potensi penuh / merangkul | meningkatkan kapasitas, menyesuaikan sistem |
-| permadani yang rumit (tapestry) | kombinasi, susunan, arsitektur |
-| secara keseluruhan / sebagai kesimpulan | hapus, tutup dengan aksi konkret berikutnya |
-| di era digital yang serba cepat ini | hapus total, sebut subjek dan waktu riil |
-| tidak dapat dipungkiri bahwa | hapus total, nyatakan fakta langsung |
-| perlu diingat bahwa / penting untuk dicatat | hapus total, nyatakan aturan langsung |
-| melakukan [verba] (eksekusi, validasi) | eksekusi, validasi (gunakan kata kerja aktif) |
-| memiliki kemampuan untuk | bisa, dapat, mampu |
-| adalah merupakan / merupakan sebuah | adalah, atau jadikan kata benda sebagai predikat |
-| alat yang ampuh / senjata ampuh | sebut nama perkakas atau fungsi teknis spesifik |
-| hadir untuk / berada di garis depan | berfungsi untuk, memimpin, merintis |
-| tidak kalah pentingnya | hapus pengantar, sebut poin langsung |
-| pedang bermata dua | sebutkan konsekuensi teknis secara eksplisit |
-| perlu digarisbawahi bahwa | hapus, tulis aturan langsung |
-| guna untuk / demi untuk / disebabkan karena | untuk, karena (hapus pleonasme) |
-| berpotensi untuk dapat / diharapkan dapat | dapat, mampu (potong rantai hedging) |
-| berdampak signifikan / solusi cerdas | sebut angka metrik atau algoritma spesifik |
-
-For extended structural patterns and evaluation rubrics, see `references/slop-patterns.md`. For Indonesian calque patterns and citations, see `references/indonesian-patterns.md`.
-
-Translate abstract metaphors into concrete system components:
-- "API surface" becomes "endpoints" or "exported functions"
-- "vector" becomes "method" or "direction"
-- "paradigm" becomes "pattern" or "approach"
-- "scaffolding" becomes "template" or "boilerplate"
-- "substrate" becomes "base" or "foundation"
-- "wedge" becomes "entry point" or "addition"
-- "bedrock" becomes "core platform" or "runtime"
-- "harness" becomes "test suite" or "runner"
-- "ratchet" becomes "tightening limit" or state the exact metric rule
-- "evacuate" becomes "migrate" or "move"
-- "flywheel" or "north star" becomes the specific operational metric or objective
-- "gold-plating" becomes "unneeded scope" or "speculative work"
+- English substitution tables, metaphor translations, empty adverbs, and filler phrases. Read `references/slop-patterns.md`.
+- Indonesian calque replacements, pleonasm eliminations, and conversational filler patterns. Read `references/indonesian-patterns.md`.
 
 ### Style and typography
 
