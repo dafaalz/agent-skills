@@ -103,6 +103,7 @@ Anchor layouts to neutral bases with at most one restrained accent color.
 - Single accent rule. Pick at most one accent color per project (Emerald, Electric Blue, Deep Rose, or Amber). Keep accent saturation strictly below 80% to eliminate neon glows.
 - Systematic color spaces. Construct palette steps using OKLCH scales for uniform perceived lightness across tints and shades. Consult references/custom-theme.md.
 - Surface elevation. Differentiate elevation layers using discrete surface lightness steps and subtle borders. Never stack semi-transparent white overlays or neon drop shadows.
+- Dynamic surface tinting. Construct state tints and subtle surface borders using color-mix in oklch space with 5% to 15% accent mix instead of stacking opacity overlays or arbitrary hex codes.
 
 ### 3. Layout structure
 
@@ -112,7 +113,8 @@ Construct responsive structural grids with modern CSS and dynamic viewport units
 - Viewport stability. Set full-height hero screens and root wrappers to min-h-[100dvh] instead of h-screen or 100vh to eliminate mobile scroll jumping.
 - Mobile collapse threshold. When Variance exceeds level 4, collapse asymmetric desktop grids into a clean single column below 768px (w-full px-4). Consult references/responsive.md.
 - Layout anti-patterns. Avoid centered three-card feature rows. Use staggered two-column pairs, bento layouts, horizontal scrolls, or index directories. Consult references/anti-patterns.md.
-- Concentric corner geometry. Maintain proportional nested radii where inner radius equals outer radius minus container padding and border thickness. Never use identical radii on nested cards.
+- Concentric corner geometry. Maintain proportional nested radii where inner radius equals outer radius minus container padding and border thickness using the formula calc(var(--outer-radius) - var(--padding) - var(--border)). Never use identical radii on nested cards.
+- Container query modularity. Declare container-type inline-size on portable micro-component roots. Trigger internal responsive adaptations and typography clamping using container queries and cqw units instead of coupling components to global viewport breakpoints.
 
 ### 4. Honest copy and authentic assets
 
@@ -152,6 +154,8 @@ Implement full lifecycle interaction states and tactile feedback for all compone
 5. Hardware-accelerated motion. Animate exclusively via transform and opacity. Restrict spring physics transitions to motion-enabled elements and respect prefers-reduced-motion queries.
 6. Asynchronous network resilience. Handle race conditions with AbortController, retry idempotent requests with exponential backoff, and provide optimistic mutations with rollback. Consult `references/api-resilience.md`.
 7. Target size minimum and keyboard focus. Guarantee interactive elements meet WCAG 2.2 SC 2.5.8 with a minimum hit area of 24x24px, with recommended 44px touch targets (min-h-[44px] or adequate padding and gap spacing). Configure visible focus indicators on all interactive targets using focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none.
+8. Top layer and discrete transitions. Use native dialog or Popover API for modals, command palettes, and drawer surfaces to activate browser focus trapping and top-layer stacking. Animate entry and exit states using @starting-style with transition-behavior allow-discrete for display, opacity, and transform transitions without JavaScript animation libraries.
+9. Relational container focus. Configure parent card boundaries to reflect keyboard focus of interior interactive links or buttons using :has(a:focus-visible) and :has(button:focus-visible) without JavaScript event listeners.
 
 ## Specialized workflow pointers
 
@@ -184,3 +188,7 @@ Verify all items before declaring frontend implementation complete:
 | Target sizes | Interactive elements maintain minimum 24x24px target size with 44px touch bounds |
 | Keyboard focus | Visible focus indicators configured via focus-visible:ring-2 focus-visible:ring-offset-2 |
 | Editorial quotes | Pull quotes use semantic figure or blockquote with structured multi-tier marginalia |
+| Container queries | Portable micro-components declare container-type inline-size and scale via @container |
+| Native dialogs | Modals use native dialog or popover with @starting-style discrete transitions |
+| Relational focus | Container cards reflect child keyboard focus via :has(:focus-visible) |
+| Surface tinting | Dynamic states use color-mix in oklch rather than stacked opacity overlays |
