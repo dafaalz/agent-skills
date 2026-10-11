@@ -5,197 +5,197 @@ description: Use when scoping new features, exploring architectural requirements
 
 # Brainstorming ideas into designs
 
-Turn ideas into validated designs before writing code or plans.
+Turn ideas into designs you can build before you write code or plans.
 
-Check the project context first. For architecture and refactoring work, research external standards, run a codebase gap analysis, and compare trade-offs. For new features, ask clarifying questions one at a time and present the design in stages. Once the user approves the approach, write the design specification and hand off to implementation planning.
+Read project files first. If you change existing code, read official standards, check code against those standards, and compare options. If you build something new, ask one question at a time and show the design in parts. After the user picks an approach, write the spec and call implementation planning.
 
 <HARD-GATE>
-Present the design and secure explicit user approval before writing code, generating project templates, or invoking implementation skills. Do not take implementation actions before user approval. This rule applies to every task, regardless of scope.
+Show the design and get explicit user approval before you write code, write project templates, or call implementation skills. Do not write code before the user says yes. This rule covers every task, no matter how small.
 </HARD-GATE>
 
 ## Workflow selection
 
-Identify whether the task involves existing architecture or greenfield capability, then follow the matching branch:
+Decide if the task changes existing code or adds new code, then run the matching branch:
 
-- Architecture or refactor. Follow Branch 1.
-- New feature or greenfield. Follow Branch 2.
+- Change existing code. Run Branch 1.
+- Add new code. Run Branch 2.
 
-Both branches terminate by invoking writing-plans. Never invoke implementation skills directly from brainstorming.
+Both branches end when you call writing-plans. Never call implementation skills directly from brainstorming.
 
-## Branch 1. Architecture evaluation and refactoring
+## Branch 1. Check existing code and plan changes
 
-Use this branch when modernizing legacy code, redesigning module boundaries, evaluating framework compliance, or restructuring existing components.
+Run this branch when you update old code, move module boundaries, check if code follows framework rules, or reshape existing components.
 
-### Step 1. External standards research
+### Step 1. Read external standards
 
-Survey authoritative standards before proposing changes to existing architecture.
+Read official docs before you suggest changes to existing code.
 
-- Delegate deep research to a subagent when exploring multi-source topics. This keeps the orchestrator context window clean.
-- Require 3 to 5 credible sources. Acceptable sources include official framework documentation, core contributor publications, official RFCs, and recognized industry engineering guides.
-- Direct the subagent to return:
-  1. Complete citations with source titles and exact URLs.
-  2. Concrete architectural rules organized by layer or subsystem.
-  3. Anti-patterns and hazards identified by the sources.
-  4. Dense output without filler phrases or conversational padding.
+- When the topic spans many sources, ask a subagent to read them. This saves context in the main session.
+- Ask for 3 to 5 trusted sources. Use official framework docs, core contributor posts, official RFCs, and trusted engineering guides.
+- Tell the subagent to return:
+  1. Full citations with source titles and exact URLs.
+  2. Rules you can apply, grouped by layer or subsystem.
+  3. Mistakes and risks the sources name.
+  4. Short output with no filler or small talk.
 
-Completion criterion. A structured synthesis containing at least 3 verified source citations and an actionable list of technical rules for each affected layer.
+Completion criterion. You list at least 3 checked sources and the rules you will apply for each affected layer.
 
-### Step 2. Codebase gap analysis
+### Step 2. Check code against standards
 
-Audit the active codebase against the researched standards using a structured gap analysis.
+Read files, models, controllers, configs, and tests. Check what the code does against the standards you read.
 
-Inspect existing files, models, controllers, configurations, and test suites. Classify findings into three categories:
+Read the code, then sort what you find into three lists:
 
-1. Sound patterns. Components that follow standards. Note why they remain untouched to prevent regressions.
-2. Flaws to remove. Bugs, anti-patterns, leaky abstractions, query builder state pollution, and tight coupling.
-3. Additions to build. Missing abstractions, typed entities, endpoints, route handlers, or service layers needed to bridge the gap.
+1. Good code. Code that follows the standards. Write why it stays as is so you avoid breaking it.
+2. Bad code to fix. Bugs, anti-patterns, leaky abstractions, query builder state pollution, and tight coupling.
+3. Missing code to write. Missing abstractions, typed entities, endpoints, route handlers, or service layers you still need to write.
 
-Provide concrete file paths, class names, and line references for every finding.
+List file path, class name, and line number for every item.
 
-Completion criterion. A three-part inventory mapping specific codebase locations to each category, with zero unverified assumptions about the current code.
+Completion criterion. You list file paths for each of the three groups and you check every claim in code with zero guesses.
 
-### Step 3. Tradeoff analysis and approach proposal
+### Step 3. Compare options and suggest one
 
-Formulate 2 to 3 distinct implementation approaches based on the gap analysis.
+Write 2 to 3 different ways to fix the code.
 
-- Define contrasting strategies, such as an in-place pragmatic refactor versus a clean-slate modular rewrite.
-- Evaluate each option across five criteria:
-  1. Scope and disruption to active systems.
-  2. Backward compatibility with views, frontend scripts, and external callers.
-  3. Testability and verification effort.
-  4. Implementation complexity and delivery risk.
-  5. Long-term maintainability.
-- Evaluate data scaling and state lifecycle. Consult `references/architecture-scalability.md` when designing list endpoints, table pagination, or interactive state persistence.
-- Include the status quo as a baseline comparison.
-- Lead with your recommended option and state the technical reasons for the choice.
-- Ask the user to choose an approach before drafting detailed component designs.
+- Describe opposite options, such as fix code where it sits versus rewrite it in new modules.
+- Check each option on five points:
+  1. How much running code you touch.
+  2. What breaks for views, frontend scripts, and outside callers.
+  3. How you test it.
+  4. How hard it is to build and what can fail.
+  5. How hard it is to change later.
+- Check data growth and state lifecycle. Read `references/architecture-scalability.md` when you design list endpoints, table pagination, or interactive state saves.
+- Keep doing nothing as one option.
+- Put your pick first and say why it wins in technical terms.
+- Ask the user to pick one option before you write detailed designs.
 
-Completion criterion. The user selects one approach or provides adjustments.
+Completion criterion. The user picks one option or asks for changes.
 
-## Branch 2. Feature and greenfield design
+## Branch 2. Design new features
 
-Use this branch when building new capabilities, interfaces, utilities, or workflows from scratch.
+Run this branch when you build new capabilities, interfaces, utilities, or workflows from scratch.
 
-### Step 1. Scope assessment and project context
+### Step 1. Bound the scope
 
-Inspect existing files, docs, and recent commits to understand conventions and dependencies.
+Read files, docs, and recent commits to learn conventions and dependencies.
 
-- Assess overall scope immediately. If the request spans multiple independent subsystems, flag it and decompose into sub-projects before discussing details.
-- Brainstorm the first sub-project through the standard design flow. Each sub-project receives its own design, plan, and implementation cycle.
+- Check scope first. If the request spans separate subsystems that you can build alone, flag it and split it into sub-projects before you discuss details.
+- Run the first sub-project through the full design flow. Each sub-project gets its own design, plan, and build cycle.
 
-Completion criterion. A bounded scope confirmed as suitable for a single implementation plan.
+Completion criterion. You bound the scope so it fits one implementation plan.
 
-### Step 2. Clarifying questions and grilling
+### Step 2. Ask questions and grill
 
-Clarify requirements through focused dialogue and verify assumptions before designing.
+Clear up requirements through direct talk and check assumptions before you design.
 
-- Find facts autonomously. Never ask the user for information discoverable via files, configs, git logs, or documentation.
-- For simple features, ask questions one at a time with concrete options and a recommended answer.
-- Surface multiple interpretations. If a user request allows two or more distinct architectural interpretations, present them explicitly with concrete tradeoffs instead of picking one silently. If requirements contain contradictory constraints or unclear logic, stop immediately and name what is confusing before designing.
-- For complex requirements, ambiguous scopes, or explicit stress-testing requests, follow `references/grilling.md`. Map choices to a design tree, ask frontier questions in structured rounds, and resolve every dependency until the frontier is empty.
-- Focus on concrete constraints, including inputs, outputs, error handling, storage, and user roles.
+- Find facts by yourself. Never ask the user for facts you can read in files, configs, git logs, or docs.
+- For simple features, ask one question at a time with fixed options and a recommended answer.
+- Name separate readings. If a request allows two or more readings, show them with tradeoffs instead of picking one in silence. If requirements clash or logic stays unclear, stop and name what confuses you before you design.
+- For tangled requirements, unclear scope, or explicit stress-test requests, follow `references/grilling.md`. Map picks to a design tree, ask frontier questions in rounds, and close every dependency until the frontier empties.
+- Ask about fixed limits, including inputs, outputs, error handling, storage, and user roles.
 
-Completion criterion. All ambiguities and decision branches resolved through explicit user confirmation, leaving zero unverified assumptions.
+Completion criterion. The user confirms every open branch and zero guesses remain.
 
-### Step 3. Approach exploration
+### Step 3. Explore approaches
 
-Propose 2 to 3 approaches with tradeoffs, lead with a recommendation, and obtain user confirmation before writing detailed specifications. Evaluate data scaling and reload persistence against `references/architecture-scalability.md`.
-- Protect Single Responsibility Principle and modular boundaries. If a user proposal merges unrelated domains or causes lifecycle regressions, run a targeted web search via `search_web` to verify industry conventions, present a grounded counter-argument citing the reference, and propose a clean decoupled alternative.
-- Propose contrasting design directions for open-ended UI tasks. When user requests for frontend or visual design lack defined aesthetic direction, avoid open-ended taste questions. Present three differentiated directions chosen from contrasting design schools, such as Information Architecture (rational, data-dense, e.g. Pentagram or Vignelli), Editorial Minimalist (whitespace, refined typography, e.g. Dieter Rams or MUJI), Modern Tool (hairline details, dark mode, single accent, e.g. Linear or Raycast), Motion Experimental (generative, kinetic, e.g. Active Theory), Brutalist (raw, unpolished high contrast, e.g. Are.na), or Warm Humanist (approachable, organic, e.g. Stripe Press). Never recommend three options from the same design school.
+Write 2 to 3 approaches with tradeoffs, put your pick first, and get user confirmation before you write the full spec. Check data growth and reload saves against `references/architecture-scalability.md`.
+- Keep domains apart. If a user pitch mixes unrelated domains or breaks lifecycle behavior, search the web with `search_web` to check industry practice, show a counter-argument with the source, and suggest a split alternative.
+- Show opposite visual directions for open UI tasks. When a frontend request lacks visual direction, do not ask open taste questions. Show three distinct directions picked from opposite schools, such as Information Architecture (rational, data-dense, e.g. Pentagram or Vignelli), Editorial Minimalist (whitespace, refined type, e.g. Dieter Rams or MUJI), Modern Tool (hairline details, dark mode, single accent, e.g. Linear or Raycast), Motion Experimental (generative, kinetic, e.g. Active Theory), Brutalist (raw, high contrast, e.g. Are.na), or Warm Humanist (approachable, organic, e.g. Stripe Press). Never show three options from the same school.
 
-Completion criterion. The user selects a preferred approach.
+Completion criterion. The user picks one approach.
 
 ## Design presentation and documentation
 
-### Step 1. Present the design
+### Step 1. Show the design
 
-Present the design in sections scaled to complexity. Cover:
-- System boundaries and responsibilities.
-- Data structures, entities, and database schemas.
+Show the design in sections sized to complexity. Cover:
+- System boundaries and who owns what.
+- Data shapes, entities, and database schemas.
 - Interfaces, endpoints, and HTTP verbs.
 - Error handling and edge cases.
-- Automated testing strategy.
+- How you test it.
 
-Ask the user after each major section whether the technical direction matches expectations.
+Ask the user after each section if the direction matches.
 
-Completion criterion. The user explicitly confirms that the design direction matches expectations.
+Completion criterion. The user confirms the direction matches.
 
-### Step 2. Write the design document
+### Step 2. Write the design doc
 
-Save the permanent Architecture Decision Record (ADR) to `docs/YYYY-MM-DD-<topic>-design.md` or the user-specified path. Consult `references/domain-modeling.md` for domain entity alignment and ADR selection filters.
+Write the Architecture Decision Record (ADR) to `docs/YYYY-MM-DD-<topic>-design.md` or the path the user names. Read `references/domain-modeling.md` for entity naming and ADR filters.
 
-Follow the Architecture Decision Record structure:
-- Title. Short descriptive title.
-- Status. Proposed, Accepted, or Superseded.
-- Context. Problem statement, constraints, and findings from research and gap analysis.
-- Decision. Selected architecture, component boundaries, and concrete file changes.
-- Alternatives considered. Rejected options and reasons for rejecting them.
-- Consequences. Direct outcomes and accepted tradeoffs.
-- Verification plan. Automated tests and manual checks.
+Write the record with these fields:
+- **Title.** Short name for the change.
+- **Status.** Proposed, Accepted, or Superseded.
+- **Context.** Problem, limits, and what you learned from research and code checks.
+- **Decision.** Chosen structure, component bounds, and files you will change.
+- **Alternatives considered.** Options you dropped and why you dropped them.
+- **Consequences.** Direct results and tradeoffs you accept.
+- **Verification plan.** Automated tests and manual checks you will run.
 
-Completion criterion. The ADR spec file is written to disk matching the ADR structure.
+Completion criterion. You write the ADR file to disk with all fields filled.
 
-### Step 3. Spec self-review
+### Step 3. Self-review the spec
 
-Inspect the written document before presenting it to the user. For automated checking, dispatch a subagent using the template in `references/spec-document-reviewer-prompt.md`, or run these checks manually:
+Read the file before you show it to the user. To check automatically, call a subagent with the template in `references/spec-document-reviewer-prompt.md`, or run these checks by hand:
 
-1. Placeholder scan. Search for and remove any TODO, TBD, or vague guidelines.
-2. Internal consistency. Confirm that components, route definitions, and data types match across all sections.
-3. Scope check. Confirm the design remains focused enough for one implementation plan.
-4. Ambiguity check. Remove any requirement that permits multiple contradictory interpretations.
+1. Placeholder scan. Search for TODO, TBD, or vague filler and delete them.
+2. Internal consistency. Check that components, routes, and data types match in all sections.
+3. Scope check. Check that the design still fits one implementation plan.
+4. Ambiguity check. Delete any requirement that allows opposite readings.
 
-Fix all findings directly in the file.
+Fix every issue in the file.
 
-Completion criterion. The spec passes all four checks with zero placeholders or ambiguities remaining.
+Completion criterion. The spec passes all four checks with zero placeholders left.
 
 ### Step 4. User review gate
 
-Prompt the user to review the written specification:
+Ask the user to read the written spec:
 
 > "The design specification is written to `<path>`. Please review it and confirm if you want any adjustments before we generate the implementation plan."
 
-Wait for explicit user approval. If the user requests adjustments, update the document and repeat the check.
+Wait for explicit user approval. If the user asks for changes, update the file and run the check again.
 
-Completion criterion. The user explicitly approves the written specification.
+Completion criterion. The user approves the written spec.
 
-### Step 5. Transition to implementation planning
+### Step 5. Move to implementation planning
 
-Invoke the `writing-plans` skill to generate the detailed, phased implementation plan. Do not invoke coding or execution skills until the plan is written and approved.
+Call the `writing-plans` skill to write the phased implementation plan. Do not call coding skills until the user approves the plan.
 
-Completion criterion. The writing-plans skill is invoked.
+Completion criterion. You call the writing-plans skill.
 
 ## Visual companion
 
-A browser-based companion for showing mockups, diagrams, and visual options during brainstorming. Available as a tool, not a mode. Accepting the companion means it is available for questions that benefit from visual treatment. It does not mean every question goes through the browser.
+A browser tool that shows mockups, diagrams, and visual options during brainstorming. It stays a tool, not a mode. When the user accepts it, you can use it for questions that need visuals. You still ask text questions in the terminal.
 
 ### Offering the companion
 
-When upcoming questions involve visual layouts, mockups, or diagrams, offer the companion once:
+When next questions cover visual layouts, mockups, or diagrams, offer the companion once:
 
 > "Some of what we are working on might be easier to explain if I can show it to you in a web browser. I can put together mockups, diagrams, comparisons, and other visuals as we go. This feature is still new and can be token-intensive. Want to try it? Requires opening a local URL."
 
-This offer must be its own message without any other content. Wait for the user response. If declined, proceed with text-only brainstorming.
+Send this offer as its own message with no other text. Wait for the answer. If the user says no, keep brainstorming in text.
 
 ### Per-question decision
 
-Even after the user accepts, decide for each question whether to use the browser or the terminal:
-- Use the browser for visual artifacts such as mockups, wireframes, layout comparisons, and visual architecture diagrams.
-- Use the terminal for text artifacts such as requirements questions, conceptual choices, tradeoff lists, and scope decisions.
+After the user says yes, pick the channel for each question:
+- Use the browser for mockups, wireframes, layout comparisons, and visual architecture diagrams.
+- Use the terminal for requirements questions, word-only picks, tradeoff lists, and scope picks.
 
-When the user accepts the browser companion, read `references/visual-companion.md` for server management and screen templates.
+When the user accepts the browser companion, read `references/visual-companion.md` for server steps and screen templates.
 
 ## Boundary isolation
 
-Apply brainstorming guidelines strictly to requirements exploration, design artifacts, and user dialogue. Keep production code syntax, database migration types, API parameters, and shell commands neutral, standard, and unaffected by stylistic or persona choices.
+Keep brainstorming rules to requirements talk, design files, and user dialogue. Keep production code syntax, database migration types, API parameters, and shell commands neutral, standard, and untouched by style picks.
 
 ## Quick audit checklist
 
-Run this check before transitioning to implementation planning:
+Check this list before you call implementation planning:
 
 | Check | Passing condition |
 |---|---|
-| Hard gate | Design approved by user before invoking writing-plans or writing code |
-| Gap analysis | Codebase mapped to sound patterns, flaws to remove, and additions to build |
-| Clarifying questions | Questions asked with concrete options, facts researched autonomously, zero unverified assumptions |
-| Spec document | ADR spec written to `docs/YYYY-MM-DD-<topic>-design.md` with zero placeholders |
-| User sign-off | Explicit user confirmation received on chosen approach and final spec |
+| Hard gate | User approves design before you call writing-plans or write code |
+| Code check | You list good code, bad code to fix, and missing code to write with file paths |
+| Questions | You ask with fixed options, you read facts by yourself, zero guesses remain |
+| Spec doc | You write ADR spec to `docs/YYYY-MM-DD-<topic>-design.md` with zero placeholders |
+| User sign-off | User confirms pick and final spec |
