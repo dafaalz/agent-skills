@@ -1,10 +1,10 @@
 # Structural patterns and editing principles
 
-Reference guide for detecting structural AI patterns, preserving personal voice, and auditing prose for synthetic writing tells.
+Reference guide for spotting structural AI patterns and auditing prose for synthetic tells.
 
 ## Editing principles
 
-- **Preserve the writer's real voice.** Observe vocabulary, cadence, bluntness, humor, uncertainty, and level of polish before editing. Keep traits that belong to the writer. Never rewrite distinctive human sentences merely for symmetry or corporate consistency.
+- **Preserve the writer's real voice.** Observe vocabulary, cadence, bluntness, humor, uncertainty, and level of polish before editing. Keep traits that belong to the writer. Do not rewrite distinctive human sentences for symmetry or corporate consistency.
 - **Make the minimum effective edit.** Fix AI patterns, factual errors, repetition, and tangled syntax. Leave strong human sentences alone. A draft with personality should still sound like the same author after editing.
 - **Apply the portability test.** If a sentence could move unchanged to another person, company, country, or product, it is generic filler. Cut it or anchor it with specific facts, metrics, mechanisms, or consequences.
 - **Show, don't tell the reader what to think.** Let facts, mechanisms, and outcomes carry weight. Delete commentary that labels a point as important, surprising, subtle, or obvious. Trust the reader to see the point.
@@ -13,78 +13,55 @@ Reference guide for detecting structural AI patterns, preserving personal voice,
 
 ## Structural patterns to eliminate
 
+Each entry quotes the detection phrases and states the rewrite.
+
 ### 1. Faux-insight setups
 
-Thought-leader posturing that flatters the author as the lone expert uncovering hidden truths.
-
-- Patterns: "What most people get wrong about X", "Here is what nobody tells you", "The part everyone misses", "The uncomfortable truth is", "This is the part most founders skip".
-- Fix: Delete the setup and state the actual claim directly.
-- Example: "What nobody tells you about distributed systems is that state sync is the real bottleneck" becomes "State synchronization is the main bottleneck in distributed systems."
+Thought-leader posturing that flatters the author as the lone expert uncovering hidden truths. The tell appears in phrases like "What most people get wrong about X", "Here is what nobody tells you", "The part everyone misses", "The uncomfortable truth is", and "This is the part most founders skip". Delete the setup and state the actual claim directly. "What nobody tells you about distributed systems is that state sync is the real bottleneck" becomes "State synchronization is the main bottleneck in distributed systems."
 
 ### 2. Colon reveals
 
-A noun phrase followed by a colon and a dramatic lowercase punchline.
-
-- Patterns: "The best part: it works offline", "The secret: distribution is king", "The kicker: nobody noticed".
-- Fix: Rewrite as a declarative sentence without artificial suspense.
-- Example: "The secret: cache invalidation was broken" becomes "Cache invalidation was broken."
+A noun phrase followed by a colon and a dramatic lowercase punchline. The tell appears in phrases like "The best part: it works offline", "The secret: distribution is king", and "The kicker: nobody noticed". Rewrite the sentence as a plain declarative and drop the artificial suspense. "The secret: cache invalidation was broken" becomes "Cache invalidation was broken."
 
 ### 3. Interpretive metadiscourse
 
-Authorial commentary stepping outside the subject to instruct the reader how to react or interpret the text.
-
-- Patterns: "That last part matters more than it sounds", "The key point is", "This distinction matters", "In other words", "Let that sink in".
-- Fix: Delete the aside entirely, or provide the missing factual support.
-- Example: "The migration completed with zero downtime. Let that sink in." becomes "The migration completed with zero downtime across 12 shards."
+Authorial commentary that steps outside the subject to instruct the reader how to react. The tell appears in phrases like "That last part matters more than it sounds", "The key point is", "This distinction matters", "In other words", and "Let that sink in". Delete the aside, or supply the missing factual support. "The migration completed with zero downtime. Let that sink in." becomes "The migration completed with zero downtime across 12 shards."
 
 ### 4. Fake-profound kickers
 
-A final sentence attempting a mic-drop aphorism, poetic metaphor, or dramatic philosophical conclusion.
-
-- Patterns: "In the end, code is just poetry written for machines", "The future is already here, waiting to be coded", "Because sometimes, the best feature is no feature at all".
-- Fix: Delete the kicker outright. Do not replace it with another metaphor. End on the last concrete fact, finding, or immediate next action.
+A closing sentence reaching for a mic-drop aphorism, poetic metaphor, or philosophical flourish. The tell appears in lines like "In the end, code is just poetry written for machines", "The future is already here, waiting to be coded", and "Because sometimes, the best feature is no feature at all". Delete the kicker outright and do not swap in another metaphor. End on the last concrete fact, finding, or immediate next action.
 
 ### 5. Rhetorical setups and self-answers
 
-Presentational gimmicks where the author asks and immediately answers their own questions, or uses teaser hooks.
-
-- Patterns: "What if I told you...", "Think about it", "Plot twist", "Question? Answer."
-- Fix: Drop the gimmick and state the technical statement directly.
+Presentational gimmicks where the author asks and immediately answers a question, or plants a teaser hook. The tell appears in phrases like "What if I told you...", "Think about it", "Plot twist", and "Question? Answer." Drop the gimmick and state the technical statement directly.
 
 ### 6. Dramatic fragmentation
 
-Breaking simple thoughts into staccato sentence fragments for unearned dramatic tension.
-
-- Patterns: "Fast. Scalable. Reliable.", "X. And Y. And Z.", "That is it. That is the whole thing."
-- Fix: Combine fragments into a complete, grammatically sound sentence that highlights the primary technical quality.
+Breaking a simple thought into staccato fragments to manufacture tension. The tell appears in fragments like "Fast. Scalable. Reliable.", "X. And Y. And Z.", and "That is it. That is the whole thing." Combine the fragments into one complete sentence that carries the primary technical quality.
 
 ### 7. Synonym cycling
 
-Rotating synonyms for the same concept within a paragraph to avoid repeating words.
-
-- Patterns: Referring to the same entity alternately as "the agent", "the assistant", "the tool", and "the helper".
-- Fix: Pick the single accurate technical term and repeat it consistently.
+Rotating synonyms for the same concept within a paragraph to avoid repeating a word. The tell appears when one entity becomes "the agent", then "the assistant", then "the tool", then "the helper". Pick the single accurate technical term and repeat it.
 
 ### 8. Negative listing
 
-Listing what something is not before stating what it actually is.
-
-- Patterns: "Not a library. Not a framework. A protocol.", "It is not about speed. It is about correctness."
-- Fix: State what the entity is directly. "A protocol for state sync" or "Correctness takes precedence over throughput."
+Listing what something is not before stating what it is. The tell appears in constructions like "Not a library. Not a framework. A protocol." and "It is not about speed. It is about correctness." State what the entity is directly, as in "A protocol for state sync" or "Correctness takes precedence over throughput."
 
 ### 9. Fake-strong verbs
 
-Replacing simple verbs like "is", "has", or "does" with inflated bureaucratic verb phrases.
-
-- Patterns: "Serves as a centralized hub for", "acts as a catalyst to enable", "functions as a cornerstone for".
-- Fix: Use direct verbs that describe the exact mechanism. "The service routes requests" instead of "The service acts as a centralized routing hub for".
+Replacing simple verbs like "is", "has", or "does" with inflated bureaucratic phrases. The tell appears in phrases like "Serves as a centralized hub for", "acts as a catalyst to enable", and "functions as a cornerstone for". Use a direct verb that names the mechanism, as in "The service routes requests" instead of "The service acts as a centralized routing hub for".
 
 ### 10. Weasel attribution
 
-Vague authority claims that invent consensus without citing verifiable sources.
+Vague authority claims that invent consensus without citing verifiable sources. The tell appears in phrases like "Experts agree that", "studies show", "industry reports suggest", and "widely regarded as the standard". Name the exact person, benchmark, RFC, or dataset. If no verifiable source exists, delete the claim.
 
-- Patterns: "Experts agree that", "studies show", "industry reports suggest", "widely regarded as the standard".
-- Fix: Name the exact person, benchmark, RFC, or dataset. If no verifiable source exists, delete the claim.
+### 11. Compulsive summary wrap-ups
+
+A closing paragraph or section that mechanically rehashes earlier points under the guise of an executive summary. The tell appears in paragraphs opening with "Overall", "In conclusion", "To summarize", "In summary", or "All in all". Delete the wrap-up and end on the last concrete fact, finding, or immediate action.
+
+### 12. Nominalizations and smothered verbs
+
+Burying an active verb inside an abstract Latinate noun paired with a weak dummy verb such as "conduct", "perform", "make", or "facilitate". The tell appears in phrases like "conduct an evaluation of", "perform an assessment of", "make a determination", and "facilitate the implementation of". Replace the dummy verb and abstract noun with the direct active root verb. "The team will conduct the implementation of the outbox pattern" becomes "The team will implement the outbox pattern."
 
 ## Expanded vocabulary and filler
 
@@ -121,7 +98,7 @@ Vague authority claims that invent consensus without citing verifiable sources.
 
 ### Metaphor translations into concrete components
 
-Translate abstract metaphors into concrete system components:
+Translate abstract metaphors into concrete system components.
 - "API surface" becomes "endpoints" or "exported functions"
 - "vector" becomes "method" or "direction"
 - "paradigm" becomes "pattern" or "approach"
@@ -170,9 +147,9 @@ Cut these throat-clearing and delay phrases:
 
 Run these checks against every draft:
 
-1. Voice preservation. Does the rewrite maintain the author's original tone, vocabulary, bluntness, and cadence?
-2. Portability check. Does every sentence contain specific context that prevents it from being pasted into an unrelated topic?
-3. Faux-insight scan. Are all clickbait setups, colon reveals, and interpretive commentary removed?
-4. Kicker check. Does the text end on a concrete fact or next step instead of an aphorism or mic-drop metaphor?
-5. Clean vocabulary. Are all banned words, empty adverbs, and filler phrases eliminated?
-6. Detect mode boundaries. For audit requests, did the agent quote lines and name patterns without rewriting or claiming AI authorship?
+1. Does the rewrite maintain the author's original tone, vocabulary, bluntness, and cadence?
+2. Does every sentence contain specific context that blocks pasting it into an unrelated topic?
+3. Are faux-insight setups, colon reveals, and interpretive commentary removed?
+4. Does the text end on a concrete fact or next step instead of an aphorism or mic-drop metaphor?
+5. Are all banned words, empty adverbs, and filler phrases eliminated?
+6. For audit requests, did the agent quote lines and name patterns without rewriting or claiming AI authorship?

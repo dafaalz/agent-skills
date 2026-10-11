@@ -1,6 +1,6 @@
 # Pola dan kosakata bahasa Indonesia untuk unslop
 
-Dokumen ini memuat aturan mendeteksi, memotong, dan menulis ulang teks bahasa Indonesia buatan AI agar kembali wajar, lugas, dan berbobot.
+Dokumen ini memuat aturan untuk memotong pola AI dan menulis ulang teks bahasa Indonesia agar kembali lugas.
 
 ## Sumber rujukan dan analisis
 
@@ -23,12 +23,12 @@ Dokumen ini menyintesis kaidah dari 14 rujukan terverifikasi lintas regulator, s
 
 ## Mengapa teks AI bahasa Indonesia terasa kaku
 
-1. Calque dan translationese. Model bahasa besar umumnya berlatih dengan korpus bahasa Inggris. Model menerjemahkan sintaksis dan ungkapan asing secara harfiah ke bahasa Indonesia. Pola ini memicu pemakaian kata hubung rancu seperti "di mana", frasa kaku seperti "memainkan peran penting", dan metafora asing seperti "dalam lanskap".
-2. Perplexity rendah. AI memilih kata dengan probabilitas statistik tertinggi. Pilihan mekanis ini menghasilkan kosakata klise yang seragam tanpa variasi diksi alami.
-3. Burstiness rendah. AI menyusun kalimat dengan panjang dan struktur klausa yang monoton dari awal hingga akhir. Tulisan kehilangan dinamika jeda dan ritme baca.
-4. Pasifisme berlebihan. AI kerap menyamarkan subjek pelaku memakai verba pasif berprefiks di- seperti "dapat dipahami bahwa" atau "hal ini dilakukan guna" demi menjaga netralitas semu.
-5. Retorika simetris dan triadik. AI sering menyusun pasangan klausa biner seperti "tidak hanya X, tetapi juga Y" serta deretan tiga kata sifat secara mekanis.
-6. Basa-basi formulaik. AI membuka tulisan memakai premis usang seperti "di era digital yang serba cepat ini", lalu menutupnya dengan rangkuman hambar tanpa langkah tindak lanjut yang nyata.
+1. Model menerjemahkan calque dan translationese secara harfiah. Model bahasa besar umumnya berlatih dengan korpus bahasa Inggris, lalu memindahkan sintaksis dan ungkapan asing apa adanya ke bahasa Indonesia. Pola ini memicu pemakaian kata hubung rancu seperti "di mana", frasa kaku seperti "memainkan peran penting", dan metafora asing seperti "dalam lanskap".
+2. Perplexity rendah membuat diksi seragam. AI memilih kata dengan probabilitas statistik tertinggi, sehingga kosakata klise muncul berulang tanpa variasi diksi alami.
+3. Burstiness rendah membuat ritme monoton. AI menyusun kalimat dengan panjang dan struktur klausa yang seragam dari awal hingga akhir, sehingga tulisan kehilangan dinamika jeda.
+4. Pasifisme berlebihan menyamarkan pelaku. AI kerap memakai verba pasif berprefiks di- seperti "dapat dipahami bahwa" atau "hal ini dilakukan guna" demi menjaga netralitas semu.
+5. Retorika simetris dan triadik memaksakan keseimbangan. AI sering menyusun pasangan klausa biner seperti "tidak hanya X, tetapi juga Y" serta deretan tiga kata sifat secara mekanis.
+6. Basa-basi formulaik membuka dan menutup tanpa isi. AI membuka tulisan dengan premis usang seperti "di era digital yang serba cepat ini", lalu menutupnya dengan rangkuman hambar tanpa langkah tindak lanjut.
 
 ## Katalog kosakata dan pola terlarang
 
@@ -137,6 +137,9 @@ Ganti susunan kata kerja bantu yang dilemahkan dengan verba aktif berimbuhan me-
 | memberikan kontribusi pada | Frasa nominal panjang | berkontribusi pada, membantu |
 | berpotensi untuk dapat | Rantai hedging berlebih | dapat, bisa |
 | diharapkan dapat membantu | Eufemisme pelemah kepastian | membantu, mempercepat |
+| melakukan investigasi terhadap | Diksi birokratis melemahkan aksi | menyelidiki, memeriksa |
+| melakukan penutupan koneksi | Frasa nominal panjang | menutup koneksi |
+| melakukan tindakan mitigasi | Verba bantu melemahkan aksi | memitigasi |
 
 ## Kaidah sintaksis dan struktur alami
 
