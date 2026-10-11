@@ -22,7 +22,7 @@ class TestWritingSkillsCompliance(unittest.TestCase):
         match = re.match(r"^---\n(.*?)\n---\n", self.content, re.DOTALL)
         self.assertIsNotNone(match, "Frontmatter must be present")
         fm = match.group(1)
-        self.assertIn("name: writing-skills", fm)
+        self.assertIn("name: writing-for-agents", fm)
         self.assertTrue(re.search(r"description:\s+Use when", fm), "Description must start with 'Use when'")
 
     def test_no_em_or_en_dashes(self):
