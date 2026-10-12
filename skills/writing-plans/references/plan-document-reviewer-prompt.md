@@ -1,24 +1,22 @@
 # Plan document reviewer prompt template
 
-Use this template when dispatching a plan document reviewer subagent.
+Use this template when dispatching a plan document reviewer subagent to verify that the plan is complete, matches the spec, and provides proper task decomposition.
 
-Purpose: Verify that the plan is complete, matches the spec, and has proper task decomposition.
+Dispatch after the complete plan is written.
 
-Dispatch timing: After the complete plan is written.
-
-```
+```markdown
 Task tool (general-purpose):
   description: "Review plan document"
   prompt: |
     You are a plan document reviewer. Verify this plan is complete and ready for implementation.
 
-    **Plan to review:** [PLAN_FILE_PATH]
-    **Spec for reference:** [SPEC_FILE_PATH]
+    Target plan. [PLAN_FILE_PATH]
+    Source spec. [SPEC_FILE_PATH]
 
     ## What to check
 
     | Category | What to look for |
-    |----------|------------------|
+    |---|---|
     | Completeness | TODOs, placeholders, incomplete tasks, missing steps |
     | Spec alignment | Plan covers spec requirements, no major scope creep |
     | Task decomposition | Tasks have clear boundaries, steps are actionable |
@@ -26,7 +24,7 @@ Task tool (general-purpose):
 
     ## Calibration
 
-    **Only flag issues that cause practical problems during implementation.**
+    Only flag issues that cause practical problems during implementation.
     An implementer building the wrong component or getting blocked is an issue.
     Minor phrasing, stylistic preferences, and advisory suggestions are not.
 
@@ -37,13 +35,13 @@ Task tool (general-purpose):
 
     ## Plan review
 
-    **Status:** Approved | Issues Found
+    Status. Approved | Issues Found
 
-    **Issues (if any):**
-    - [Task X, Step Y]: [specific issue]. [Why it matters for implementation]
+    Issues (if any).
+    * [Task X, Step Y]. [specific issue]. [Why it matters for implementation]
 
-    **Recommendations (advisory, do not block approval):**
-    - [suggestions for improvement]
+    Recommendations (advisory, do not block approval).
+    * [suggestions for improvement]
 ```
 
 Reviewer returns status, issues (if any), and recommendations.

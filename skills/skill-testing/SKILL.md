@@ -7,6 +7,12 @@ description: Use when empirically benchmarking, A/B testing, stress-testing agai
 
 Empirically benchmark candidate skill instructions against baseline implementations using parallel subagents and human-in-the-loop evaluation.
 
+## Modes
+
+Select an execution mode before Step 1:
+- Benchmark mode (default). Execute parallel test runs across golden benchmark scenarios to evaluate skill quality.
+- Evaluation and grafting mode. Compare variant outputs, extract superior techniques, and merge refinements into target skills.
+
 ## Overview
 
 The skill testing arena validates prompt engineering hypotheses by measuring real model behavior instead of theoretical markdown linting. Six concurrent subagents build identical micro-components under competing skill versions across three contrasting stress scenarios. When a golden production reference is provided, the arena deconstructs its concrete mechanics first to ensure skills do not stay trapped in mediocre local optima. Human evaluation directs differential rule extraction and safe patch synthesis.
@@ -67,15 +73,15 @@ Completion criterion. Exactly three contrasting micro-component scenarios formul
 
 Launch the testing arena concurrently and verify output integrity:
 
-- Create a timestamped sandbox directory: `<workspace>/scratch/arena-<timestamp>/`.
+- Create a timestamped sandbox directory at `<workspace>/scratch/arena-<timestamp>/`.
 - Construct subagent prompts embedding the master scenario prompt and candidate skill rules.
 - Set model configuration to `inherit` by default, or apply `flash` if the user explicitly requested token optimization.
-- Launch all six subagents in a single `invoke_subagent` call:
-  - S1-A and S1-B for Scenario 1
-  - S2-A and S2-B for Scenario 2
-  - S3-A and S3-B for Scenario 3
-- Enforce deterministic output naming: `s1_candidate_a.html`, `s1_candidate_b.html`, `s2_candidate_a.html`, `s2_candidate_b.html`, `s3_candidate_a.html`, `s3_candidate_b.html`.
-- Run pre-flight verification according to [references/arena-orchestration.md](references/arena-orchestration.md): confirm all six files exist, contain non-zero bytes, have valid syntax, and link approved CDNs without broken imports.
+- Launch all six subagents concurrently in a single parallel dispatch:
+  * S1-A and S1-B for Scenario 1
+  * S2-A and S2-B for Scenario 2
+  * S3-A and S3-B for Scenario 3
+- Enforce deterministic output filenames including `s1_candidate_a.html`, `s1_candidate_b.html`, `s2_candidate_a.html`, `s2_candidate_b.html`, `s3_candidate_a.html`, and `s3_candidate_b.html`.
+- Run pre-flight verification according to [references/arena-orchestration.md](references/arena-orchestration.md). Confirm all six files exist, contain non-zero bytes, have valid syntax, and link approved CDNs without broken imports.
 
 Completion criterion. All six subagents complete execution and all six output files pass pre-flight verification on disk.
 
@@ -89,9 +95,13 @@ Ingest human decisions and synthesize the final patch:
 - Execute targeted searches via `search_web` to validate evaluator feedback against authoritative technical sources before drafting rules.
 - Extract the differential rules responsible for superior behavior and construct a surgical diff block.
 - Verify that the target `SKILL.md` remains strictly under 250 lines, pushing extended documentation into `references/`.
-- Present the synthesized diff to the user with two options: run an additional iteration round or commit the patch permanently to the target skill.
+- Present the synthesized diff to the user with two explicit options to run an additional iteration round or commit the patch permanently to the target skill.
 
 Completion criterion. User evaluation ingested, external search validation completed, differential patch generated under target line budget constraints, and explicit user decision received on iteration or permanent commit.
+
+## Boundary isolation
+
+Confine skill testing strictly to test harness workspaces and benchmark fixtures. Never alter active production skills without clean test verification and explicit confirmation.
 
 ## Never ship checklist
 

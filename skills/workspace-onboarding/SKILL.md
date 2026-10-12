@@ -1,12 +1,22 @@
 ---
 name: workspace-onboarding
-description: Use when starting a new conversation, initializing work on a project, or onboarding to an unfamiliar workspace to discover the active stack, load rules, and establish execution constraints. Don't use for single-file edits in established sessions with known runtime environments.
+description: Use when starting a new conversation, initializing work on a project, or onboarding to an unfamiliar workspace. Don't use for single-file edits in established sessions with known runtime environments.
 allowed-tools: Read Bash Glob Grep
 ---
 
 # Workspace onboarding
 
 Inspect repository context, verify environment configurations, and load governing rules before proposing solutions or running modifications.
+
+## Modes
+
+Select an onboarding mode before Step 1:
+- Full discovery mode (default). Execute runtime detection, config mapping, and environment reconnaissance for greenfield or unfamiliar workspaces.
+- Re-verification mode. Re-check runtime and branch state on existing workspaces without rewriting codebase notes.
+
+## Boundary isolation
+
+Workspace onboarding operates strictly in an exploratory and reconnaissance capacity. Never modify application source files, run mutating database migrations, or install global system packages during workspace onboarding.
 
 ## Workflow
 
@@ -17,34 +27,34 @@ Follow these four steps in sequence.
 Identify the active runtime, framework, database, and package managers from files on disk and live runtime commands.
 
 1. Inspect project manifests:
-   - For PHP or Laravel projects, read `composer.json` to verify framework version, packages, and custom scripts.
-   - For Node, React, Vue, or Next.js projects, read `package.json` to check dependencies, Tailwind versions, and test runners.
-   - For Python projects, inspect `pyproject.toml`, `Pipfile`, or `requirements.txt`.
+   * For PHP or Laravel projects, read `composer.json` to verify framework version, packages, and custom scripts.
+   * For Node, React, Vue, or Next.js projects, read `package.json` to check dependencies, Tailwind versions, and test runners.
+   * For Python projects, inspect `pyproject.toml`, `Pipfile`, or `requirements.txt`.
 2. Inspect environment files with strict priority:
-   - Read `.env` first whenever the file exists on disk. Use `.env.example` solely as a fallback template when `.env` is absent.
-   - Check `DB_CONNECTION`, `DATABASE_URL`, port bindings, and external services in the active `.env`.
-   - Never assume a default SQLite or MySQL database from template files when a configured `.env` file exists.
+   * Read `.env` first whenever the file exists on disk. Use `.env.example` solely as a fallback template when `.env` is absent.
+   * Check `DB_CONNECTION`, `DATABASE_URL`, port bindings, and external services in the active `.env`.
+   * Verify database connections through config files or health check endpoints; never assume database credentials or connection state without explicit checks.
 3. Validate active runtime database configuration:
-   - Run framework introspection commands when available (such as `php artisan db:show` or `php artisan env` for Laravel) to verify the live database engine, host, and port.
-   - Check test configuration files (such as `phpunit.xml`) to identify test specific overrides (such as in-memory SQLite) and avoid misclassifying test fixtures as the application database.
+   * Run framework introspection commands when available (such as `php artisan db:show` or `php artisan env` for Laravel) to verify the live database engine, host, and port.
+   * Check test configuration files (such as `phpunit.xml`) to identify test specific overrides (such as in-memory SQLite) and avoid misclassifying test fixtures as the application database.
 4. Record discovered stack properties including runtime version, framework, database driver, test runner, and linter.
 
-Completion criterion. A verified inventory of the runtime, framework, database engine confirmed via active environment files or runtime CLI, and tooling without unverified assumptions.
+Completion criterion. Verify and record the runtime version, framework, database engine, and tooling inventory directly from active environment files or live CLI commands.
 
 ### Step 2. Rule discovery and binding
 
 Locate and read the applicable project guidelines and behavioral constraints.
 
 1. Execute the deterministic rule discovery chain in this order:
-   - First, check `.agents/rules/AGENTS.md` or `.agents/skills/` if present in the workspace.
-   - Second, check `AGENTS.md`, `CODEBASE.md`, or `CLAUDE.md` in the project root.
-   - Third, check global machine rules at `~/.gemini/config/rules/AGENTS.md`.
+   * First, check `.agents/rules/AGENTS.md` or `.agents/skills/` if present in the workspace.
+   * Second, check `AGENTS.md`, `CODEBASE.md`, or `CLAUDE.md` in the project root.
+   * Third, check global machine rules at `~/.gemini/config/rules/AGENTS.md`.
 2. Bind rule constraints to the current session:
-   - Adopt the persona, tone, and language defined in the discovered rules immediately from turn 1.
-   - Respect boundaries on file manipulation and tool usage.
+   * Adopt the persona, tone, and language defined in the discovered rules immediately from turn 1.
+   * Respect boundaries on file manipulation and tool usage.
 3. Resolve conflicts between rule files and runtime facts:
-   - If assertions in discovered rule files contradict live runtime manifests or database introspection from Step 1, treat live runtime as ground truth.
-   - Adopt the live configuration and note the documentation drift in the onboarding synthesis line.
+   * If assertions in discovered rule files contradict live runtime manifests or database introspection from Step 1, treat live runtime as ground truth.
+   * Adopt the live configuration and note the documentation drift in the onboarding synthesis line.
 
 Completion criterion. Governing rule file identified and its constraints applied to the current context.
 
@@ -63,9 +73,20 @@ Completion criterion. Response draft verified to contain zero filler phrases and
 
 Deliver a single substantive verification statement before proceeding to task execution.
 
-Output syntax:
-`[Stack: <framework> <version> | DB: <driver> | Tooling: <test_runner>, <linter> | Rules: <governing_file>]`
+Format the status line using this syntax:
+```text
+[Stack: <framework> <version> | DB: <driver> | Tooling: <test_runner>, <linter> | Rules: <governing_file>]
+```
 
 Follow immediately with the substantive technical answer or the next concrete investigation step. Never output empty confirmation filler.
 
 Completion criterion. Exactly one dense status bracket output followed directly by task execution.
+
+## Quick audit checklist
+
+| Check | Passing condition |
+|---|---|
+| Stack detection | Active framework, language runtime, and dependencies verified from manifests |
+| Environment ground truth | Live `.env` and runtime introspection prioritized over example templates |
+| Rule binding | Project rules loaded from `.agents/`, root docs, or user configs |
+| Synthesis output | Single dense status bracket emitted before task execution |

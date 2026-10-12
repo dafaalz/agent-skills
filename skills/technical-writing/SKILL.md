@@ -15,6 +15,12 @@ Follow three universal rules across every layer:
 
 Use codebase truth for naming. Always write the exact symbol, file path, flag, or command name instead of synonyms or descriptive approximations. Code identifiers, endpoints, flags, and types function as Technical Names. Apply STE rules strictly to the surrounding prose. Consult `references/asd-ste100-rules.md` for detailed writing rules and vocabulary tables.
 
+## Modes
+
+Select an execution mode before Step 1:
+- Author mode (default). Draft new technical documentation, guides, or RFCs following established project conventions.
+- Review mode. Audit existing documentation for clarity, precision, and adherence to anti-slop guidelines without altering meaning.
+
 ## Workflow
 
 Follow these four steps in sequence:
@@ -104,13 +110,13 @@ Place safety notices immediately before the procedural step to which they apply:
 
 - **WARNING**. Use strictly for hazards that cause irreversible data loss, production outages, or security breaches. Open with an imperative command or condition stating the hazard, then state consequence and prevention.
 - **CAUTION**. Use for risks of service degradation, invalid runtime states, or build failures.
-- **NOTE**. Use for non-hazardous technical clarifications and prerequisites. Notes must never contain commands or imperative verbs.
+- **NOTE**. Use for non-hazardous technical clarifications and prerequisites. Frame notes using descriptive statements; notes must never contain commands or imperative verbs.
 
 ### Punctuation rules
 
 - Prohibit semicolons. Split coordinate clauses into separate sentences.
-- Restrict colons. Use colons strictly to introduce an explicit vertical list, a table, or a code block. Never use colons as connectors in running text.
-- Restrict hyphens. Use hyphens only in approved compound words or compound Technical Names. Never use hyphens as dashes to connect thoughts.
+- Restrict colons. Introduce lists, tables, and code blocks with colons; never use colons as connectors in running text.
+- Restrict hyphens. Join approved compound words or Technical Names with hyphens; never use hyphens as dashes to connect thoughts.
 - Prohibit slashes like "a/b" or "and/or". Write "a, b, or both".
 - Keep articles like "the" and "a" before nouns to prevent dual interpretations.
 
@@ -118,6 +124,10 @@ Place safety notices immediately before the procedural step to which they apply:
 
 - PR descriptions and commit messages must follow every layer except Diátaxis mode separation. Write concise briefings that reviewers can digest in under one minute. Link out to large terminal outputs or test logs instead of pasting them inline.
 - Match repository conventions for code snippets and examples. Do not force arbitrary indentation rules that clash with project formatters.
+
+## Boundary isolation
+
+Technical writing governs documentation files only (`*.md`, `docs/`, `RFCs`). Never alter application source code, update build configurations, or modify API endpoint signatures while editing documentation.
 
 ## Worked example
 

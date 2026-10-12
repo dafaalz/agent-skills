@@ -1,6 +1,6 @@
 ---
 name: verification-before-completion
-description: Require fresh terminal verification evidence before claiming tasks are complete. Use when about to claim work is complete, fixed, or passing, before committing or creating PRs, requiring fresh verification command output before making assertions. Don't use for initial exploratory brainstorming or rough drafting phases.
+description: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs, requiring fresh verification command output before making assertions. Don't use for initial exploratory brainstorming or rough drafting phases.
 ---
 
 # Verification before completion
@@ -12,6 +12,16 @@ NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
 ```
 
 Never rely on cached assertions, previous turn outputs, or assumptions. Run the verification command in the current turn before stating that the task is finished.
+
+## Modes
+
+Select a verification mode before Step 1:
+- Scoped turn verification (default). Verify the specific command output for the current task before responding to the user.
+- Pre-release gate. Execute the entire test suite, linter suite, and git status check before submitting a pull request or merging.
+
+## Boundary isolation
+
+Verification evaluates execution state and test outcomes only. Never alter test assertion thresholds, delete failing tests, or mock passing states to bypass verification gates.
 
 ## Workflow
 
@@ -83,49 +93,51 @@ Completion criterion. The user receives a factual statement backed by terminal e
 
 ## Key patterns
 
-### Tests
-- Valid action: Execute the test command, verify clean output (such as 34 of 34 passed), then report that tests pass.
-- Prohibited action: Asserting "should pass now" or "looks correct" without running the test command.
+Enforce paired behavioral contracts across verification targets:
 
-### Regression tests (TDD red-green)
-- Valid action: Write the test, run it to confirm it passes with the fix, temporarily revert the fix to confirm the test fails, and restore the fix.
-- Prohibited action: Claiming regression coverage without verifying the failure step.
-
-### Build
-- Valid action: Run the build command and verify exit code 0 before asserting compilation success.
-- Prohibited action: Claiming the build passes based solely on a passing linter.
-
-### Requirements
-- Valid action: Re-read the plan or issue, create an itemized checklist, verify each item with evidence, and report completion status.
-- Prohibited action: Concluding a feature is complete merely because test suites pass.
-
-### Agent delegation
-- Valid action: When an agent reports success, inspect the version control diff directly, verify the changes, and report the confirmed state.
-- Prohibited action: Forwarding agent success claims without independent diff verification.
+- **Tests.** Execute the test command and verify clean output (such as 34 of 34 passed) before reporting that tests pass; never assert "should pass now" or "looks correct" without running the test command.
+- **Regression tests (TDD red-green).** Write the test, run it to confirm it passes with the fix, temporarily revert the fix to confirm the test fails, and restore the fix; never claim regression coverage without verifying the failure step.
+- **Build.** Run the build command and verify exit code 0 before asserting compilation success; never claim the build passes based solely on a passing linter.
+- **Requirements.** Re-read the plan or issue, create an itemized checklist, and verify each item with evidence before reporting completion status; never conclude a feature is complete merely because test suites pass.
+- **Agent delegation.** When an agent reports success, inspect the version control diff directly, verify the changes, and report the confirmed state; never forward agent success claims without independent diff verification.
 
 ## Git state and documentation preservation gate
 
 Run these git checks before making any completion claim:
 
 1. Execute `git status --short` to verify all touched files.
-2. Inspect deleted files marked with `D`.
-   - Core files must never be deleted without an explicit user prompt. Protected files include `CODEBASE.md`, `AGENTS.md`, `CLAUDE.md`, `README.md`, and `.env.example`.
-   - If any core documentation file was deleted inadvertently, restore it immediately using `git checkout -- <file>`.
+2. Inspect deleted files marked with `D`:
+   * Core files must never be deleted without an explicit user prompt. Protected files include `CODEBASE.md`, `AGENTS.md`, `CLAUDE.md`, `README.md`, and `.env.example`.
+   * If any core documentation file was deleted inadvertently, restore it immediately using `git checkout -- <file>`.
 3. Confirm that untracked temporary files, scratch scripts, or dump files are either cleaned up or added to `.gitignore`.
+
+Completion criterion. Git working tree clean with protected files preserved and untracked artifacts removed.
 
 ## Scoped linter and code style verification
 
 Run linters against modified files to prevent shipping formatting bugs or breaking pre-commit hooks:
 
 1. Detect configured linters:
-   - For PHP or Laravel, check `composer.json` for `laravel/pint` or `phpstan/phpstan`.
-   - For JavaScript or TypeScript, check `package.json` for `eslint`, `biome`, or `prettier`.
+   * For PHP or Laravel, check `composer.json` for `laravel/pint` or `phpstan/phpstan`.
+   * For JavaScript or TypeScript, check `package.json` for `eslint`, `biome`, or `prettier`.
 2. Scope execution to modified files:
-   - Identify touched files using `git diff --name-only`.
-   - Run the linter strictly against those files, such as `vendor/bin/pint --test path/to/File.php` or `npx eslint path/to/File.tsx`.
-   - Do not execute full-repository scans that pull in pre-existing legacy errors outside the active scope.
+   * Identify touched files using `git diff --name-only`.
+   * Run the linter strictly against those files, such as `vendor/bin/pint --test path/to/File.php` or `npx eslint path/to/File.tsx`.
+   * Do not execute full-repository scans that pull in pre-existing legacy errors outside the active scope.
 3. If no linter is configured in project manifests, record "none configured" under linter status in the verification report without failing the gate.
+
+Completion criterion. Scoped linters confirm zero lint errors on modified files, or status recorded as none configured.
 
 ## Automated web performance and accessibility gate
 
 For web applications with automated auditing configured, consult `references/lighthouse-ci.md` to run Lighthouse CI assertions against production builds.
+
+## Quick audit checklist
+
+| Check | Passing condition |
+|---|---|
+| Fresh command output | Direct terminal execution output captured in active turn |
+| Zero failures | Exit code 0 with zero test failures or type errors |
+| Repository safety | Git working tree clean and protected documentation files intact |
+| Scoped linting | Modified files pass configured linters with zero errors |
+| Factual claims | Completion claim cites exact commands and passing counts |

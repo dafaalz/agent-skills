@@ -1,6 +1,6 @@
 ---
 name: review-a-skill
-description: Audit agent skills against AgentSkills specifications, structural execution standards, and anti-slop guidelines. Use when reviewing, auditing, benchmarking, or comparing agent skills against AgentSkills specifications, structural guidelines, or alternative implementations. Don't use for reviewing application source code, running CI test suites, or writing end-user documentation.
+description: Use when reviewing, auditing, benchmarking, or comparing agent skills against AgentSkills specifications, structural guidelines, or alternative implementations. Don't use for reviewing application source code, running CI test suites, or writing end-user documentation.
 ---
 
 # Review a skill
@@ -9,7 +9,7 @@ Audit agent skills against AgentSkills standards, structural execution requireme
 
 ## Workflow
 
-Follow these four steps in sequence:
+Follow these four steps in sequence.
 
 ### Step 1. Ingestion and mode determination
 
@@ -20,10 +20,10 @@ Identify the review scope and intake candidate artifacts:
 
 Load prerequisite skills and target files before auditing:
 
-1. Locate and read both `unslop` and `writing-for-agents` directly using `view_file` from the active skills root (such as `.agents/skills/`, `~/.agents/skills/`, `~/.gemini/config/skills/`, or the active repository `skills/` directory). Never audit from memory or secondary summaries.
+1. Locate and read both `unslop` and `writing-for-agents` directly using `view_file` from the active skills root (such as `.agents/skills/`, `~/.agents/skills/`, `~/.gemini/config/skills/`, or the active repository `skills/` directory). Audit memory and state files only when explicitly requested; do not inspect session history or user scratchpad files during standard skill review. Inspect skill files directly and never audit from memory or secondary summaries.
 2. Load the target `SKILL.md` along with any disclosed files in `references/`. Check initial boundary constraints:
-   - Directory naming. Confirm the directory name matches the `name` field in the YAML frontmatter using 1 to 64 lowercase alphanumeric characters and single hyphens.
-   - Context budget. Confirm the main `SKILL.md` stays under 250 lines. Flag heavy documentation exceeding 100 lines that belongs in `references/`.
+   * Directory naming. Confirm that the directory name matches the `name` field in the YAML frontmatter with 1 to 64 lowercase alphanumeric characters and single hyphens.
+   * Context budget. Confirm that the main `SKILL.md` stays under 250 lines. Relocate documentation exceeding 100 lines into `references/`.
 
 Completion criterion. Prerequisite skills `unslop` and `writing-for-agents` are loaded into context via `view_file`, target skills are ingested, the operating mode is determined, and directory naming plus line budget constraints are cataloged.
 
@@ -31,14 +31,14 @@ Completion criterion. Prerequisite skills `unslop` and `writing-for-agents` are 
 
 Audit the skill against `writing-for-agents` structural requirements:
 
-- Frontmatter routing. Check the `description` field for explicit positive triggers starting with "Use when" and negative exclusions starting with "Don't use for". Verify absence of internal workflow summaries that tempt models to skip the skill body. Note intentional use of `disable-model-invocation: true` for purely manual skills.
+- Frontmatter routing. Check the `description` field for explicit positive triggers starting with "Use when" and negative exclusions starting with "Don't use for". Verify absence of internal workflow summaries that tempt models to skip the skill body. Confirm that manual-only skills declare the disable-model-invocation flag set to true.
 - Information hierarchy. Verify clean separation across the three tiers: primary sequential execution steps, secondary on-demand constraint tables, and tertiary external reference pointers.
 - Workflow discipline. Verify steps run in strict numbered sequence. Check for explicit mode handling (such as Audit mode versus Edit mode) to prevent premature destructive rewrites.
 - Binary completion criteria. Every numbered step must terminate on a checkable, binary, and exhaustive completion criterion. Flag vague completions like "ensure understanding" or "verify accuracy" that induce premature completion.
 - Leading words and positive bounds. Confirm the text recruits pre-training priors with established leading words. Ensure every negative prohibition is paired immediately with an explicit positive action.
 - Boundary isolation. Confirm explicit rules protect non-target domains, such as keeping code syntax, database schemas, and terminal commands untouched by stylistic guidelines.
 
-Completion criterion. A written catalog listing structural findings, missing completion criteria, frontmatter defects, and boundary leaks.
+Completion criterion. A written catalog documents structural findings, missing completion criteria, frontmatter defects, and boundary leaks.
 
 ### Step 3. Anti-slop and linguistic scan
 
@@ -50,7 +50,7 @@ Audit skill prose against `unslop` guidelines:
 - Modern slop patterns. Flag redundant inline-header lists where a bold label merely repeats the following clause. Flag mannered prose, philosophical aphorisms, personified code, and over-compression that drops articles or uses telegram arrows.
 - Localization and calque patterns. For Indonesian documentation, eliminate calque relative clauses like "di mana" or "yang mana", pleonasms like "guna untuk" or "adalah merupakan", and abstract metaphors.
 
-Completion criterion. A linguistic finding log citing line numbers, offending phrases, matched slop categories, and positive replacements.
+Completion criterion. A linguistic finding log records line numbers, offending phrases, matched slop categories, and positive replacements.
 
 ### Step 4. Synthesis, comparison, and grafting
 
@@ -68,7 +68,7 @@ Synthesize findings into an actionable evaluation report:
 - Sharp rule grafting. Extract novel or sharper rules from candidate versions. Formulate drop-in replacement snippets that preserve existing structure while sealing loopholes.
 - Final checklist verification. Audit the candidate or proposed patch against the quick audit checklist below.
 
-Completion criterion. An evaluation report containing the dimensional comparison table or single-audit log, a direct verdict, and concrete drop-in patch recommendations.
+Completion criterion. The evaluation report delivers the dimensional comparison table or single-audit log, a direct verdict, and concrete drop-in patch recommendations.
 
 ## Boundary isolation
 

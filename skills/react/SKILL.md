@@ -1,16 +1,22 @@
 ---
 name: react
-description: Audit, profile, and optimize React and Next.js performance, waterfalls, bundle size, and rendering. Use when auditing, profiling, and optimizing React and Next.js performance, waterfalls, bundle size, Server Components, or re-renders. Don't use for general HTML styling, non-React frameworks, or initial greenfield scaffolding.
+description: Use when auditing, profiling, and optimizing React and Next.js performance, waterfalls, bundle size, Server Components, or re-renders. Don't use for general HTML styling, non-React frameworks, or initial greenfield scaffolding.
 allowed-tools: Read Bash Glob Grep
 ---
 
 # React
 
-Performance optimization and architectural patterns for React and Next.js applications. Governs waterfall elimination, bundle size reduction, Server Components, and render tuning.
+Performance optimization and architectural patterns for React and Next.js applications. Profile and optimize React and Next.js applications by eliminating network waterfalls, managing bundle size, and reducing unnecessary re-renders.
+
+## Modes
+
+Select an execution mode before Step 1:
+- Audit mode (default). Profile bundles, waterfalls, and re-renders, and report findings without editing source code.
+- Optimize mode. Restructure component hierarchies, split code chunks, and implement memoization.
 
 ## Workflow
 
-Follow these five steps in sequence:
+Follow these five steps in sequence.
 
 ### Step 1. Toolchain probe and bottleneck identification
 
@@ -57,10 +63,11 @@ Completion criterion. Clean build exit code, passing test assertions, and verifi
 
 ## Boundary isolation
 
-Apply performance refactors strictly to rendering structures and network boundaries:
+Confine optimization strictly to component rendering patterns, bundle splitting, and data fetching:
+- Preserve backend API route contracts, database schemas, and business validation logic.
+- Never modify component visual aesthetics, design tokens, or typography in the name of performance.
+- Preserve existing accessibility attributes and semantic markup; never remove aria attributes or keyboard handlers to simplify rendering.
 - Preserve all component prop interfaces, TypeScript contracts, and exported signatures.
-- Never strip accessibility attributes (`aria-*`, `role`, focus management) to improve render metrics.
-- Keep business logic and state hooks intact when applying rendering wrappers.
 
 ## Rule categories by priority
 
@@ -76,3 +83,15 @@ Apply performance refactors strictly to rendering structures and network boundar
 | 8 | Advanced Patterns | LOW | `advanced-` | Stable callback refs, single initialization, event handler refs |
 
 Detailed rule specifications, code examples, and bad versus good patterns are stored individually in `references/rules/<prefix>-<name>.md`.
+
+## Quick audit checklist
+
+Review this table before completing React optimization tasks:
+
+| Check | Passing condition |
+|---|---|
+| Waterfalls | Data dependencies run concurrently or stream via Suspense |
+| Bundle size | Heavy client modules split dynamically with tree-shaking preserved |
+| Server Components | Client boundary placed at leaf nodes without secret leaks |
+| Accessibility | Semantic elements, ARIA attributes, and focus order preserved intact |
+| Verification | Automated tests pass and TypeScript emits zero diagnostic errors |

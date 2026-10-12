@@ -7,6 +7,16 @@ description: Use when auditing user interfaces and user experience, web accessib
 
 Audit user interfaces and user experiences with empirical rigor.
 
+## Modes
+
+Select an execution mode before Step 1:
+- Audit mode (default). Inspect UI components against WCAG standards, layout architecture, and cognitive load heuristics, and produce an evaluation findings table without modifying styles.
+- Remediation mode. Apply surgical CSS/HTML patches to address approved UI/UX findings.
+
+## Boundary isolation
+
+UI/UX review evaluates interface usability and presentation only. Never alter backend business logic, API route parameters, or database schemas while remediating UI issues.
+
 ## Overview
 
 Audit frontend implementations and user journeys across visual mechanics and cognitive ergonomics. Evaluate code and interfaces against objective browser standards, accessibility specifications, and cognitive psychology research. Disregard subjective taste or generic AI design tropes. Focus on measurable defects, interaction friction, working memory overload, and recovery failures. Consult reference documents in `references/` on demand.
@@ -25,7 +35,7 @@ Identify user intent and route execution immediately:
 Enforce these foundational invariants across all audits:
 
 1. **Enforce visible focus rings.** Never accept `outline: none` or `outline: 0` without a verified replacement. Require `:focus-visible` rings with at least a 3:1 contrast ratio, 2px solid thickness, and 2px offset.
-2. **Apply concentric border radii geometry.** Enforce the concentric corner formula on nested containers `R_inner = max(0, R_outer - (padding + border))` to eliminate pinched corners. Never permit identical inner and outer radii on nested containers.
+2. **Apply concentric border radii geometry.** Enforce the concentric corner formula on nested containers `R_inner = max(0, R_outer-(padding + border))` to eliminate pinched corners. Never permit identical inner and outer radii on nested containers.
 3. **Use discrete surface tokens for elevation.** Demand semantic surface tokens based on lightness steps instead of semi-transparent white overlays.
 4. **Audit interaction friction over styling.** Focus on task completion time, cognitive load, error rates, and mental model mismatches before fine-tuning aesthetics.
 5. **Enforce exact cognitive thresholds.** Apply Nelson Cowan 4-chunk limits, Doherty 400ms feedback bounds, and Fitts's Law 48px touch targets without inventing arbitrary thresholds.
@@ -38,29 +48,26 @@ Enforce these foundational invariants across all audits:
 Enforce technical standards, layout stability, and accessibility invariants:
 
 1. **WCAG 2.2 AA accessibility.** Verify W3C WAI-ARIA APG patterns, semantic HTML elements, roving tabindex, focus traps, and AccName 1.2 rules. Require native elements over generic containers. Read `references/accessibility.md`.
-2. **Visible focus rings.** Never accept stripped focus rings. Ensure high-contrast outlines appear on keyboard navigation while suppressing them cleanly on mouse click via `:focus-visible`.
-3. **Concentric border radii.** Ensure nested card shells, buttons, and inner badges maintain concentric curvature. Outer radius must always exceed inner radius by the exact padding and border offset.
-4. **8pt spatial grid.** Enforce spacing on an 8pt or 4pt modular scale. Use discrete semantic surface tokens based on lightness steps instead of semi-transparent white overlays. Align columns using CSS Subgrid. Read `references/layout-and-space.md`.
-5. **APCA and contrast compliance.** Verify APCA and WCAG contrast thresholds across text and interactive controls. Check dynamic frame contrast across video and animated surfaces using localized scrims. Implement DTCG 3-tier token structures, OKLCH scales, dark mode halation mitigation, and Windows High Contrast Mode border fallbacks. Read `references/color-and-contrast.md`.
-6. **Container queries and layout stability.** Use CSS Container Queries (`@container`) for modular components instead of binding solely to viewport media queries. Enforce CSS logical properties on shared components. Declare explicit dimensions and aspect ratios to prevent Cumulative Layout Shift.
-7. **Component mechanics.** Verify Popover API usage, CSS Anchor Positioning, `@starting-style` transitions, and relational `:has()` selectors. Read `references/component-mechanics.md`.
-8. **Typography mechanics.** Verify reading measure between 45 and 75 characters per line, fluid clamp formulas, unitless line heights, and tabular numbers for structured tables. Read `references/typography.md`.
-9. **Animation physics checks.** Restrict micro-interactions to GPU-composited properties `transform` and `opacity`. Reject animations on layout-triggering properties like width, height, margin, or padding. For spring physics, gesture tracking, choreographies, and frame-rate audits, activate the `ui-motion` skill.
+2. **8pt spatial grid and layout scales.** Enforce spacing on an 8pt or 4pt modular scale. Align columns using CSS Subgrid. Declare explicit dimensions and aspect ratios to prevent Cumulative Layout Shift. Read `references/layout-and-space.md`.
+3. **APCA and contrast compliance.** Verify APCA and WCAG contrast thresholds across text and interactive controls. Check dynamic frame contrast across video and animated surfaces using localized scrims. Implement DTCG 3-tier token structures, OKLCH scales, dark mode halation mitigation, and Windows High Contrast Mode border fallbacks. Read `references/color-and-contrast.md`.
+4. **Container queries and modular stability.** Use CSS Container Queries (`@container`) for modular components instead of binding solely to viewport media queries. Declare container contexts for responsive cards.
+5. **Component mechanics.** Verify Popover API usage, CSS Anchor Positioning, `@starting-style` transitions, and relational `:has()` selectors. Read `references/component-mechanics.md`.
+6. **Typography mechanics.** Verify reading measure between 45 and 75 characters per line, fluid clamp formulas, unitless line heights, and tabular numbers for structured tables. Read `references/typography.md`.
+7. **Animation physics checks.** Restrict micro-interactions to GPU-composited properties `transform` and `opacity`. Reject animations on layout-triggering properties like width, height, margin, or padding. For spring physics, gesture tracking, choreographies, and frame-rate audits, activate the `ui-motion` skill.
 
 ## Section 2. UX cognitive heuristics and journey ergonomics
 
 Enforce human-centered psychology laws, task efficiency, and error resilience:
 
 1. **Hick-Hyman Law.** Reaction time increases logarithmically with the number and complexity of choices. Prune choices to 5 to 7 options per view, or group them logically with progressive disclosure. Read `references/cognitive-laws.md`.
-2. **Nelson Cowan 4-chunk limit.** Working memory holds at most 4 distinct chunks simultaneously. Never force users to retain more than 4 items across screen transitions, multi-step wizards, or dense navigation menus.
+2. **Nelson Cowan 4-chunk limit.** Working memory holds at most 4 distinct chunks simultaneously. Group content into at most 4 items across screen transitions, multi-step wizards, or dense navigation menus; never force users to retain more than 4 items simultaneously.
 3. **Fitts's Law touch targets.** Target acquisition time depends on distance and target size. Require interactive elements to measure at least 48x48px on touchscreen interfaces with at least 8px separation between targets. Read `references/mobile-touch-ergonomics.md`.
-4. **Form validation timing.** Delay field error display until `onBlur`, then live revalidate on `onInput` after initial blur. Keep submit buttons enabled, display clear inline error messages, and shift focus to the first invalid input on submission. Read `references/forms-and-error-recovery.md`.
-5. **Undo for reversible actions.** Prescribe instant execution paired with a 5 to 10 second undo toast notification for reversible actions. Avoid modal confirmation dialogs because habituation renders repeated confirmation prompts ineffective against slips.
-6. **Mobile thumb zones.** Place primary mobile actions and navigation triggers inside the Natural Thumb Zone along the screen bottom. Keep the Ow Zone at the top edges free of primary interactive triggers. Read `references/mobile-touch-ergonomics.md`.
-7. **System status transparency.** Provide clear feedback within 100ms for user actions, display subtle progress indicators for operations taking 400ms to 1000ms, and render skeleton loaders instead of blank spinners. Read `references/system-status-and-states.md`.
-8. **Task flows and information architecture.** Minimize steps to completion, eliminate dead-scroll zones (>300px travel without visual mutation), enforce Krug scannability, apply progressive disclosure 80/20 rules, and minimize the Lostness Metric. Read `references/task-flows-and-ia.md`.
-9. **Usability heuristics and principles.** Check NN/g 10 heuristics, Norman signifiers and constraints, Shneiderman golden rules, and ISO 9241-110 dialogue standards. Read `references/heuristics-and-principles.md`.
-10. **Interface copy and lexical consistency.** Enforce outcome verbs on triggers ("Save changes" instead of "Submit"). Maintain lexical cohesion across actions and status toasts ("Publish" triggers "Published"). Name interface concepts using user mental models rather than backend architectures ("Manage notifications" instead of "Webhook configuration"). Never write apologetic error copy; describe what failed and state concrete recovery steps. Omit decorative section counters (01, 02) when content is not an ordered sequence. Read `references/copy-writing.md`.
+4. **Form validation timing and error recovery.** Delay field error display until `onBlur`, then live revalidate on `onInput` after initial blur. Keep submit buttons enabled, display clear inline error messages, and shift focus to the first invalid input on submission. Read `references/forms-and-error-recovery.md`.
+5. **Mobile thumb zones.** Place primary mobile actions and navigation triggers inside the Natural Thumb Zone along the screen bottom. Keep the Ow Zone at the top edges free of primary interactive triggers. Read `references/mobile-touch-ergonomics.md`.
+6. **System status transparency.** Provide clear feedback within 100ms for user actions, display subtle progress indicators for operations taking 400ms to 1000ms, and render skeleton loaders instead of blank spinners. Read `references/system-status-and-states.md`.
+7. **Task flows and information architecture.** Minimize steps to completion, eliminate dead-scroll zones (>300px travel without visual mutation), enforce Krug scannability, apply progressive disclosure 80/20 rules, and minimize the Lostness Metric. Read `references/task-flows-and-ia.md`.
+8. **Usability heuristics and principles.** Check NN/g 10 heuristics, Norman signifiers and constraints, Shneiderman golden rules, and ISO 9241-110 dialogue standards. Read `references/heuristics-and-principles.md`.
+9. **Interface copy and lexical consistency.** Enforce outcome verbs on triggers ("Save changes" instead of "Submit"). Maintain lexical cohesion across actions and status toasts ("Publish" triggers "Published"). Name interface concepts using user mental models rather than backend architectures ("Manage notifications" instead of "Webhook configuration"). Never write apologetic error copy; describe what failed and state concrete recovery steps. Omit decorative section counters (01, 02) when content is not an ordered sequence. Read `references/copy-writing.md`.
 
 ## Ordered evaluation sequence
 
@@ -78,7 +85,7 @@ Establish review boundaries, blast radius, and user intent before inspecting cod
 6. Record excluded files, third-party redirects, and out-of-scope backend processes.
 7. Write or load `references/operate-brief.md` for operate and read routes before inspecting code.
 
-Completion criterion. Target surfaces, active styling engine, project guidelines, user goals, optimal step counts, and operate brief confirmed.
+Completion criterion. Target surfaces, active styling engines, guidelines, user goals, and operate brief confirmed and recorded in a scope checklist.
 
 ### Step 2. UI mechanics audit
 
@@ -91,7 +98,7 @@ Audit target surfaces against technical and structural standards:
 5. Component mechanics. Check Popover API, CSS Anchor Positioning, and `@starting-style` transitions using `references/component-mechanics.md`.
 6. Motion mechanics. Check composited properties and delegate spring physics to `ui-motion`.
 
-Completion criterion. Target surfaces evaluated against all technical mechanics with zero skipped categories.
+Completion criterion. Target surfaces evaluated against all technical mechanics and recorded in an itemized evaluation table with zero skipped categories.
 
 ### Step 3. UX cognitive and interaction audit
 
@@ -104,7 +111,7 @@ Audit user journeys against cognitive and behavioral standards:
 5. System status and states. Check six-state completeness, skeleton loaders, and optimistic updates using `references/system-status-and-states.md`.
 6. Mobile touch ergonomics. Check 48px touch targets, bottom thumb zones, and swipe gestures using `references/mobile-touch-ergonomics.md`.
 
-Completion criterion. Target workflows evaluated across cognitive laws, task flows, forms, and touch ergonomics with zero skipped domains.
+Completion criterion. Target workflows evaluated across cognitive laws, task flows, forms, and touch ergonomics and recorded in an itemized findings table with zero skipped domains.
 
 ### Step 4. Consolidation and reporting
 
@@ -119,7 +126,7 @@ Consolidate findings into a structured report using `references/report-format.md
 7. Assign an `Approve` or `Changes Requested` final verdict.
 8. Run finish review in fresh context with request, answers, artifact path, screenshots, direction contract, and hook findings as inputs. Inherit no transcript.
 
-Completion criterion. Formatted report with categorized findings, Before-After-Why evidence tables, concrete resolutions, final verdict, and isolated review inputs.
+Completion criterion. Formatted report delivered containing categorized findings, Before-After-Why evidence tables, concrete code diffs, final verdict, and isolated review inputs.
 
 ## Five-dimension design critique scorecard
 
@@ -138,7 +145,7 @@ Audit implementations against this checklist. Every item represents an automatic
 | Never | Instead |
 | --- | --- |
 | `outline: none` or `outline: 0` without a visible replacement | `:focus-visible` with minimum 2px solid outline and 2px offset |
-| Nested child container sharing identical `border-radius` with parent | Concentric radius formula `R_inner = max(0, R_outer - (padding + border))` |
+| Nested child container sharing identical `border-radius` with parent | Concentric radius formula `R_inner = max(0, R_outer-(padding + border))` |
 | Pure black `#000000` applied to large dark mode canvas surfaces | Dark neutral tones with OKLCH lightness 0.16 to 0.20 such as `#121212` |
 | Stacking white opacity overlays for dark mode surface elevations | Discrete semantic container tokens with stepped lightness values |
 | Hover styling triggered unconditionally on touchscreen devices | Wrap hover rules in `@media (hover: hover) and (pointer: fine)` |

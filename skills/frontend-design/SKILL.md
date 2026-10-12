@@ -5,13 +5,19 @@ description: Use when building frontend interfaces, styling layouts with Tailwin
 
 # Frontend design
 
-Author high-craft visual interfaces, establish token architectures, and eliminate default AI styling patterns.
+Author intentional visual interfaces, establish token architectures, and eliminate default AI styling patterns.
 
 ## Overview
 
-Frontend design provides a unified engineering runbook for visual craft, token architecture, component mechanics, and anti-slop safeguards. It replaces generic AI defaults such as neon gradients, generic serif headings on dashboards, centered three-card rows, and fabricated metrics with intentional design systems. Every interface must feature authentic content, stable layout structure, accessible interaction models, and verified production libraries.
+Frontend design provides an engineering runbook for layout structure, token architecture, component mechanics, and anti-slop safeguards. It replaces generic AI defaults such as neon gradients, generic serif headings on dashboards, centered three-card rows, and fabricated metrics with intentional design systems. Every interface must feature authentic content, stable layout structure, accessible interaction models, and verified production libraries.
 
 Consult reference documents in references/ on demand for deep implementation patterns.
+
+## Modes
+
+Select an execution mode before Step 1:
+- Greenfield mode (default). Author new views, generate DESIGN.md, and establish visual tokens from scratch.
+- Audit and restyle mode. Inspect existing components, calculate delta scores against references/impeccable-delta.md, and present recommendations before modifying markup.
 
 ## Execution workflow
 
@@ -56,7 +62,7 @@ Evaluate output against anti-slop criteria before completing work.
 - Confirm zero uninstalled packages, zero fake metrics, and zero banned fonts.
 - Apply `references/impeccable-delta.md` checks 1 to 8 against project DESIGN.md and prior project views.
 
-Completion criterion. Interface satisfies all checklist checks with scores of 3 or higher across all evaluation criteria and delta checks 1 to 8 pass.
+Completion criterion. Component markup passes responsive checks at all target breakpoints, includes skeleton loader and empty state markup, and confines animations to transform and opacity.
 
 ## Boundary isolation
 
@@ -102,7 +108,7 @@ Anchor layouts to neutral bases with at most one restrained accent color.
 - Neutral foundation. Anchor interfaces to Zinc or Slate. Never use pure black (#000000); use Zinc-950 or Charcoal Ink (#18181B) for deep surfaces and high-contrast text.
 - Single accent rule. Pick at most one accent color per project (Emerald, Electric Blue, Deep Rose, or Amber). Keep accent saturation strictly below 80% to eliminate neon glows.
 - Systematic color spaces. Construct palette steps using OKLCH scales for uniform perceived lightness across tints and shades. Consult references/custom-theme.md.
-- Surface elevation. Differentiate elevation layers using discrete surface lightness steps and subtle borders. Never stack semi-transparent white overlays or neon drop shadows.
+- Surface elevation. Differentiate elevation layers using discrete surface lightness steps and subtle borders instead of stacking semi-transparent white overlays or neon drop shadows.
 - Dynamic surface tinting. Construct state tints and subtle surface borders using color-mix in oklch space with 5% to 15% accent mix instead of stacking opacity overlays or arbitrary hex codes.
 - Banned AI palette tropes. Avoid formulaic warm cream (#F4F1EA) paired with terracotta (#D97757) and high-contrast serifs, or near-black backgrounds paired with single acid-green or vermilion accents, unless explicitly required by brand guidelines.
 
@@ -115,7 +121,7 @@ Construct responsive structural grids with modern CSS and dynamic viewport units
 - Mobile collapse threshold. When Variance exceeds level 4, collapse asymmetric desktop grids into a clean single column below 768px (w-full px-4). Consult references/responsive.md.
 - Layout anti-patterns. Avoid centered three-card feature rows. Use staggered two-column pairs, bento layouts, horizontal scrolls, or index directories. Consult references/anti-patterns.md.
 - Characteristic hero composition. Open with the most representative artifact of the domain, such as an interactive demo, canvas, or direct preview. Avoid generic hero blocks made of large isolated numbers, small labels, and gradient washes. Apply the Chanel restraint principle: pick exactly one focal anchor per view and keep secondary elements quiet.
-- Concentric corner geometry. Maintain proportional nested radii where inner radius equals outer radius minus container padding and border thickness using the formula calc(var(--outer-radius) - var(--padding) - var(--border)). Never use identical radii on nested cards.
+- Concentric corner geometry. Maintain proportional nested radii where inner radius equals outer radius minus container padding and border thickness using concentric geometry formulas instead of applying identical radii on nested cards.
 - Container query modularity. Declare container-type inline-size on portable micro-component roots. Trigger internal responsive adaptations and typography clamping using container queries and cqw units instead of coupling components to global viewport breakpoints.
 
 ### 4. Honest copy and authentic assets
@@ -124,11 +130,11 @@ Deliver verifiable production content with authentic brand media.
 
 - Zero fabricated metrics. Never invent placeholder percentages, uptime stats, speed multipliers, or fake testimonial quotes. If exact metrics are absent, use organic real-world samples or structural illustrations.
 - Genuine brand marks. Use verified SVG or PNG logos for authentic integrations. Omit partner logo walls entirely when authentic proof is unavailable.
-- Authentic photography and illustration. Use real team photos, transparent PNG cutouts, or genuine vector art. Never default to generic AI clay dioramas, low-poly pastel 3D toys, or uncredited decorative mesh blobs.
+- Authentic photography and illustration. Use real team photos, transparent PNG cutouts, or genuine vector art instead of generic AI clay dioramas, low-poly pastel 3D toys, or uncredited decorative mesh blobs.
 - Zero synthetic ordinal counters or scroll cues. Omit decorative 01 / 06 section corner counters and animated mouse scroll indicators. Let content, hierarchy, and peeked fold boundaries guide navigation naturally.
-- Zero fake device chrome. Never hand-code simulated browser URL bars, traffic-light window controls, or faux smartphone frames. Let UI content speak for itself.
+- Zero fake device chrome. Let UI content speak for itself instead of hand-coding simulated browser URL bars, traffic-light window controls, or faux smartphone frames.
 - Zero template chrome. Omit tracked-out ALL-CAPS eyebrow labels above headings, metadata strings separated by middle dots ('A · B · C'), dual-fragment headings separated by dashes, and automatic '→' characters on button text.
-- Visual icon sets. Use Phosphor, Radix, or Solar SVG icons with unified stroke weight. Never render raw unicode emojis in user interface labels or copy.
+- Visual icon sets. Use Phosphor, Radix, or Solar SVG icons with unified stroke weight instead of rendering raw unicode emojis in user interface labels or copy.
 
 ## Macrostructures and visual genres
 
@@ -167,7 +173,7 @@ Route execution to dedicated reference runbooks based on task requirements:
 
 1. Generating ./DESIGN.md. Follow references/design-template.md to author a canonical specification covering dials, palette tokens, typography rules, component specs, and anti-patterns.
 2. Curated UI primitives and libraries. Consult references/recommended-libraries.md to map functional requirements to verified single-purpose packages like Base UI, cmdk, Sonner, input-otp, NumberFlow, Virtuoso, Zustand, and CVA.
-3. Creative Awwwards-style WebGL and GSAP scenes. Consult references/creative-motion-webgl.md when choreographing smooth scroll, GSAP ScrollTrigger timelines, and Three.js canvas lifecycles with offscreen pause constraints.
+3. Kinetic WebGL and GSAP scenes. Consult references/creative-motion-webgl.md when choreographing smooth scroll, GSAP ScrollTrigger timelines, and Three.js canvas lifecycles with offscreen pause constraints.
 4. Pre-built UI components and macrostructures. Browse references/components/ for tested component patterns (navbars, bento cards, hero callouts, footer statements) and references/macrostructures/ for full-page templates.
 5. Micro-interactions and gesture physics. Consult references/ui-patterns.md for button press feedback, bento card mechanics, and cursor interactions. For spring physics, gesture tracking, and frame rate audits, activate the ui-motion skill.
 

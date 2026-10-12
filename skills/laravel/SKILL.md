@@ -11,6 +11,12 @@ Deterministic, test-driven workflows for Laravel applications.
 
 Build, refactor, and debug Laravel applications using native Artisan inspection and established repository conventions. Delegate architectural scoping to superpower skills, write tests before implementation, and verify changes with automated test suites and Pint formatting.
 
+## Modes
+
+Select an execution mode before Step 1:
+- Feature mode (default). Follow test-driven development to build new routes, Eloquent models, and components.
+- Diagnostic mode. Inspect logs, reproduce exceptions with minimal scripts, and resolve failures without adding architectural scaffolding.
+
 ## Workflow
 
 Follow these four steps in sequence:
@@ -24,8 +30,8 @@ Probe framework version, configuration, and database state before modifying appl
    php artisan --version
    ```
 2. Detect the `laravel/boost` MCP server in available tools:
-   - When `search-docs` is present, query it for version-specific documentation and package contracts.
-   - When `search-docs` is absent, inspect framework behavior with native Artisan commands in `references/cli-introspection.md` or read vendor source directly.
+   * When `search-docs` is present, query it for version-specific documentation and package contracts.
+   * When `search-docs` is absent, inspect framework behavior with native Artisan commands in `references/cli-introspection.md` or read vendor source directly.
 3. Inspect affected database tables and route definitions:
    ```bash
    php artisan model:show <ModelName>
@@ -46,15 +52,15 @@ Audit sibling controllers, models, migrations, and test files for established pr
 | Pest and PHPUnit tests, HTTP assertions, service fakes | `references/testing-patterns.md` |
 | Authorization policies, SQL injection safety, mass assignment | `references/security-and-hardening.md` |
 
-Completion criterion. Every modified file adheres to conventions observed in sibling files and matches its corresponding reference guide.
+Completion criterion. Every planned edit maps to a documented pattern in the selected reference guide and preserves existing sibling class structure.
 
 ### Step 3. Implementation and boundary isolation
 
 Apply minimal, isolated modifications using test-first development:
 
-1. For new features or bug fixes, coordinate with the `tdd` skill to establish failing tests before writing production code.
+1. For new features or bug fixes, coordinate with the `testing-patterns` skill to establish failing tests before writing production code.
 2. For error diagnosis, coordinate with the `systematic-debugging` skill to inspect `storage/logs/laravel.log` and verify reproducing steps first.
-3. Keep database queries inside Eloquent models, repositories, or query scopes, keeping Blade templates, Inertia controllers, and JsonResource classes free of queries.
+3. Confine database queries to Eloquent models, repositories, or query scopes, and leave Blade templates, Inertia controllers, and JsonResource classes free of direct queries.
 4. Extract validation into Form Request classes and pass only `$request->validated()` into models.
 5. Eager load relationships using `with()` or `loadMissing()` to eliminate N+1 queries.
 
@@ -82,4 +88,22 @@ Completion criterion. Targeted tests pass with exit code 0 and Pint reports zero
 - Prefer native framework utilities over custom helper functions or external packages.
 - Pass raw SQL through parameterized bindings with positional placeholders.
 - Maintain CSRF protection, route middleware, and model authorization policies during tests. Fix test fixtures rather than disabling security middleware.
-- Store credentials and private keys in `.env` and `config/` files. Application code must never contain hardcoded secrets.
+- Store credentials and private keys in `.env` and `config/` files, and never hardcode secrets in application code.
+
+## Boundary isolation
+
+Confine framework modifications strictly to application architecture and test assertions:
+- Keep vendor packages, generated migration timestamps, Composer lock files, and core Laravel framework files untouched.
+- Preserve database column names, environment variable keys, and CLI command signatures in their exact schema formats.
+
+## Quick audit checklist
+
+Review this table before completing Laravel tasks:
+
+| Check | Passing condition |
+|---|---|
+| Query confinement | Queries confined to Eloquent models, scopes, or repositories |
+| Validation | Request input extracted via Form Requests and validated |
+| N+1 prevention | Relations eager-loaded via `with()` or `loadMissing()` |
+| Security | Input parameterized, policies enforced, zero hardcoded secrets |
+| Code style | Automated tests pass and Laravel Pint passes with zero violations |

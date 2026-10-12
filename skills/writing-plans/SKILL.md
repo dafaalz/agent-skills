@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: Create phased implementation plans with test-first tasks from a design specification before writing code. Use when creating phased implementation plans with test-first tasks from a design specification before writing code. Don't use for initial design ideation, exploratory research, or direct code execution.
+description: Use when creating phased implementation plans with test-first tasks from a design specification before writing code. Don't use for initial design ideation, exploratory research, or direct code execution.
 ---
 
 # Writing implementation plans
@@ -14,9 +14,19 @@ Announce the following message at session start:
 
 Save plans to `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md` as transient scaffolding artifacts unless the user specifies a different path. Implementation plans are transient execution scaffolding. After implementation is complete and verified, the plan file should be purged to keep the repository clean.
 
+## Modes
+
+Select a planning mode before Step 1:
+- Author mode (default). Draft new implementation plans with test-first tasks from design specifications.
+- Review mode. Audit existing implementation plans against design specs and anti-slop rules without modifying plan status.
+
+## Boundary isolation
+
+Writing plans produces transient execution scaffolding only (`docs/superpowers/plans/`). Never write production application code, modify existing tests, or alter repository code files while drafting implementation plans.
+
 ## Workflow
 
-Follow these four steps in sequence:
+Follow these four steps in sequence.
 
 ### Step 1. Scope audit and file mapping
 
@@ -27,7 +37,7 @@ Inspect the specification and repository structure before creating tasks:
 - Co-locate related logic. Group files by functional responsibility rather than technical layer. Files that change together belong together.
 - Follow repository conventions. Match existing file and directory patterns. If an existing file is already unwieldy, include a planned split into smaller modules.
 
-Completion criterion. A complete inventory of target files mapped to clear responsibilities, confirmed to belong to a single cohesive subsystem.
+Completion criterion. Target files mapped to explicit responsibilities and verified to belong to a single cohesive subsystem.
 
 ### Step 2. Task decomposition and plan drafting
 
@@ -44,7 +54,7 @@ Draft the implementation plan using the templates in the reference section below
 - Specify exact execution commands with expected exit codes or failure messages for every test step.
 - Ensure tasks remain self-contained with explicit inputs, outputs, and behavioral boundaries.
 
-Completion criterion. A drafted plan document containing the mandatory header, granular test-driven tasks, interface contracts, and exact verification commands.
+Completion criterion. Plan document drafted with mandatory header, granular test-driven tasks, interface contracts, and exact verification commands.
 
 ### Step 3. Plan self-review and validation
 
@@ -52,9 +62,9 @@ Audit the drafted plan against the source specification:
 - Verify specification coverage. Skim each section of the specification and verify that an explicit task implements it. Add tasks for any missing requirements.
 - Scan for placeholders. Confirm that the plan contains zero instances of TODO, TBD, vague validation rules, or undefined target interfaces.
 - Verify signature consistency. Confirm that function names, argument lists, and types match across all tasks.
-- Optional reviewer subagent. For automated validation, dispatch a subagent using the prompt in `plan-document-reviewer-prompt.md`. Fix all identified defects directly in the plan file.
+- Optional reviewer subagent. For automated validation, dispatch a subagent using the prompt in `references/plan-document-reviewer-prompt.md`. Fix all identified defects directly in the plan file.
 
-Completion criterion. The plan document contains zero placeholders, covers all specification requirements, and maintains consistent method signatures throughout.
+Completion criterion. Plan document audited to confirm zero placeholders, complete specification coverage, and consistent method signatures throughout.
 
 ### Step 4. Execution handoff
 
@@ -65,7 +75,7 @@ Save the plan to disk and present execution options to the user:
   2. Inline execution. Executes tasks batch-by-batch within the current session with review checkpoints. Requires `executing-plans`.
 - Wait for the user to choose an execution option before executing any tasks.
 
-Completion criterion. The plan file is written to disk and the user is prompted with the execution options.
+Completion criterion. Plan file written to disk and execution options presented to the user.
 
 ## Reference templates and rules
 
@@ -144,4 +154,14 @@ Every step must provide precise contract specifications without duplicating full
 
 Transform abstract requirements into concrete, verifiable test goals:
 - Convert open-ended instructions into testable gates. For example, "add input validation" becomes "write tests asserting failure on invalid inputs, then make them pass".
-- Pair every multi-step action with an explicit verification check specifying the exact test command and expected outcome. Strong success criteria enable autonomous verification loops without constant clarification.
+- Pair every multi-step action with an explicit verification check that defines the exact test command and expected outcome.
+
+## Quick audit checklist
+
+| Check | Passing condition |
+|---|---|
+| Header structure | Mandatory plan header present with goal, architecture, and stack |
+| Task granularity | Bite-sized 2 to 5 minute tasks with test-first sequence |
+| Verification commands | Exact test commands and expected exit codes or failure messages provided |
+| Zero placeholders | Zero instances of TODO, TBD, or speculative application logic |
+| Reference isolation | Scaffolding plans placed under `docs/superpowers/plans/` |

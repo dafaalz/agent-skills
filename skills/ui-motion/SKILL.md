@@ -13,6 +13,12 @@ UI motion engineering delivers hardware-accelerated, physically grounded interfa
 
 Consult deep reference documents in references/ for recipes, gesture physics, mobile native environments, desktop platform pipelines, vocabulary mapping, Google rendering standards, and audit playbooks.
 
+## Modes
+
+Select an execution mode before Step 1:
+- Author mode (default). Implement choreographies, transitions, and gesture physics.
+- Audit mode. Inspect animation performance, check frame drops, and verify reduced-motion compliance without editing styles.
+
 ## Workflow router
 
 Identify user intent and route execution immediately:
@@ -92,21 +98,19 @@ For complex headless UI primitives (toasts, drawers, command menus), rely on bat
 
 Never mix CSS transition utility classes (`transition`, `duration-*`) with JavaScript animation libraries on the same node. Assign full control either to CSS classes or to JavaScript transforms.
 
-Completion criterion. The cheapest capable tool selected, preferring compositor CSS transitions before JavaScript animation libraries.
+Completion criterion. The cheapest capable tool is selected with compositor CSS transitions prioritized over JavaScript animation libraries.
 
 ### Step 4. Hardware acceleration and property scoping
 
-- **Animate `transform` and `opacity` exclusively.** They skip layout recalculation and paint passes, running on the compositor thread. Properties like `width`, `height`, `margin`, `padding`, `top`, and `left` force expensive layout thrashing. Allow `height` only on accordions where transform cannot match the behavior. Allow `clip-path: inset()` on creative editorial curtain reveals.
-- **Never use `scale(0)`.** Start entry transitions from `scale(0.95)` with zero opacity.
+- **Animate `transform` and `opacity` exclusively; never animate `width`, `height`, `margin`, `padding`, `top`, or `left`.** Transforms and opacity run directly on the compositor thread without layout recalculation or paint passes. Layout properties force expensive recalculations. Allow `height` only on accordions where transform cannot match the behavior. Allow `clip-path: inset()` on creative editorial curtain reveals.
+- **Start entry transitions from `scale(0.95)` with zero opacity; never use `scale(0)`.** Physical objects never emerge from zero dimension.
 - **Set `transform-origin` at the trigger.** Anchor popovers, dropdowns, and tooltips to their trigger using `var(--transform-origin)`. Modals remain exempt and stay centered.
 - **Use percentage values in `translate()`.** A value like `translateY(100%)` scales with the element dimensions instead of a fragile pixel count.
 - **In Motion or Framer Motion, use hardware-accelerated transforms.** Motion v11 and higher executes independent transform values (`x`, `y`, `scale`) directly on the compositor thread via Web Animations API (WAAPI). On older Framer Motion versions, explicit transform strings bypass JavaScript main thread layout sync:
 
 ```jsx
-/* Modern Motion (v11+) uses WAAPI hardware acceleration natively */
+/* Modern Motion (v11+) uses WAAPI; legacy uses explicit transform strings */
 <motion.div animate={{ x: 100 }} />
-
-/* Legacy fallback if main thread CPU bottleneck occurs */
 <motion.div animate={{ transform: "translateX(100px)" }} />
 ```
 
@@ -160,19 +164,13 @@ Include accessibility and pointer checks in all delivered animation styles:
 
 ```css
 @media (prefers-reduced-motion: reduce) {
-  [data-motion-enter],
-  .element {
-    animation: none !important;
-    transition: none !important;
-    transform: none !important;
-    opacity: 1 !important;
+  [data-motion-enter], .element {
+    animation: none !important; transition: none !important;
+    transform: none !important; opacity: 1 !important;
   }
 }
-
 @media (hover: hover) and (pointer: fine) {
-  .element:hover {
-    transform: scale(1.04);
-  }
+  .element:hover { transform: scale(1.04); }
 }
 ```
 
@@ -181,6 +179,10 @@ Never branch conditionally on `useReducedMotion()` in JSX before initial hydrati
 Defer mobile focus past transition completion. Delay `.focus({ preventScroll: true })` until the entry transition completes (duration + 10ms). Never auto-focus text inputs on touch viewports (`pointer: coarse` or `< 640px`) to prevent virtual keyboard layout jumps. Focus the container or close button instead.
 
 Completion criterion. Styles include `@media (prefers-reduced-motion: reduce)` overrides without conditional JSX tag branching.
+
+## Boundary isolation
+
+Confine animation rules strictly to motion timing, CSS transforms, and gesture hooks. Never alter core application state logic, backend API calls, or accessibility roles in the name of animation.
 
 ## Review format
 

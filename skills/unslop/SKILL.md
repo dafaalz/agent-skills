@@ -9,7 +9,7 @@ Strip AI patterns and filler from prose and documentation, and write plain activ
 
 ## Workflow
 
-Run these four steps in order.
+Run these four steps in sequence to audit and refine prose.
 
 ### Step 1. Pick a mode and scan for patterns
 
@@ -54,9 +54,9 @@ Completion criterion. Verify that no three consecutive sentences share identical
 
 Check the draft against the quick audit checklist at the end of this document. For an edit request, output the full rewritten draft and a short list of what changed.
 
-Completion criterion. Confirm that the text passes every row of the quick audit checklist.
+Completion criterion. Full rewritten draft and itemized change summary delivered, passing every row of the quick audit checklist.
 
-## Leave code alone
+## Boundary isolation
 
 Use these rules for human-facing prose, documentation, walkthroughs, and chat explanations only.
 

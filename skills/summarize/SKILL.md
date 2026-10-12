@@ -5,14 +5,20 @@ description: Use when generating structured session execution summaries, documen
 
 # Summarize
 
-Produce an accurate, structured record of session execution. Write for two consumers, the user confirming changes, and subsequent agent sessions continuing the work without rediscovery.
+Produce an accurate, structured record of session execution. Write for two consumers. The primary consumer is the user who verifies changes. The secondary consumer is a subsequent agent session that continues the work without rediscovery.
+
+## Modes
+
+Select a summarization mode before Step 1:
+- Summary mode (default). Distill session activities, modifications, and findings into structured evidence tables.
+- Handoff mode. Package system state, active variables, and next immediate steps for a subsequent agent or user.
 
 ## Integrity rule
 
 Report exclusively what occurred during the current session:
-- Never claim a file changed without inspecting diffs.
-- Never state a test passed without observing clean terminal output.
-- Never present plans or proposals as completed modifications.
+- Inspect diffs directly; never claim a file changed without inspecting diffs.
+- Observe clean terminal output directly; never state a test passed without observing clean terminal output.
+- Record verified facts and actual results; never present plans or proposals as completed modifications.
 - Record failures, discarded attempts, and dead ends so future sessions do not repeat them.
 - Flag unverified paths explicitly instead of assuming success.
 
@@ -50,7 +56,7 @@ Completion criterion. Every automated verification command is tabulated with exa
 
 ### Step 4. Context handoff assembly
 
-When transferring work to another agent, append the structured handoff block containing branch, entry point, verification commands, and open tasks.
+When transferring work to another agent, append the structured handoff block that contains branch, entry point, verification commands, and open tasks.
 
 Completion criterion. A complete session execution summary rendered to the user or persisted to disk.
 
@@ -73,7 +79,7 @@ List chronological operations with concrete evidence in a table:
 | 3 | Run | `npm test -- auth` | 14 passed, 0 failed |
 | 4 | Run | `npx tsc --noEmit` | Clean run with 0 errors |
 
-Group by category when the list grows, including files created, files edited, files removed, and commands executed. State what changed and why for each path.
+Group by category when the list grows. Categorize entries by files created, files edited, files removed, and commands executed. State what changed and why for each path.
 
 ### 3. Issues and root causes
 
@@ -112,18 +118,18 @@ List every unverified check under Known gaps.
 State gaps without softening:
 - Untested code paths due to missing fixtures or unavailable external APIs.
 - Unverified deployment or integration behaviors.
-- Open questions requiring external decisions.
+- Open questions that require external decisions.
 
 ### 6. Actionable next steps
 
 Numbered list of concrete next tasks:
 1. Add regression test for boundary conditions at `src/auth/session.ts`.
-2. Update callers referencing deprecated function signatures.
+2. Update callers that reference deprecated function signatures.
 3. Fix pre-existing type warnings in legacy files.
 
 ### 7. Agent handoff block
 
-When transferring context to another agent, append this structured block:
+To transfer context to another agent, append this structured block:
 
 ```markdown
 ## Context handoff
@@ -136,6 +142,10 @@ When transferring context to another agent, append this structured block:
 **Caution** Do not revert schema migration timestamp constraint.
 ```
 
+## Boundary isolation
+
+Summarization operates strictly in an analytical and reporting capacity. Never edit application code, alter configuration files, or execute mutating commands while creating summaries.
+
 ## Anti-slop and precision guidelines
 
 - State factual outcomes immediately in leading sentences.
@@ -144,3 +154,16 @@ When transferring context to another agent, append this structured block:
 - Quote exact error messages and exit codes verbatim.
 - Drop conversational padding such as "successfully", "carefully", or "it is worth noting".
 - Strip emojis and decorative styling.
+
+## Quick audit checklist
+
+Audit summaries against this table before finalizing:
+
+| Anti-pattern | Correct practice |
+|---|---|
+| Claiming untested fixes work | Execute verification commands and record exact outputs |
+| Omitting failed attempts | Record failures, discarded paths, and root causes plainly |
+| Speculative completion claims | Record verified facts; never claim plans as modifications |
+| Narrative status descriptions | Use structured tables with command, path, and result columns |
+| Conversational padding | Present findings directly without filler or introductory fluff |
+| Unanchored file references | Cite exact repository file paths and line numbers |

@@ -10,15 +10,21 @@ Explore divergent visual and interaction directions for a single UI component be
 
 This skill builds distinct, production-ready variants for a single UI component and renders them in an isolated picker harness. The user evaluates variants in context and selects a direction to integrate.
 
+## Modes
+
+Select an execution branch based on user invocation:
+- Exploration branch (default). Run Steps 1 through 5 to research, build, and verify candidate variants.
+- Promotion branch (`keep <variant>`). Skip directly to Step 6 to integrate the chosen component and clean up scratch files.
+
 ## Core rules
 
-- **Isolate prototype code.** Never edit production components during exploration. Build all variants and the picker harness in an isolated route or standalone HTML file.
-- **Diverge on explicit axes.** Differentiate variants by layout, density, motion, or interaction pattern. Do not present variants that differ only by color tint or placeholder text.
-- **Build functional interactions.** Every variant must handle state, transitions, and realistic domain copy. Placeholder text and dead buttons are prohibited.
-- **Follow motion standards.** Keep interaction transitions under 300ms. Animate transform and opacity exclusively. Use ease-out curves on entrances, and respect reduced-motion user preferences.
-- **Preserve picker chrome.** Render the picker component exactly as defined in [PICKER.md](PICKER.md). Do not restyle the picker with project tokens or theme colors.
-- **Deliver early v0 drafts.** Avoid the big reveal trap. Emit a viewable v0 draft containing layout skeletons, design tokens, and explicit module placeholders (such as `[image]` or `[icon]`) to confirm direction with the user before investing in complex interaction choreography or fine-tuned micro-motion.
-- **Clean up on promotion.** Delete the prototype harness and unselected variants once the user confirms a winning direction.
+- Build all variants and the picker harness in an isolated route or standalone HTML file instead of editing production components during exploration.
+- Differentiate variants by layout, density, motion, or interaction pattern rather than presenting variants that vary only by color tint or placeholder text.
+- Supply realistic domain copy, interactive states, and transitions for every variant instead of relying on placeholder text or dead buttons.
+- Keep interaction transitions under 300ms, animate transform and opacity exclusively, use ease-out curves on entrances, and respect reduced-motion preferences.
+- Render the picker component exactly as defined in [PICKER.md](PICKER.md) instead of restyling it with project tokens or theme colors.
+- Emit a viewable v0 draft containing layout skeletons, design tokens, and explicit module placeholders (such as `[image]` or `[icon]`) to confirm direction with the user before investing in complex interaction choreography or micro-motion.
+- Delete the prototype harness and unselected variants once the user confirms a winning direction.
 
 ## Workflow
 
@@ -26,12 +32,12 @@ Follow these six steps in sequence:
 
 ### Step 1. Scope and brief definition
 
-Isolate a single high-impact UI component from the user request.
+Isolate the target UI component from the user request.
 
-- If the request targets a complex screen or multi-component flow, select the single component that carries the highest interaction risk or design ambiguity.
+- If the request targets a complex screen or multi-component flow, select the component that carries the highest interaction risk or design ambiguity.
 - State the brief in one declarative sentence defining the component, its target surface, and its primary job.
 
-Completion criterion. A written one-sentence brief defining a single target component and its operational context.
+Completion criterion. The written one-sentence brief defines the target component and its operational context.
 
 ### Step 2. Technical and visual recon
 
@@ -42,7 +48,7 @@ Inspect the active codebase to identify design constraints and styling tokens.
 - Context. Inspect the container dimensions, background surfaces, and sibling components where the target piece mounts.
 - Standalone fallback. If no existing codebase exists, default to semantic HTML, standard system fonts, neutral slate tones, and one accent color.
 
-Completion criterion. An inventory recording the target stack, design tokens, and surrounding DOM constraints.
+Completion criterion. The inventory records the target stack, design tokens, and surrounding DOM constraints.
 
 ### Step 3. Direction and axis selection
 
@@ -52,7 +58,7 @@ Define three distinct directions before writing code. Expand to five only when t
 - Pair each direction with an explicit axis of variation, such as density, spatial hierarchy, interaction cadence, or feedback mechanism.
 - Verify that no two variants occupy the same point on a chosen axis.
 
-Completion criterion. A list of 3 to 5 named variants with mutually exclusive variation axes.
+Completion criterion. The variant list specifies 3 to 5 named directions with mutually exclusive variation axes.
 
 ### Step 4. Harness construction
 
@@ -61,9 +67,9 @@ Assemble the isolated preview environment and embed the standard picker.
 - Dev server environment. Create a dedicated route or preview page at `/prototypes/<component-slug>` containing variant components and the harness.
 - Static environment. Generate a single self-contained HTML file containing inline styles and scripts for direct browser execution.
 - Picker integration. Copy markup, styles, and event wiring verbatim from [PICKER.md](PICKER.md).
-- Display standards. Render one variant at a time at full size with surrounding layout context. Do not use thumbnail grids. Switch variants instantly without transitional animations.
+- Display standards. Render one variant at a time at full size with surrounding layout context instead of using thumbnail grids, and switch variants instantly without transitional animations.
 
-Completion criterion. An operational harness rendering variants one at a time and switching instantly via keyboard and mouse controls.
+Completion criterion. The operational harness renders variants one at a time and switches instantly via keyboard and mouse controls.
 
 ### Step 5. Verification and review handoff
 
@@ -91,6 +97,12 @@ Integrate the chosen variant and remove temporary exploration artifacts.
 - If the user requests further exploration, retain the harness and repeat Step 3 focusing on sub-variants of the favored direction.
 
 Completion criterion. The chosen component is integrated into the destination codebase and all prototype scratch files are removed.
+
+## Boundary isolation
+
+Keep prototype code strictly confined to scratch preview paths (`/prototypes/` or temporary HTML files):
+- Never modify production component files, routing tables, or global build configurations during exploration.
+- Do not commit prototype harnesses or scratch dependencies to production bundles.
 
 ## Invocation variants
 

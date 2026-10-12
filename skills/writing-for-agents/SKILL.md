@@ -141,7 +141,7 @@ description: Use when [triggering conditions]. Don't use for [negative exclusion
 ---
 ```
 
-You keep `name` to lowercase alphanumerics and single hyphens. You write `description` in third person with positive triggers that start at "Use when" and negative exclusions that start at "Don't use for". You omit workflow summary. Model may run summary and skip body. Read `references/agentskills-spec.md` for full schema, optional fields, and discovery roots. Read `references/skill-mechanics.md` to choose model invocation against user invocation.
+You keep `name` to lowercase alphanumerics and single hyphens. You write `description` in third person with positive triggers that start at "Use when" and negative exclusions that start at "Don't use for". You omit workflow summary. Model may run summary and skip body. Read `references/agentskills-spec.md` for full schema, optional fields, and discovery roots. Read `references/skill-mechanics.md` to choose model invocation against user invocation. Commit reference files directly to git; never ignore, hide, or stash secondary reference documents.
 
 ## Testing a skill
 

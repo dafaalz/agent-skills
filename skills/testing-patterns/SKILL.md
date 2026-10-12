@@ -16,6 +16,12 @@ Read the reference guides for domain-specific execution details:
 * For pre-commit gates, Husky setup, and lint-staged automation, read `references/pre-commit-hooks.md`.
 * For boundary value analysis, equivalence partitioning, and exploratory test charters, read `references/test-matrix-and-charters.md`.
 
+## Modes
+
+Select a testing mode before Step 1:
+- Author mode (default). Write new automated test suites, contract tests, and test fixtures.
+- Optimization mode. Refactor existing test suites, eliminate flaky tests, and optimize testcontainer startup latency.
+
 ## Workflow
 
 Execute the six testing steps sequentially. Complete each verification criterion before proceeding to the next step.
@@ -29,7 +35,7 @@ Apply test-driven development through vertical slices at confirmed seam boundari
    * Target public methods, API endpoints, or top-level component boundaries. Avoid reaching into private collaborators or internal state.
    * Consult `references/tdd-anti-patterns.md` for seam boundary and mock isolation pitfalls.
 2. Execute the Red-green loop per vertical slice:
-   * Red. Write a minimal failing test observing behavior at the public seam. Run the test to confirm it fails cleanly from missing behavior rather than syntax or setup errors.
+   * Red. Write a minimal failing test that observes behavior at the public seam. Run the test to confirm it fails cleanly from missing behavior rather than syntax or setup errors.
    * Green. Write minimal production code to pass the test without premature optimization, unused configurability, or speculative abstractions. Run the test suite to confirm clean passes.
    * Refactor. Clean up structure, remove duplication, and improve readability only after tests pass.
    * Repeat the loop for subsequent vertical slices.
@@ -41,7 +47,7 @@ Completion criterion. Target seams map to public contracts, and every slice pass
 Align testing scope with system topology to prevent duplicated test coverage:
 
 1. Choose the distribution model matching target architecture:
-   * Testing Trophy for web applications and client components. Concentrate coverage on integration tests while keeping unit tests restricted to pure functions and state machines.
+   * Testing Trophy for web applications and client components. Concentrate coverage on integration tests and restrict unit tests to pure functions and state machines.
    * Testing Pyramid for backend monoliths with rich domain rules. Anchor the base with fast domain unit tests, intermediate service tests, and a small apex of end-to-end journeys.
    * Testing Honeycomb for microservices and event systems. Focus on service-level integration tests, Pact boundary contracts, and minimal integrated flows.
 2. For browser suites, limit scope to Tier 1 business journeys whose failure blocks revenue or authentication. Delegate secondary validations, form errors, and edge layouts to component integration suites.
@@ -53,7 +59,7 @@ Completion criterion. The testing tier matches system architecture, and test sco
 Construct fixtures through fluent test data builders following Google DAMP (Descriptive And Meaningful Phrases) principles:
 
 1. Replace static JSON dumps and raw SQL scripts with fluent builders to keep test intent visible.
-2. Encapsulate valid default attributes within builders. Calling `build()` without arguments must yield a valid, persistable entity.
+2. Encapsulate valid default attributes within builders. Invoking `build()` without arguments must yield a valid, persistable entity.
 3. Chain override methods such as `withStatus()` or `withTier()` to declare only attributes required by the specific test.
 4. Inject sequential counters or random identifiers into emails, primary keys, and tenant identifiers to maintain test isolation during parallel execution.
 
@@ -78,17 +84,17 @@ Completion criterion. Network calls intercept cleanly through MSW, and backend p
 
 ### Step 5. Declarative assertion construction
 
-Construct assertions evaluating public observable behavior and accessibility trees instead of internal implementation details:
+Construct assertions that evaluate public observable behavior and accessibility trees instead of internal implementation details:
 
 1. Test components and services as black boxes:
    * Assert on observable DOM output, HTTP responses, and database state instead of internal state variables or private methods.
    * Reserve call count verification strictly for external side-effect boundaries like payment gateways or email dispatchers.
 2. Locate user interface elements through the accessibility tree:
-   * Query elements following the priority order of `getByRole`, `getByLabelText`, `getByPlaceholderText`, and `getByText`.
-   * Use `getByTestId` only as a fallback for non-semantic canvas controls or complex custom graphics. Avoid querying by CSS classes, HTML tags, or XPath selectors.
+   * Query elements in the priority order of `getByRole`, `getByLabelText`, `getByPlaceholderText`, and `getByText`.
+   * Locate elements through semantic role and label queries; use `getByTestId` only as a fallback for non-semantic controls, and never query by CSS classes, HTML tags, or XPath selectors.
 3. Use web-first assertions for asynchronous interfaces:
-   * Assert using auto-waiting matchers like `expect(locator).toBeVisible()` or `expect(locator).toHaveText()` that poll the DOM until conditions settle.
-   * Pair element checks with auto-waiting assertions instead of executing immediate assertions against static snapshots.
+   * Assert with auto-waiting matchers like `expect(locator).toBeVisible()` or `expect(locator).toHaveText()` that poll the DOM until conditions settle.
+   * Pair element checks with auto-waiting assertions; never execute immediate assertions against static snapshots.
 
 Completion criterion. Assertions verify only public behavior, accessible roles, or persisted state without inspecting internal implementation mechanics.
 
@@ -107,3 +113,20 @@ Verify test execution speed, determinism, and absence of intermittent failures:
 3. Execute the full test suite three consecutive times across multiple worker processes without failures.
 
 Completion criterion. The suite passes three consecutive parallel test runs with zero arbitrary sleeps and within established latency budgets.
+
+## Boundary isolation
+
+Confine testing operations strictly to test suites (`tests/`, `spec/`), fixtures, and mock definitions. Never modify production business logic or loosen database constraints to force tests to pass.
+
+## Quick audit checklist
+
+Audit test implementations against this table before finalizing:
+
+| Anti-pattern | Correct practice |
+|---|---|
+| Testing private implementation details | Assert on public interfaces, observable DOM, and return values |
+| Arbitrary sleeps (`sleep()`, `waitForTimeout()`) | Use web-first auto-waiting assertions on visible elements |
+| Brittle selector queries (CSS classes, XPath) | Query accessible roles (`getByRole`) and explicit labels |
+| Flaky shared database state | Run containerized databases on tmpfs mounts with table resets |
+| Mocking fetch directly with monkey patches | Intercept network transport boundaries cleanly with MSW v2 |
+| Redundant test coverage across tiers | Choose distribution model matching target architecture |

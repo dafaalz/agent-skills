@@ -9,7 +9,7 @@ Unify requesting and receiving code review into a single disciplined workflow. C
 
 ## Overview and core principles
 
-Code review demands technical rigor rather than emotional performance or unverified agreement.
+Review code with technical rigor rather than emotional performance or unverified agreement.
 
 Follow these core principles:
 - Review early, review often. Request review after each discrete task or major feature to prevent compounding defects.
@@ -18,6 +18,12 @@ Follow these core principles:
 - Technical correctness over social comfort. Maintain skepticism. Push back with concrete facts when suggestions degrade architecture.
 - Structural audit depth. Consult `references/architectural-lenses.md` for classical engineering lenses, logic defects, and Fowler code smell baseline.
 - Comment hygiene. Consult `references/comment-hygiene.md` to prune AI conversational narration while preserving critical business context.
+
+## Modes
+
+Select the operating mode before Step 1:
+- Request mode (Phase 1). Run when requesting review on a branch or task. Extract commit boundaries and dispatch parallel reviewer subagents.
+- Feedback mode (Phase 2). Run when evaluating received review comments. Verify feedback against codebase reality, push back on invalid points, and remediate accepted items.
 
 ## Phase 1. Requesting code review
 
@@ -75,7 +81,7 @@ Dispatch the Standards and Spec reviewer sub-agents in parallel using templates 
 - The diff command `git diff ${BASE_SHA}...${HEAD_SHA}` and commit list from `git log ${BASE_SHA}..HEAD --oneline`.
 - Documented repo standard files.
 - The 12 Fowler code smells from `references/architectural-lenses.md`.
-- Instruction to report hard standard violations and smell heuristics under 400 words, skipping tooling-enforced lints.
+- Instruction to report hard standard violations and smell heuristics under 400 words, and omit tooling-enforced lints.
 
 2. Spec sub-agent receives:
 - The diff command and commit list.
@@ -119,7 +125,7 @@ Follow this six-step loop for every review item:
 3. Verify. Inspect the codebase, git history, and tests to confirm whether the premise matches reality.
 4. Evaluate. Assess whether the proposed change is technically sound for this specific stack.
 5. Respond. Provide a factual technical response or reasoned pushback.
-6. Implement. Apply approved modifications one item at a time, running tests after each edit.
+6. Plan remediation. Queue approved modifications for Step 6 and run tests after each subsequent edit.
 
 Completion criterion. All review comments verified against codebase truth, with ambiguous items clarified and grounded counter-arguments formulated where architecture is degraded.
 
@@ -137,7 +143,7 @@ Respond instead with direct technical substance:
 - State the factual requirement or issue directly.
 - Point to the specific file and line under review.
 - Confirm the fix factually, such as "Fixed date validation in search.ts by rejecting non-ISO strings."
-- Jump directly to running tests and showing diffs. Actions carry authority over words.
+- Jump directly to running tests and showing diffs.
 
 ### Handling unclear items
 
@@ -172,7 +178,7 @@ Verify necessity using this process:
 
 Execute accepted review changes methodically to avoid compound regressions:
 - Clarify ambiguous items first before touching code.
-- Fix blocking and critical bugs first, including broken tests and security concerns.
+- Fix blocking and critical bugs first: resolve broken tests and security concerns before other edits.
 - Grep all callers before editing shared functions to fix the root cause once across all call sites.
 - Apply simple localized fixes second, such as typos, imports, or boundary checks.
 - If taking an intentional shortcut with a known limit, mark it in code using `shortcut: <the limit>, <when to upgrade>`.
@@ -189,9 +195,17 @@ Navigate disagreements with technical facts:
 - If you pushed back and later discover the reviewer was correct, acknowledge the facts directly without lengthy apologies.
 - State the verified finding plainly, such as "Verified the 10.15 backward compatibility requirement. Implementing the fallback branch now."
 
-### Review anti-patterns
+### Thread replies
 
-Review these common pitfalls and their corrections:
+Reply directly in the comment thread for inline GitHub pull request comments rather than submitting top-level PR comments. Keep all discussion tied to the relevant line diff.
+
+## Boundary isolation
+
+Code review operates in an advisory and remediation capacity only. Never modify unrelated files, refactor working logic outside the reviewed commit range, or change formatting conventions across files not touched by the review.
+
+## Quick audit checklist
+
+Review this table before completing the code review:
 
 | Anti-pattern | Correct practice |
 |---|---|
@@ -202,7 +216,3 @@ Review these common pitfalls and their corrections:
 | Avoiding pushback | Prioritize technical correctness over comfort |
 | Partial implementation | Clarify ambiguous items before writing code |
 | Speculative generalizations | Check YAGNI by grepping for actual callers |
-
-### Thread replies
-
-Reply directly in the comment thread for inline GitHub pull request comments rather than submitting top-level PR comments. Keep all discussion tied to the relevant line diff.

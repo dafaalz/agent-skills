@@ -20,7 +20,7 @@ Decide if the task changes existing code or adds new code, then run the matching
 - Change existing code. Run Branch 1.
 - Add new code. Run Branch 2.
 
-Both branches end when you call writing-plans. Never call implementation skills directly from brainstorming.
+Both branches feed into Design presentation and documentation before calling writing-plans; never call implementation skills directly from brainstorming.
 
 ## Branch 1. Check existing code and plan changes
 
@@ -70,7 +70,7 @@ Write 2 to 3 different ways to fix the code.
 - Put your pick first and say why it wins in technical terms.
 - Ask the user to pick one option before you write detailed designs.
 
-Completion criterion. The user picks one option or asks for changes.
+Completion criterion. The user explicitly confirms one chosen option.
 
 ## Branch 2. Design new features
 

@@ -7,6 +7,12 @@ description: Use when designing module interfaces, evaluating abstraction depth,
 
 Design deep modules with substantial behavior behind small interfaces, placed at clean seams, and testable directly through those interfaces.
 
+## Modes
+
+Select the design mode before Step 1:
+- Greenfield mode. Draft schemas, bounded contexts, and initial interface contracts from scratch.
+- Refactor mode. Audit existing database schemas, migration files, and routes to encapsulate existing complexity behind deep modules.
+
 ## Workflow
 
 Follow these five steps in sequence.
@@ -17,9 +23,9 @@ Read the project context and verify actual data schemas before modifying or crea
 
 1. Inspect `AGENTS.md`, `CODEBASE.md`, or `CLAUDE.md` in the project root if present. Use the domain nouns, bounded contexts, and naming conventions defined there.
 2. Audit database schemas and migration files:
-   - For projects with existing databases, inspect migration directories (such as `database/migrations/`, `prisma/schema.prisma`, or `src/db/`).
-   - Ground all entity attributes, foreign keys, and relations in verified schema files on disk. Never invent columns or assume database fields based on general model training.
-   - For greenfield repositories without existing migrations, mark the status as greenfield initialization and draft the initial schema explicitly without unverified assumptions.
+   * For projects with existing databases, inspect migration directories (such as `database/migrations/`, `prisma/schema.prisma`, or `src/db/`).
+   * Ground all entity attributes, foreign keys, and relations in verified schema files on disk. Never invent columns or assume database fields based on general model training.
+   * For greenfield repositories without existing migrations, mark the status as greenfield initialization and draft the initial schema explicitly without unverified assumptions.
 3. Infer domain boundaries and seams directly from verified migrations, route declarations, and existing data models.
 
 Completion criterion. The agent names modules, methods, and attributes using verified project domain terms and disk-backed database schemas.
@@ -41,8 +47,8 @@ Completion criterion. User preference recorded and the matching design branch in
 
 Formulate the interface and identify module boundaries using deep module principles.
 
-1. Apply the deletion test. Imagine deleting the module. If complexity vanishes, the module is a shallow pass-through wrapper and should be merged or deleted. If complexity reappears across multiple callers, the module earns its keep. Consult `references/codebase-health-and-hotspots.md` for git churn hotspot detection, deletion test execution, and architecture diagrams.
-2. Minimize interface surface and reject line count metrics. Measure depth by leverage gained per unit of interface learned, never by lines of code ratio. Rewarding code volume encourages artificial bloat. Reduce public methods, simplify parameters, and design functions to return pure values rather than producing mutating side effects.
+1. Apply the deletion test. Imagine deleting the module. If complexity vanishes, the module is a shallow pass-through wrapper and should be merged or deleted. If complexity reappears across multiple callers, keep the module. Consult `references/codebase-health-and-hotspots.md` for git churn hotspot detection, deletion test execution, and architecture diagrams.
+2. Minimize interface surface and reject line count metrics. Measure depth by leverage gained per unit of interface learned, never by lines of code ratio. Reduce public methods, simplify parameters, and design functions to return pure values instead of mutating state.
 3. Classify dependencies across seams. Consult `references/deepening.md` to classify external touchpoints into in-process, local-substitutable, remote owned, or true external.
 4. Enforce seam discipline. Follow the rule that one adapter represents a hypothetical seam, while two adapters represent a real seam. Do not introduce interface ports unless at least two concrete adapters exist.
 5. Simplicity first and reuse hierarchy. Take the first option that fully works. Prioritize an existing codebase helper or pattern first, the standard library or platform feature second, an installed dependency third, and minimum new code last. Never add a dependency for a few lines. Never introduce abstractions, generics, or configurability layers for single-use code.
@@ -80,11 +86,15 @@ Use these architectural terms consistently:
 | Module | A discrete unit with an interface and an implementation | Component, service, unit |
 | Interface | Everything a caller must know to use the module correctly, including types, invariants, ordering constraints, error modes, configuration, and performance traits | API, signature |
 | Implementation | Internal code body hidden behind the interface | Adapter |
-| Depth | Abstraction power at the interface, maximizing behavior while minimizing surface area | Lines of code ratio |
+| Depth | Abstraction power at the interface that provides substantial behavior behind minimal surface area | Lines of code ratio |
 | Seam | The location where behavior can be altered without editing the caller | Boundary |
 | Adapter | A concrete implementation that satisfies an interface at a seam | Infrastructure, driver |
 | Multiplier | Total capability gained by callers per unit of interface learned | Abstraction power |
 | Locality | Concentration of change, knowledge, and bugs in one place | Cohesion |
+
+## Boundary isolation
+
+Design module interfaces and contracts only. Do not write functional implementation code, run database migrations, or alter production runtime files during design specification.
 
 ## Quick audit checklist
 

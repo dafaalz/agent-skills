@@ -5,17 +5,26 @@ description: Use when reverse-engineering, deconstructing, benchmarking, or repl
 
 # Copy web design
 
-Deterministic runbook for reverse-engineering and replicating web designs while preserving legal boundaries, extracting design tokens, deconstructing layouts, profiling animations, and synthesizing production code.
+Reverse-engineer and replicate web designs within legal boundaries by extracting tokens, deconstructing layouts, profiling animations, and writing production code.
 
 ## Progressive disclosure
 
 This runbook defines sequential execution steps. Read detailed reference manuals when executing specific phases:
-- Legal doctrines, AFC test, trade dress, and clean-room protocol: `references/legal-and-ethics.md`
-- OKLCH colors, variable typography, fluid clamp scales, and shadow layering: `references/visual-tokens-and-typography.md`
-- Semantic landmarks, CSS Grid, CSS Subgrid, and container queries: `references/layout-and-dom-decomposition.md`
-- DevTools animation timelines, easing curves, scroll dynamics, and WebGL: `references/motion-and-microinteractions.md`
-- CDP extraction, SVG sanitization, Tailwind compilation, and Core Web Vitals: `references/tooling-and-code-synthesis.md`
-- Browser console token extraction helper: `scripts/extract_tokens.js`
+
+| Phase / Topic | Reference manual |
+|---|---|
+| Legal doctrines, AFC test, trade dress, and clean-room protocol | `references/legal-and-ethics.md` |
+| OKLCH colors, variable typography, fluid clamp scales, and shadow layering | `references/visual-tokens-and-typography.md` |
+| Semantic landmarks, CSS Grid, CSS Subgrid, and container queries | `references/layout-and-dom-decomposition.md` |
+| DevTools animation timelines, easing curves, scroll dynamics, and WebGL | `references/motion-and-microinteractions.md` |
+| CDP extraction, SVG sanitization, Tailwind compilation, and Core Web Vitals | `references/tooling-and-code-synthesis.md` |
+| Browser console token extraction helper | `scripts/extract_tokens.js` |
+
+## Modes
+
+Select the replication mode before Phase 1:
+- Audit mode. Extract visual tokens, typography scales, and motion curves from live pages without writing application code.
+- Synthesis mode. Deconstruct DOM structure and compile production components into the target framework.
 
 ## Workflow
 
@@ -40,7 +49,7 @@ Extract design tokens and typography metrics from the live page:
 2. Ingest color systems. Identify primary, neutral, and accent colors. Convert hex values to OKLCH Display P3 definitions. Derive interactive hover and active states using `color-mix()`.
 3. Ingest typography scales. Inspect `@font-face` declarations for variable font axes (`wght`, `wdth`, `slnt`, `opsz`). Measure heading font sizes across mobile (320px) and desktop (1280px) viewports to extract modular scale ratios and fluid `clamp()` formulas.
 4. Measure spatial rhythm. Determine the base grid multiplier (4px or 8px). Classify padding and gaps into Inset, Squish, Stack, and Inline patterns.
-5. Deconstruct elevation shadows. Identify layered umbra and penumbra tiers, applying chromatic tinting from the background color.
+5. Deconstruct elevation shadows. Identify layered umbra and penumbra tiers, and apply chromatic tinting from the background color.
 6. Code over screenshots. When both source code and screenshots are available, inspect source stylesheets and DOM structures directly rather than estimating token values from visual imagery. Source code provides verified token values, while visual estimation introduces lossy discrepancies.
 
 Completion criterion. A written design token catalog defining OKLCH colors, variable font rules, fluid clamp formulas, spatial scales, and shadow tiers.
@@ -73,20 +82,24 @@ Completion criterion. Recorded cubic-bezier values, confirmed compositor-only ex
 
 Synthesize the final production code into the target framework:
 
-1. Select synthesis target.
-   - For Modern React, synthesize to Next.js or React 19, Tailwind CSS v4 `@theme` tokens, Radix UI headless primitives, and `next/image`.
-   - For pure web, synthesize to semantic HTML5, modern CSS with custom properties and CSS Grid, native `<picture>` tags, and vanilla ES modules.
-2. Sanitize vector assets. Process all inline SVGs through DOMPurify and SVGO, replacing fixed fills with `currentColor`.
+1. Select synthesis target:
+   * For Modern React, synthesize to Next.js or React 19, Tailwind CSS v4 `@theme` tokens, Radix UI headless primitives, and `next/image`.
+   * For pure web, synthesize to semantic HTML5, modern CSS with custom properties and CSS Grid, native `<picture>` tags, and vanilla ES modules.
+2. Sanitize vector assets. Process all inline SVGs through DOMPurify and SVGO, and replace fixed fills with `currentColor`.
 3. Audit accessibility. Run Axe-core checks. Verify keyboard tab order, modal focus traps, and visible focus rings (`:focus-visible`).
 4. Validate performance. Run automated Lighthouse audits. Confirm zero Cumulative Layout Shift, passing Largest Contentful Paint, and low Interaction to Next Paint.
 5. Replicate standalone single-file HTML mockups. When exporting or synchronizing framework code (React, Next.js) to a single-file HTML document:
-   - Audit external runtime dependencies. Map npm packages to matching public CDN scripts placed before application logic, such as Lenis smooth scroll (`https://unpkg.com/lenis@1.1.18/dist/lenis.min.js`) and GSAP core with ScrollTrigger (`https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js`).
-   - Convert reactive state hooks to explicit DOM computations. Calculate coordinates for active indicators and sliding pills using `offsetLeft`, `offsetTop`, `offsetWidth`, and `offsetHeight`. Recalculate positions inside a window resize listener.
-   - Enforce modal scroll containment. Add `data-lenis-prevent="true"` to modal dialogs and scroll containers. Call `lenis.stop()` when opening a modal and call `lenis.start()` when closing it.
-   - Prevent shell interpolation during automated edits. Never execute inline shell commands containing unescaped `${...}` JavaScript expressions. Write scripts using quoted heredocs (`python3 - << 'EOF'`) or dedicated Python runner files.
-   - Verify script execution. Run `node -e` syntax checks on extracted script blocks to confirm zero syntax errors before declaring completion.
+   * Audit external runtime dependencies. Map npm packages to matching public CDN scripts placed before application logic, such as Lenis smooth scroll (`https://unpkg.com/lenis@1.1.18/dist/lenis.min.js`) and GSAP core with ScrollTrigger (`https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js`).
+   * Convert reactive state hooks to explicit DOM computations. Calculate coordinates for active indicators and sliding pills using `offsetLeft`, `offsetTop`, `offsetWidth`, and `offsetHeight`. Recalculate positions inside a window resize listener.
+   * Enforce modal scroll containment. Add `data-lenis-prevent="true"` to modal dialogs and scroll containers. Call `lenis.stop()` when opening a modal and call `lenis.start()` when closing it.
+   * Prevent shell interpolation during automated edits. Never execute inline shell commands containing unescaped `${...}` JavaScript expressions. Write scripts using quoted heredocs (`python3 << 'EOF'`) or dedicated Python runner files.
+   * Verify script execution. Run `node -e` syntax checks on extracted script blocks to confirm zero syntax errors before declaring completion.
 
 Completion criterion. Working production components passing all Axe-core accessibility checks and Core Web Vitals performance gates, with standalone HTML mirrors verifying CDN script parity, modal scroll locks, and passing Node.js script syntax checks.
+
+## Boundary isolation
+
+Confine replication strictly to client-facing layout, CSS tokens, and component UI. Never modify backend API controllers, database schemas, server environments, or data access layers.
 
 ## Quick audit checklist
 

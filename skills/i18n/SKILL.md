@@ -39,7 +39,7 @@ find . -path ./node_modules -prune -o \( -name "*.po" -o -name "*.xliff" -o -nam
 
 Record runtime capabilities, existing catalog locations, translation formats, and user locale persistence sources. Extend existing libraries instead of introducing competing frameworks.
 
-Completion criterion. A verified inventory listing the runtime, active i18n libraries, catalog paths, and locale storage strategy.
+Completion criterion. The inventory records the runtime, active i18n libraries, catalog paths, and locale storage strategy.
 
 ### Step 2. Progressive disclosure and domain module loading
 
@@ -57,7 +57,7 @@ Consult only the reference modules relevant to the scoped domains:
 | Content, catalogs, assets | [references/intl-content-and-assets.md](references/intl-content-and-assets.md) | Always loaded. Governs catalog layouts and expansion. |
 | Localization testing and QA | [references/intl-testing-and-qa.md](references/intl-testing-and-qa.md) | Always loaded. Verifies pseudolocales and gates. |
 
-Completion criterion. Relevant domain reference files loaded into session context based on user scope.
+Completion criterion. The session context contains all relevant domain reference files based on user scope.
 
 ### Step 3. Audit and severity classification
 
@@ -80,7 +80,9 @@ Classify each finding by impact:
 | Medium | Prevents subsequent locale onboarding | Physical CSS margins and padding, concatenated sentence fragments, fixed date format strings |
 | Low | Completeness and polish gaps | Missing inline `lang` tags, absent pseudolocale testing builds in CI |
 
-Completion criterion. A written findings table identifying file locations, line numbers, defect categories, and planned remediation.
+Completion criterion. A written findings table records file locations, line numbers, defect categories, and planned remediation.
+
+When operating in `/i18n audit only` mode, output the severity-classified findings table from Step 3 and halt. Do not proceed to Step 4.
 
 ### Step 4. Ordered implementation
 
@@ -90,11 +92,11 @@ Execute changes in strict architectural sequence:
 3. String extraction. Replace hardcoded copy with catalog keys and named parameters.
 4. Formatting. Replace ad-hoc date and number formatters with standard platform APIs or library formatters.
 5. Plurals and grammar. Convert count-dependent logic to ICU plural messages with CLDR categories.
-6. Layout and BiDi. Switch physical CSS properties to logical equivalents, setting `dir` attributes where required.
+6. Layout and BiDi. Switch physical CSS properties to logical equivalents, and set `dir` attributes on root containers.
 7. Collation. Replace code-unit comparisons with locale-aware collator calls.
 8. Testing infrastructure. Add pseudolocale pipelines, lint rules, and matrix test fixtures.
 
-Completion criterion. Code modifications applied in sequence matching repository conventions without unused abstractions.
+Completion criterion. Code modifications apply in sequence matching repository conventions without unused abstractions.
 
 ### Step 5. Verification
 
@@ -107,7 +109,7 @@ Verify work against concrete criteria:
 - Layouts employ CSS logical properties (`margin-inline-start`, `padding-inline-end`).
 - Pseudolocale tests show zero unextracted raw strings and zero truncated containers.
 
-Completion criterion. Fresh command output confirming clean test runs and zero unresolved audit items.
+Completion criterion. Fresh command output confirms clean test runs and zero unresolved audit items.
 
 ## Common pitfalls
 
@@ -122,3 +124,21 @@ Completion criterion. Fresh command output confirming clean test runs and zero u
 | Code-unit `.sort()` | Sorts `Å`, `é`, and `Z` incorrectly | Use `Intl.Collator(locale).compare` |
 | Fragment concatenation | Breaks under differing language word orders | Single message templates with named placeholders |
 | `.substring()` slicing | Corrupts surrogate pairs, emoji, and Indic scripts | Use `Intl.Segmenter` with grapheme granularity |
+
+## Boundary isolation
+
+Apply internationalization changes strictly to user-facing strings, formatting calls, and layout directives:
+- Keep database column names, internal event payloads, API route identifiers, and configuration keys in their original canonical English or system format.
+- Protect code syntax, CLI commands, and test assertion primitives from translation or localized casing alterations.
+
+## Quick audit checklist
+
+Review this table before completing internationalization changes:
+
+| Check | Passing condition |
+|---|---|
+| String extraction | User-facing copy loaded from catalogs, zero hardcoded UI strings |
+| Locale formatting | Date and number formatters pass explicit locale and time zone |
+| Plurals | Pluralization logic uses ICU syntax with CLDR categories |
+| Bidirectional layout | Layout uses CSS logical properties and root dir attributes |
+| Boundary isolation | System keys, column names, and APIs remain in canonical format |

@@ -81,11 +81,11 @@ Consult specific reference guides on demand based on target architecture:
 
 ## Full audit workflow
 
-Follow these seven sequential phases in full audit mode.
+Follow these six sequential phases in full audit mode.
 
-### Phase 1. Reconnaissance
+### Phase 1. Discovery
 
-Map source structure, trust boundaries, entrypoints, local build paths, and initial coverage units.
+Map source structure, trust boundaries, entrypoints, local build paths, and initial coverage units:
 - Inspect project configuration, package manifests, route definitions, and permission decorators.
 - Select applicable domain companion guides from `references/`.
 - Seed the deterministic coverage ledger with initial units.
@@ -93,9 +93,9 @@ Map source structure, trust boundaries, entrypoints, local build paths, and init
 
 Completion criterion. An initial `coverage-ledger.json` seeded with all in-scope boundaries is written to disk.
 
-### Phase 1b. Threat modeling and scoping gate
+### Phase 2. Threat modeling and trust boundaries
 
-Align with the user on attack surface priority, trade-offs, and run profile before dispatching hunters.
+Align with the user on attack surface priority, trade-offs, and run profile before dispatching hunters:
 - Present the mapped trust boundaries, entrypoints, and sensitive assets discovered in Phase 1.
 - Formulate 2 to 3 distinct audit approaches with trade-offs. For example, compare a targeted auth and API sweep against deep data lifecycle analysis or a full-spectrum audit.
 - State the proposed run profile (`quick`, `standard`, or `deep`) and agent invocation budget.
@@ -104,52 +104,47 @@ Align with the user on attack surface priority, trade-offs, and run profile befo
 
 Completion criterion. Explicit user approval is recorded for the selected audit approach, scope paths, and run profile.
 
-### Phase 2. Coverage-led hunting waves
+### Phase 3. Vulnerability scanning
 
-Assign ledger units to focused hunter agents in waves.
-- Hunter agents inspect source invariants and run sandboxed local checks where safe.
-- Hunters output structured JSON candidates containing source traces, proof of concept inputs, and observed results.
+Assign ledger units to focused hunter agents in waves:
+- Hunter agents inspect source invariants and execute sandboxed local checks where safe.
+- Hunters output structured JSON candidates with source traces, proof-of-concept inputs, and observed results.
 - Run a coverage critic wave after hunter execution to identify gaps or reassignments.
 - Consult `references/hunting.md` and `references/attack-classes.md` for hunting rules.
 
-Completion criterion. All planned ledger units are resolved to candidate, covered, or deferred states with zero unassigned units.
+Completion criterion. All planned ledger units resolve to candidate, covered, or deferred states with zero unassigned units.
 
-### Phase 3. Candidate validation
+### Phase 4. Exploitability verification
 
-Subject every candidate vulnerability to independent verification.
+Subject every candidate vulnerability to independent verification:
 - Deduplicate candidates by unique vulnerability fingerprint.
 - Dispatch fresh, isolated verifier agents with clean contexts for each candidate.
 - Verifiers attempt independent reproduction and confirm source invariants.
 - Consult `references/validation-and-reporting.md` for verification protocols.
 
-Completion criterion. Every candidate is evaluated by an isolated verifier and assigned a confirmed, needs-validation, or rejected verdict.
+Completion criterion. Every candidate receives an evaluation from an isolated verifier and an assigned confirmed, needs-validation, or rejected verdict.
 
-### Phase 4. Structured output
+### Phase 5. Remediation guidance
 
-Compile verified results into structured machine-readable format.
+Compile verified results into structured machine-readable format and formulate precise remediations:
 - Write all final records to `findings.json`.
 - Validate findings with `scripts/validate-findings.cjs`.
 - Validate coverage claims with `scripts/validate-coverage-ledger.cjs`.
+- Document the minimal source-grounded code remediation for every confirmed vulnerability.
 
-Completion criterion. Both validation scripts execute with exit code 0 against the generated output files.
+Completion criterion. Both validation scripts execute with exit code 0 against the generated output files and remediations are documented.
 
-### Phase 5. Independent record verification
+### Phase 6. Verification re-test
 
-Run a final verification pass across all confirmed records before reporting.
-- Fresh agents re-verify that code references and line numbers match current target source.
+Re-verify confirmed records against current target source and generate audit deliverables:
+- Re-verify that code references and line numbers match current target source.
 - Resolve any discrepancies or state changes.
+- Produce `REPORT.md` with executive posture, methodology, and coverage metrics.
+- Produce `FINDINGS-DETAIL.md` with confirmed vulnerabilities, source traces, and fixes.
+- Produce `NEEDS-VALIDATION.md` with hypotheses blocked on external environment facts.
+- Exclude live probe instructions or exploit payloads that target external systems.
 
-Completion criterion. All confirmed records are verified against the exact target source revision.
-
-### Phase 6. Reporting
-
-Generate human-readable audit deliverables from validated records.
-- Produce `REPORT.md` summarizing executive posture, methodology, and coverage metrics.
-- Produce `FINDINGS-DETAIL.md` documenting confirmed vulnerabilities with source traces and fixes.
-- Produce `NEEDS-VALIDATION.md` listing hypotheses blocked on external environment facts.
-- Exclude live probe instructions or exploit payloads targeting external systems.
-
-Completion criterion. All three report markdown files are written to disk matching final validated JSON records.
+Completion criterion. All three report markdown files match validated records and code references align with the target source revision.
 
 ## Severity calibration
 
@@ -162,11 +157,29 @@ Only confirmed records receive severity ratings. Overall severity must not excee
 
 ## Anti-patterns
 
-1. Presenting checklist omissions as security vulnerabilities without an exploitable boundary.
-2. Offering general hardening advice without a demonstrable breach of an invariant.
-3. Attempting network testing against external systems or production services.
-4. Guessing cloud provider, proxy, or browser behaviors not declared in repository source.
-5. Treating authorized same-principal actions as security boundaries.
-6. Skipping the Phase 1b scoping gate to launch unaligned hunting waves.
-7. Reporting prose-only findings that lack structured reproduction evidence.
-8. Modifying target repository code during the audit.
+| Anti-pattern | Required practice |
+|---|---|
+| Presenting checklist omissions as vulnerabilities | Require an exploitable trust boundary and demonstrable impact |
+| Offering general hardening advice | Ground all findings in a proven breach of a source invariant |
+| Attempting network testing against external systems | Test strictly against local sandboxed processes and mock endpoints |
+| Guessing cloud, proxy, or browser behaviors | Assert behaviors declared directly in repository configuration |
+| Treating authorized same-principal actions as bugs | Validate multi-principal or unauthenticated privilege boundaries |
+| Skipping scoping gate before hunting waves | Secure explicit user confirmation on approach, scope, and budget |
+| Reporting prose-only findings without evidence | Back every finding with structured JSON reproduction evidence |
+| Modifying target repository code during audit | Keep target source files read-only and emit patch files externally |
+
+## Boundary isolation
+
+Security audits operate in an advisory capacity. Never modify production database data, commit mock credentials to git, or weaken production security controls during audit probing.
+
+## Quick audit checklist
+
+Review this table before completing security audit tasks:
+
+| Check | Passing condition |
+|---|---|
+| Source grounding | Every finding traces directly to a vulnerable code path in repository source |
+| Boundary validation | Exploitable trust boundary demonstrated between distinct principals |
+| Sandboxed execution | Local processes run inside sandboxes without external network traffic |
+| Scope confirmation | User explicitly approved audit approach, scope boundaries, and budget |
+| Deliverable validation | Schema validator scripts pass and report files reflect confirmed findings |

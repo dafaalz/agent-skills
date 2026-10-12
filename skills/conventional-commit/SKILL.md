@@ -15,8 +15,14 @@ Commit the working tree as atomic commits following the Conventional Commits 1.0
 3. Never run `git add .` or `git add -A` blindly. Inspect the working tree diff first.
 4. Never commit without reading the diff. The commit message must describe actual changes on disk.
 5. Consult `references/commit-types.md` for standard commit types. Never invent custom types or fake scopes.
-6. Never amend, rebase, or force-push commits created in previous sessions.
+6. Create new commits for additional changes; never amend, rebase, or force-push commits created in previous sessions.
 7. Consult `references/resolving-conflicts.md` to resolve merge or rebase conflicts before staging.
+
+## Modes
+
+Select the commit mode before Step 1:
+- Commit mode (default). Stage hunks and commit verified changes directly to git.
+- Dry-run mode. Inspect the diff, determine commit count, and draft commit messages without modifying git state.
 
 ## Workflow
 
@@ -87,13 +93,13 @@ Determine whether the project or user prefers **oneline** or **multiline** commi
 #### Format options
 
 1. **Oneline mode (Single-line).**
-   - Syntax follows `<type>[optional scope]: <description>`.
-   - Use when the subject line alone conveys complete intent, or when the user or repository standard requires compact commit history.
-   - Do not include empty lines, bodies, descriptions, or footers.
-   - Sample commit: `feat(ui): add custom-select blade component`
+   * Syntax follows `<type>[optional scope]: <description>`.
+   * Use when the subject line alone conveys complete intent, or when the user or repository standard requires compact commit history.
+   * Write only the single subject line; do not include blank lines, bodies, or footers.
+   * Sample commit: `feat(ui): add custom-select blade component`
 
 2. **Multiline mode.**
-   - Syntax structure:
+   * Syntax structure:
 
      ```text
      <type>[optional scope][!]: <description>
@@ -103,7 +109,7 @@ Determine whether the project or user prefers **oneline** or **multiline** commi
      [optional footer(s)]
      ```
 
-   - Use when detailing complex reason, migration guides, breaking changes (`BREAKING CHANGE:`), or tracking issue references (`Closes: #123`).
+   * Use when detailing complex reason, migration guides, breaking changes (`BREAKING CHANGE:`), or tracking issue references (`Closes: #123`).
 
 #### Message component rules
 
@@ -117,7 +123,7 @@ Determine whether the project or user prefers **oneline** or **multiline** commi
 #### Optional co-author trailer
 
 - Include a co-author trailer only when the user requests it or repository guidelines require attribution.
-- Resolve identity strictly from real sources, including explicit user prompt, git configuration (`git config --get coauthor.name`), or existing repository history. If no real identity exists, omit the trailer.
+- Resolve identity strictly from real sources: prompt the user directly, read git configuration (`git config --get coauthor.name`), or verify repository commit history. If no real identity exists, omit the trailer.
 - Place the trailer at the bottom of the footers block separated by a blank line:
 
 ```text
@@ -139,7 +145,7 @@ git commit -m "feat(ui): add custom-select blade component"
 Commit using a heredoc so multi-line messages and blank lines are preserved:
 
 ```bash
-git commit -F - <<'EOF'
+git commit --file=- <<'EOF'
 fix(auth): reject expired refresh tokens on rotation
 
 Validate expiry timestamp before generating a replacement token pair.
@@ -184,3 +190,19 @@ Completion criterion. Working tree status is completely clean and the subject ve
 | Adding `!` without breaking footer   | Leaves consumers without migration details       | Always provide a `BREAKING CHANGE:` footer                              |
 | Fabricating co-author identity       | Injects false attribution into permanent git log | Omit trailer when no identity is provided                               |
 | Merging formatting and logic         | Hides logic changes during code review           | Split into a `style:` or `refactor:` commit first                       |
+
+## Boundary isolation
+
+Commit operations manipulate git history and staging state only. Never modify source code, alter configuration files, or run destructive git reset or checkout commands during commit creation.
+
+## Quick audit checklist
+
+Run this check before completing any commit task:
+
+| Check | Passing condition |
+|---|---|
+| Unstaged secrets | Zero credential files (`.env`, `*.pem`) or build artifacts in staged diff |
+| Atomicity | Each commit contains exactly one logical, revertable change |
+| Message syntax | Imperative subject, lowercase, under 72 chars, valid standard type |
+| Breaking change | Every `!` paired with a `BREAKING CHANGE:` footer |
+| Clean tree | Working tree status clean and subject verification command passes |

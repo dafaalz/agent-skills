@@ -8,9 +8,15 @@ allowed-tools: Read Write Edit Glob Grep Bash
 
 Normalize diverging patterns across a repository into a single canonical architecture protected by automated linter guards.
 
+## Modes
+
+Select an execution mode before Step 1:
+- Audit mode (default). Inventory codebase patterns, identify architectural divergence, and generate a standardization plan without modifying files.
+- Normalize mode. Apply approved pattern refactors and install linter guardrails.
+
 ## Governing principle
 
-Never silently select a canonical variant without verified repository evidence or user authorization. The majority pattern is evidence, not authority. A minority pattern may represent an active architectural migration. Normalizing to the majority without checking destroys intentional migrations.
+Verify repository evidence or secure user authorization before selecting a canonical variant; never adopt a pattern solely on file frequency. The majority pattern is evidence, not authority. A minority pattern may represent an active architectural migration. Normalizing to the majority without checking destroys intentional migrations.
 
 ## Precedence hierarchy
 
@@ -61,7 +67,7 @@ find . -type f -not -path './.git/*' -not -path '*/node_modules/*' -not -path '*
 
 If the repository is mid-migration (indicated by `TODO(migrate)` comments or dual implementations), clarify migration intent before touching files.
 
-Completion criterion. An inventory of repository convention files, active formatters, and language distribution counts.
+Completion criterion. The inventory records repository convention files, active formatters, and language distribution counts.
 
 ### Phase 2. Detect divergences
 
@@ -75,7 +81,7 @@ grep -rn --exclude-dir={node_modules,.git,dist,build,vendor} -E "throw new|raise
 
 Record each divergence with exact file counts and sample locations. Check git history for recent changes in minority variants to distinguish intentional modernizations from accidental deviations.
 
-Completion criterion. A catalog of identified divergences mapping file counts and sample snippets to each variant.
+Completion criterion. The divergence catalog documents file counts and sample snippets for every identified variant.
 
 ### Phase 3. Resolve canonical variants
 
@@ -88,7 +94,7 @@ When code patterns conflict and rank 1 or 2 does not specify a rule, present opt
 - Identify counter-signals such as newer modules or recent commit ranges.
 - Cap questions to at most four major divergences per round.
 
-Completion criterion. A confirmed canonical variant selected via convention documents, tool configs, or explicit user sign-off.
+Completion criterion. A confirmed canonical variant is recorded with backing references from convention files, tool configurations, or explicit user authorization.
 
 ### Phase 4. Normalize
 
@@ -113,9 +119,9 @@ gofmt -w . && goimports -w .
 - Update associated test cases and documentation.
 - Add an automated linter guard (such as `no-restricted-imports` in ESLint or `banned-api` in Ruff) to prevent regressions.
 
-Never touch generated files, lockfiles, or external vendor dependencies (`vendor/`, `node_modules/`, `dist/`).
+Confine normalization edits to project source files; never modify generated files, lockfiles, or external vendor dependencies (`vendor/`, `node_modules/`, `dist/`).
 
-Completion criterion. All instances of the deprecated variant replaced across the codebase, with automated linter guards installed.
+Completion criterion. Every instance of the deprecated variant is replaced across the codebase, and automated linter guards prevent regressions.
 
 ### Phase 5. Verify
 
@@ -129,7 +135,7 @@ Confirm the codebase is healthy and consistent:
 grep -rn "disallowed-pattern" --exclude-dir={node_modules,.git,dist,build,vendor} . && echo "FAIL" || echo "CLEAN"
 ```
 
-Completion criterion. Clean build exit code, passing test suite, and grep confirmation showing zero remaining deprecated occurrences.
+Completion criterion. Build command exits with zero, all tests pass, and grep returns zero matches for the deprecated pattern.
 
 ## Common mistakes
 
@@ -141,3 +147,19 @@ Completion criterion. Clean build exit code, passing test suite, and grep confir
 | Modifying definitions without updating callers | Breaks builds and unit tests | Search repository for all caller references |
 | Omitting automated linter guard | Divergence returns in subsequent pull requests | Add linter restriction rule to config |
 | Normalizing third-party or generated directories | Edits get overwritten on subsequent builds | Exclude vendor and build output paths |
+
+## Boundary isolation
+
+Standardize syntax conventions and architectural patterns only. Do not alter functional domain logic, modify database schemas, or rename public API endpoints during normalization.
+
+## Quick audit checklist
+
+Review this table before completing standardization tasks:
+
+| Check | Passing condition |
+|---|---|
+| Hierarchy adherence | Canonical variant backed by enforced tool config, docs, or explicit sign-off |
+| Call site coverage | Every caller updated across all repository source files |
+| Automated guards | Linter or formatter rule configured to block reintroduced deprecated patterns |
+| Boundary integrity | Vendor dependencies, lockfiles, and generated files remain untouched |
+| Build and test | Full build exits clean and automated test suite passes with zero failures |

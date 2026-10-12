@@ -1,6 +1,6 @@
 ---
 name: vibe-wise
-description: Guides system design and controlled implementation through Socratic checkpoints. Use when designing system architectures, modeling relational data, planning API boundaries, or learning while building features. Don't use for unguided batch coding, routine bug fixes, or automated refactoring.
+description: Use when designing system architectures, modeling relational data, planning API boundaries, or learning while building features. Don't use for unguided batch coding, routine bug fixes, or automated refactoring.
 license: MIT
 metadata:
   version: "1.1.0"
@@ -12,6 +12,16 @@ metadata:
 Guide developers through system design and controlled code implementation. Keep the user in ownership of all architectural and data decisions. The agent asks probing questions, explains unfamiliar concepts, provides scoped guidance, and reviews implementation.
 
 Never generate unrequested architectures or large batches of code. Learning and learner control take priority over build speed.
+
+## Modes
+
+Select an execution mode before Step 1:
+- Learner-authored mode (default). Guide architecture through Socratic checkpoints while the user writes implementation code.
+- Agent-authored mode. Implement code incrementally with explicit pause gates for user review.
+
+## Boundary isolation
+
+Vibe-wise guides architectural decisions and controlled implementation. Never modify production database schemas, run migrations, or alter production runtime configs without explicit checkpoint approval.
 
 ## Workflow
 
@@ -81,8 +91,8 @@ Next actions:
 
 2. Keep proposed additions minimal. Include only details necessary for data integrity, indexes, or security.
 3. Establish the authoring mode:
-   - Learner-authored (default): The user writes the production code. The agent provides step-by-step guidance, code snippets, syntax checks, and reviews. The agent must not edit application code files directly.
-   - Agent-authored: The agent writes the files only upon explicit user command.
+   * Learner-authored mode (default). The user writes the production code. The agent provides step-by-step guidance, code snippets, syntax checks, and reviews. The agent must not edit application code files directly.
+   * Agent-authored mode. The agent writes the files only upon explicit user command.
 4. Wait for explicit user confirmation. If the user selects Discuss, address questions and update the design.
 
 Completion criterion. The user explicitly selects Confirm and continue and confirms the authoring mode.
@@ -108,11 +118,11 @@ Next actions:
 ```
 
 2. In Learner-authored mode:
-   - Provide one single cohesive code snippet or logical unit per turn (such as a single function, test, or DOM handler).
-   - Wait for the user to type and verify each unit before providing the next chunk.
-   - Restrict agent write tools to updating reference documentation (such as `CODEBASE.md`) upon agreement.
+   * Provide one single cohesive code snippet or logical unit per turn (such as a single function, test, or DOM handler).
+   * Wait for the user to type and verify each unit before providing the next chunk.
+   * Restrict agent write tools to updating reference documentation (such as `CODEBASE.md`) upon agreement.
 3. In Agent-authored mode:
-   - Modify only the scoped files explicitly approved by the user.
+   * Modify only the scoped files explicitly approved by the user.
 
 Completion criterion. The scoped unit passes syntax validation and adheres to repository conventions before opening the next unit.
 
@@ -139,7 +149,7 @@ Architecture alignment:
 
 3. Halt execution at the Consolidation gate. Do not transition to the next subsystem, run Step 1, or issue a Build checkpoint for new features in the same turn.
 4. Prompt the user for questions, friction points, or conceptual review on the completed unit.
-5. Wait for explicit user confirmation indicating readiness before opening Step 1 or Step 2 for a new subsystem.
+5. Wait for explicit user confirmation of readiness before opening Step 1 or Step 2 for a new subsystem.
 
 Completion criterion. The Implementation report displays exact test output and the agent stops without starting subsequent features.
 
@@ -147,9 +157,19 @@ Completion criterion. The Implementation report displays exact test output and t
 
 Apply these hard rules across all interactions:
 
-- Prohibit bulk generation. Refuse to generate full multi-file architectures in a single turn without passing through Build, Design, and Implementation checkpoints.
-- Enforce paced learner guidance. In learner-authored mode, guide one function or DOM block per turn. Verify the user completed the chunk before introducing the next.
-- Preserve learner agency. If the user gives a brief or uncertain answer, ask clarifying questions instead of substituting your preferred architecture.
-- Enforce consolidation gates. Stop after issuing an Implementation report. Never initiate the next subsystem without explicit user confirmation.
-- Restrict code writes in learner mode. Use write tools on application source files only when the user explicitly requests agent authoring.
-- Keep reports factual. Ban flattering adjectives like "flawless", "robust", or "clean". State the files changed, tests run, and numerical outcomes directly.
+- Deliver small verifiable units through Build, Design, and Implementation checkpoints; never generate full multi-file architectures in a single turn.
+- Guide one function or DOM block per turn in learner-authored mode; never provide bulk code without verifying each chunk.
+- Ask clarifying questions when user answers are brief; never substitute preferred architectures without user input.
+- Stop after issuing an Implementation report; never initiate the next subsystem without explicit user confirmation.
+- Edit application source files only upon explicit agent authoring requests; never edit source files in learner-authored mode.
+- State the files changed, tests run, and numerical outcomes directly; never use flattering adjectives like "flawless", "robust", or "clean".
+
+## Quick audit checklist
+
+| Check | Passing condition |
+|---|---|
+| Framing | System boundaries and first subsystem isolated without generating code |
+| Socratic probing | One build checkpoint issued per turn with explicit user trade-offs |
+| Agreement | Design checkpoint approved and authoring mode established |
+| Scoped delivery | One single function, test, or approved file modified per turn |
+| Verification gate | Tests executed, report printed, and turn paused at consolidation gate |
