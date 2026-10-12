@@ -262,6 +262,46 @@ A WebGL hero where the 3D doesn't earn its place by being interactive. A station
 
 **Fix.** If the user can't manipulate it, it doesn't justify Three.js. Use a still photograph or a hand-built SVG.
 
+### Clay diorama default world
+
+Soft-matte low-poly clay dioramas, pastel miniature floating islands, or toy-like isometric 3D objects dropped into hero sections. Models default to this style to mask missing product assets.
+
+**Why it fails.** The low-poly clay aesthetic is the recognizable 2024 to 2025 AI marketing default. Audiences pattern-match it immediately as synthetic filler.
+
+**Fix.** Ground the visual layer in authentic photography, real product cutouts, or custom vector line craft. If genuine assets are unavailable, lead with high-contrast typography, semantic data displays, or architectural layout rhythm rather than decorative 3D toys.
+
+### The 01 / 06 section counter
+
+Corners of sequential sections tagged with redundant numeric counters like `01 / 06` or `02 / 06`.
+
+**Why it fails.** Sequence is not informative on a standard webpage unless the page is an explicit step-by-step tutorial or numbered specimen sheet. Applied decoratively across landing pages, it acts as an AI filler tic.
+
+**Fix.** Delete section counters. Let headings and layout boundaries carry the narrative order.
+
+### The animated scroll cue and mouse icon
+
+A mouse wireframe icon with an animated scroll wheel or a bouncing down-arrow at the base of the hero section labeled "Scroll to explore".
+
+**Why it fails.** Visitors already know how to scroll. An animated scroll indicator signals that the hero section failed to communicate continuity or visual hierarchy across the fold.
+
+**Fix.** Delete the scroll cue. Signal continuity naturally by letting the edge of the next section, an overlapping subject plane, or baseline typography peek above the fold.
+
+### Multi-dimensional convergence and the design fingerprint gate
+
+Successive pages or variants within a project quietly adopting the same underlying skeleton: identical navigation bar, identical hero centering, identical three-column bento, and identical four-column link footer.
+
+**Why it fails.** Even when copy and accent colors change, structural sameness signals templated generation.
+
+**Fix.** Enforce the design fingerprint gate. Every new page or layout variant must differ from existing pages in the project on at least 4 of 6 structural dimensions:
+1. Macrostructure (Bento, Editorial, Marquee, Split, Cockpit, Directory, or Poster).
+2. Navigation model (Pill, Masthead, Slab, Terminal, or Edge-aligned).
+3. Hero composition and device (Dimensional layered planes, High-character typography, Asymmetric split, or Live interactive surface).
+4. Section rhythm and act sequence shape (Varying spans, alternating density, avoiding uniform repeating heights).
+5. Closing pattern and footer (Statement close, Colophon, Inline single-line, or Letter sign-off).
+6. Distinctive signature move (One unique interaction or visual element that exists only on this page).
+
+When designing internal sub-pages within a unified application or dashboard, keep global navigation and footer chrome persistent, and satisfy the 4 divergence dimensions across macrostructure, hero device, section rhythm, and distinctive signature moves.
+
 ---
 
 ## Microinteraction tells
@@ -354,7 +394,7 @@ A spinner appears for 50ms while a fast action completes.
 
 `"Hello"` and `'word'` in rendered text. A sign nothing was proof-read.
 
-**Fix.** Curly quotes: `"Hello"`, `'word'`.
+**Fix.** Curly quotes: `“Hello”`, `‘word’`.
 
 ### Double-hyphen dashes
 

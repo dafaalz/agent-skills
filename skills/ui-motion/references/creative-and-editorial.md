@@ -1,13 +1,13 @@
 # Creative and editorial motion engineering
 
-Hardware-accelerated techniques for narrative landing pages, editorial showcases, continuous pointer physics, dynamic lighting, and curtain reveal masks.
+Hardware-accelerated techniques for narrative landing pages, editorial layouts, continuous pointer physics, dynamic lighting, and curtain reveal masks.
 
 ## 1. Scope and dual-layer architecture
 
 Separate motion engineering into two distinct operational layers:
 
 - **Functional UI layer.** Transactable controls, forms, inputs, dropdowns, tooltips, dialogs, and command palettes. Restricted to under 300ms, strict cubic bezier tokens, and zero decorative overhead. Keyboard shortcuts execute with 0ms transition.
-- **Creative and editorial layer.** Hero sections, brand storytelling, portfolio showcases, and narrative transitions. Durations from 600ms to 1400ms are explicitly sanctioned when paired with asymmetric high-velocity curves (`cubic-bezier(0.16, 1, 0.3, 1)` or `cubic-bezier(0.22, 1, 0.36, 1)`).
+- **Creative and editorial layer.** Hero sections, brand storytelling, portfolio galleries, and narrative transitions. Durations from 600ms to 1400ms are explicitly sanctioned when paired with asymmetric high-velocity curves (`cubic-bezier(0.16, 1, 0.3, 1)` or `cubic-bezier(0.22, 1, 0.36, 1)`).
 
 Never apply functional UI speed caps to narrative editorial scenes, and never apply editorial long-decay physics to transactional app workflows.
 
@@ -190,3 +190,64 @@ Cinematic entrances employ opening bars to establish visual focus:
 }
 ```
 
+## 7. Dimensional multi-plane hero layering
+
+Scrollytelling compositions build spatial depth by decomposing the hero into independent visual planes that translate at differential rates during scroll.
+
+### Physical layer sandwich
+
+Structure the DOM hierarchy from deep background to foreground:
+
+1. **Backplane (`z-index: 1`).** Atmospheric environment, high-resolution panorama, or subtle gradient mesh. Moves at `0.2x` scroll rate.
+2. **Typography midplane (`z-index: 2`).** Display headlines and editorial statements positioned behind or partially occluded by the subject. Moves at `0.7x` scroll rate.
+3. **Primary subject plane (`z-index: 3`).** Isolated product cutout, device model, or focal character with transparent background. Moves at `1.0x` baseline or pins momentarily during act transitions.
+4. **Foreground framing plane (`z-index: 4`).** Environmental foreground silhouettes, lens dust, or micro-accents. Moves at `1.3x` to `1.5x` scroll rate to exaggerate camera parallax.
+5. **Interactive HUD overlay (`z-index: 5`).** Navigation, chapter trackers, and CTA affordances that remain anchored to the viewport.
+
+### Implementation recipe
+
+Drive translation through normalized scroll progress (`0.0` to `1.0`) mapped to hardware-accelerated transforms:
+
+```javascript
+function updateHeroDepth(progress) {
+  const p = Math.max(0, Math.min(1, progress));
+  const baseTravel = 320; // Subject baseline (1.0x)
+
+  backplane.style.transform = `translate3d(0, ${(p * baseTravel * 0.2).toFixed(1)}px, 0)`;
+  typography.style.transform = `translate3d(0, ${(p * baseTravel * 0.7).toFixed(1)}px, 0)`;
+  subject.style.transform = `translate3d(0, ${(p * baseTravel * 1.0).toFixed(1)}px, 0)`;
+  foreground.style.transform = `translate3d(0, ${(p * baseTravel * 1.5).toFixed(1)}px, 0)`;
+}
+```
+
+Ensure non-interactive backplane and foreground elements permit clicks and touch events to reach underlying controls:
+
+```css
+.hero-backplane,
+.hero-foreground {
+  pointer-events: none;
+}
+```
+
+### Accessibility and reduced-motion fallback
+
+Never collapse the visual sandwich into a flat white page under reduced-motion settings. Preserve the layered composition, visual occlusion, and typography placement statically:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .hero-plane {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .hero-subject {
+    position: relative;
+    z-index: 3;
+  }
+
+  .hero-typography {
+    position: absolute;
+    z-index: 2;
+  }
+}
+```

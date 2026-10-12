@@ -54,9 +54,9 @@ Evaluate output against anti-slop criteria before completing work.
 - Score implementation on Philosophy, Hierarchy, Execution, Specificity, Restraint, and Variety.
 - Verify mobile responsiveness at 320px, 375px, 414px, and 768px.
 - Confirm zero uninstalled packages, zero fake metrics, and zero banned fonts.
-- Apply `references/impeccable-delta.md` checks 1 to 5 plus drift check 4 against project DESIGN.md and active CSS.
+- Apply `references/impeccable-delta.md` checks 1 to 8 against project DESIGN.md and prior project views.
 
-Completion criterion. Interface satisfies all checklist checks with scores of 3 or higher across all evaluation criteria and delta checks 1 to 5 pass.
+Completion criterion. Interface satisfies all checklist checks with scores of 3 or higher across all evaluation criteria and delta checks 1 to 8 pass.
 
 ## Boundary isolation
 
@@ -122,7 +122,8 @@ Deliver verifiable production content with authentic brand media.
 
 - Zero fabricated metrics. Never invent placeholder percentages, uptime stats, speed multipliers, or fake testimonial quotes. If exact metrics are absent, use organic real-world samples or structural illustrations.
 - Genuine brand marks. Use verified SVG or PNG logos for authentic integrations. Omit partner logo walls entirely when authentic proof is unavailable.
-- Authentic photography. Use real team photos or transparent PNG cutouts. Never use generic AI-generated faces or faceless avatars.
+- Authentic photography and illustration. Use real team photos, transparent PNG cutouts, or genuine vector art. Never default to generic AI clay dioramas, low-poly pastel 3D toys, or uncredited decorative mesh blobs.
+- Zero synthetic ordinal counters or scroll cues. Omit decorative 01 / 06 section corner counters and animated mouse scroll indicators. Let content, hierarchy, and peeked fold boundaries guide navigation naturally.
 - Zero fake device chrome. Never hand-code simulated browser URL bars, traffic-light window controls, or faux smartphone frames. Let UI content speak for itself.
 - Visual icon sets. Use Phosphor, Radix, or Solar SVG icons with unified stroke weight. Never render raw unicode emojis in user interface labels or copy.
 
@@ -192,3 +193,5 @@ Verify all items before declaring frontend implementation complete:
 | Native dialogs | Modals use native dialog or popover with @starting-style discrete transitions |
 | Relational focus | Container cards reflect child keyboard focus via :has(:focus-visible) |
 | Surface tinting | Dynamic states use color-mix in oklch rather than stacked opacity overlays |
+| Fingerprint divergence | Layout diverges from prior project views on at least 4 of 6 structural dimensions |
+| Section ordinality | Zero decorative 01 / 06 corner counters and zero animated mouse scroll cues |

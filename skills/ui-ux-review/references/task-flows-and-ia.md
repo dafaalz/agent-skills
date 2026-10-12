@@ -55,7 +55,7 @@ Measures the percentage of users who successfully complete a defined objective:
 
 `TCR = (Completed Sessions / Total Attempted Sessions) * 100%`
 
-Benchmarks:
+Evaluate against the following benchmarks:
 - Cross-industry average benchmark. 78 percent according to Sauro and Lewis.
 - Critical transactional workflows (checkout, onboarding, password recovery). Minimum 95 percent target.
 
@@ -74,15 +74,15 @@ Quantifies disorientation during navigation tasks:
 
 `L = sqrt(((N / S) - 1)^2 + ((R / N) - 1)^2)`
 
-Variables:
-- `N`: Number of unique pages visited during the task.
-- `S`: Total number of page visits (including revisits).
-- `R`: Minimum optimal number of pages required to complete the task.
+The formula uses three variables:
+- `N`. Number of unique pages visited during the task.
+- `S`. Total number of page visits, including revisits.
+- `R`. Minimum optimal number of pages required to complete the task.
 
-Score interpretations:
-- `L < 0.4`: Optimal navigation. The user navigates directly to the target.
-- `0.4 <= L <= 0.5`: Moderate hesitation. The user searches for pathways.
-- `L > 0.5`: Severe disorientation. The user loops and backtracks repeatedly.
+Interpret scores using these thresholds:
+- `L < 0.4`. Optimal navigation. The user navigates directly to the target.
+- `0.4 <= L <= 0.5`. Moderate hesitation. The user searches for pathways.
+- `L > 0.5`. Severe disorientation. The user loops and backtracks repeatedly.
 
 ### Drop-off rate and funnel leakage
 Measures user attrition between successive stages:
@@ -124,7 +124,7 @@ Audit critical workflows against these criteria:
 
 ### B. Flow efficiency and redundancy
 - Does the workflow represent the minimum theoretical step count required to complete the objective?
-- Are unnecessary inputs eliminated by leveraging smart defaults or known user data?
+- Are unnecessary inputs eliminated by using smart defaults or known user data?
 - Is complex branching logic hidden until the user activates its trigger?
 
 ### C. Cognitive load and mental models
@@ -136,3 +136,19 @@ Audit critical workflows against these criteria:
 - Do breadcrumbs and page headings clearly communicate current hierarchical location?
 - Does an accessible escape hatch (Cancel or Save Draft button) exist within modals and multi-step flows?
 - Are users informed immediately whenever background computation exceeds 1000 milliseconds?
+
+## 5. Dead-scroll zones and timeline interaction pacing
+
+Dead-scroll occurs when a user scrolls through a webpage or scrollytelling section, but the interface produces zero perceptible visual changes, animation advancement, or layout movement.
+
+### Thresholds and detection
+
+- **The 300px / 50vh threshold.** Any continuous scroll travel exceeding 300 CSS pixels or 0.5 viewport heights (50vh or 50dvh) without visual state mutation constitutes dead-scroll.
+- **Pinning stall.** Sticky pinned containers where the trigger locks the viewport, but interior timeline steps fail to start immediately or leave empty gaps between acts.
+- **Scroll hijacking without proportional feedback.** Overriding native scroll physics with virtual scroll dampening so heavy that wheel gestures feel disconnected from visual feedback.
+
+### Remediation rules
+
+1. **Eliminate dead pinning travel.** Ensure sticky scene pins align exactly with the start and end of animation scrub timelines.
+2. **Proportional feedback density.** Every mouse wheel detent or touch flick must trigger visible response on screen. If an element finishes transforming, release the pin immediately.
+3. **Continuous progress indicators.** For multi-act scrollytelling sequences, provide a persistent chapter progress tracker so users understand where they are within the narrative sequence.

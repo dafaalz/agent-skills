@@ -26,8 +26,8 @@ Identify user intent and route execution immediately:
 7. **Browser compositor and Google rendering standards.** Consult [references/google-standards.md](references/google-standards.md) when diagnosing Chromium layer explosion, auditing Core Web Vitals (INP and CLS) frame budgets, adopting Material Design 3 motion tokens, or implementing Android physics-based fling and spring animations.
 8. **Desktop native and platform motion.** Consult [references/desktop-and-platform.md](references/desktop-and-platform.md) for Windows 11 DWM compositor tokens, Mica backdrop rules, macOS AppKit `NSAnimationContext` atomic batching, Electron and Tauri non-client title bar dragging without IPC loop latency, and Linux Wayland buffer sync.
 9. **Kinetic typography and shimmer.** Consult [references/kinetic-typography-and-shimmer.md](references/kinetic-typography-and-shimmer.md) for character stagger sequences, blur filter boundaries, text-clip gradient shimmer, webfont loading synchronization, and CDP visual test capture timing.
-10. **Creative and editorial storytelling.** Consult [references/creative-and-editorial.md](references/creative-and-editorial.md) for RAF LERP pointer inertia, dynamic spotlight cards, windowed parallax, clip-path curtain wipes, and SVG grain.
-11. **Canvas scrubbing and smooth scroll.** Consult [references/canvas-and-scroll-scrubbing.md](references/canvas-and-scroll-scrubbing.md) for Lenis synchronization, 2D canvas frame sequences, DPR capping, predictive caching, and sliding pill tabs.
+10. **Creative and editorial storytelling.** Consult [references/creative-and-editorial.md](references/creative-and-editorial.md) for RAF LERP pointer inertia, dynamic spotlight cards, windowed parallax, clip-path curtain wipes, dimensional multi-plane hero layering, and SVG grain.
+11. **Canvas scrubbing and smooth scroll.** Consult [references/canvas-and-scroll-scrubbing.md](references/canvas-and-scroll-scrubbing.md) for Lenis synchronization, 2D canvas frame sequences, dense GOP video scrub encoding, DPR capping, predictive caching, and sliding pill tabs.
 
 ## Execution invariants
 
@@ -101,7 +101,7 @@ Completion criterion. The cheapest capable tool selected, preferring compositor 
 - **In Motion or Framer Motion, use hardware-accelerated transforms.** Motion v11 and higher executes independent transform values (`x`, `y`, `scale`) directly on the compositor thread via Web Animations API (WAAPI). On older Framer Motion versions, explicit transform strings bypass JavaScript main thread layout sync:
 
 ```jsx
-/* Modern Motion (v11+) leverages WAAPI hardware acceleration natively */
+/* Modern Motion (v11+) uses WAAPI hardware acceleration natively */
 <motion.div animate={{ x: 100 }} />
 
 /* Legacy fallback if main thread CPU bottleneck occurs */
@@ -123,7 +123,7 @@ Standard browser easings lack punch. Use these tokens:
 --ease-out: cubic-bezier(0.23, 1, 0.32, 1); /* strong ease-out for UI entries */
 --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1); /* on-screen movement and curtain wipes */
 --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1); /* iOS drawer curve */
---ease-quintic: cubic-bezier(0.22, 1, 0.36, 1); /* weighted editorial showcases, hero entries */
+--ease-quintic: cubic-bezier(0.22, 1, 0.36, 1); /* weighted editorial presentations, hero entries */
 --ease-expo: cubic-bezier(0.16, 1, 0.3, 1); /* kinetic text stagger, high-velocity reveals */
 ```
 
@@ -150,7 +150,7 @@ Follow this duration budget reference:
 
 Keep functional UI animations under 300ms. Reserve 600 to 1400ms for creative editorial entrances.
 
-Completion criterion. Custom cubic bezier tokens and duration budgets under 300ms assigned without using `ease-in`.
+Completion criterion. Custom cubic bezier tokens and duration budgets (under 300ms for functional UI, under 1400ms for editorial storytelling) assigned without using `ease-in`.
 
 ### Step 6. Accessibility and SSR hydration verification
 

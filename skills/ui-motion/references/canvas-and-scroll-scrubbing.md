@@ -152,3 +152,63 @@ function retriggerGridAnimation(cards) {
   });
 }
 ```
+
+## 5. Dense GOP video encoding for timeline scrubbing
+
+When requirements mandate native `<video>` elements instead of 2D canvas frame sequences, standard streaming video files fail because long keyframe intervals (60 to 120 frames) stall hardware video decoders during reverse scrubbing.
+
+### FFmpeg encoding recipe
+
+Re-encode video assets with dense keyframe intervals (Group of Pictures of 1 or 2 frames), zero B-frames (`-bf 0`) to prevent bidirectional decoder stalls, and stripped audio:
+
+```bash
+ffmpeg -i source.mp4 \
+  -c:v libx264 \
+  -preset slow \
+  -crf 20 \
+  -g 2 \
+  -keyint_min 2 \
+  -bf 0 \
+  -an \
+  -pix_fmt yuv420p \
+  -movflags +faststart \
+  scrub_optimized.mp4
+```
+
+### Critical flags explained
+
+- `-g 2` and `-keyint_min 2`. Places an intra-coded frame (I-frame) every 2 frames. The browser decoder never seeks backward through more than one delta frame.
+- `-bf 0`. Eliminates bidirectional predictive B-frames. Enforces pure forward prediction to avoid reverse-scrub decode buffer thrashing.
+- `-an`. Strips the audio stream. Prevents browser audio buffer desynchronization and autoplay permission rejections during rapid scroll direction changes.
+- `-movflags +faststart`. Relocates the `moov` atom header to the beginning of the file, allowing immediate seek operations before the entire media payload finishes downloading.
+
+### Scrub controller synchronization
+
+Clamp currentTime updates inside `requestAnimationFrame`, prevent decoder queue overflow using a seeking guard, and check `video.readyState >= 2` before seeking:
+
+```javascript
+const video = document.querySelector("#scrub-video");
+let targetTime = 0;
+let rafId = null;
+
+function renderScrubFrame() {
+  if (video.readyState >= 2 && !video.seeking) {
+    if ("fastSeek" in video) {
+      video.fastSeek(targetTime);
+    } else {
+      video.currentTime = targetTime;
+    }
+  }
+  rafId = null;
+}
+
+function updateVideoScrub(progress) {
+  if (!video.duration) return;
+  const p = Math.max(0, Math.min(1, progress));
+  targetTime = p * video.duration;
+
+  if (!rafId) {
+    rafId = requestAnimationFrame(renderScrubFrame);
+  }
+}
+```

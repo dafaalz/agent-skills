@@ -1,14 +1,14 @@
 # Impeccable delta
 
-Apply these seven checks on every frontend build and polish pass. Each check ends with a binary pass condition.
+Apply these eight checks on every frontend build and polish pass. Each check ends with a binary pass condition.
 
 ## Scope
 
-Use this file for operate screens and persuade surfaces alike. Operate screens must pass checks 1 to 4 on every run. Persuade surfaces must pass all seven. Skip a check only with written brief approval.
+Use this file for operate screens and persuade surfaces alike. Operate screens must pass checks 1 to 4 on every run. Persuade surfaces must pass all eight. Skip a check only with written brief approval.
 
 ## How to use
 
-Run checks 1 to 4 during the build. Run checks 5 to 7 at finish review. Record each result as pass or FAIL with gate number. Fix FAIL before ship. Log results in the CSS stamp or review report.
+Run checks 1 to 4 during the build. Run checks 5 to 8 at finish review. Record each result as pass or FAIL with gate number. Fix FAIL before ship. Log results in the CSS stamp or review report.
 
 ## 1. Tint text on colored surfaces
 
@@ -51,6 +51,12 @@ Pass condition. Reviewer input packet lists all seven inputs. Verdict recorded a
 Run live browser iteration only on trusted local checkout. Never inject helpers into production sites. Never weaken CSP for preview.
 
 Pass condition. Target URL is localhost or local file. Prod URL routes to detect read only.
+
+## 8. Clear the design fingerprint gate
+
+When building multiple views or variants in a project, the candidate build must diverge from prior project views on at least 4 of 6 structural dimensions: macrostructure, navigation treatment, hero device, section rhythm, closing pattern, and interactive signature move.
+
+Pass condition. Design verified against prior project views across all 6 dimensions, with at least 4 confirmed structural differences recorded.
 
 ## Result log
 

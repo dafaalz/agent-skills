@@ -138,3 +138,13 @@ Windows Contrast Themes (High Contrast Mode) assists users with low vision or ph
 2. **Three-tier token isolation.** Confirm components reference semantic tokens rather than raw primitive hex values.
 3. **Dark mode halation check.** Verify canvas backgrounds maintain OKLCH lightness of at least 0.16.
 4. **Forced-colors preservation.** Confirm buttons, cards, and input fields declare physical or transparent borders to survive high-contrast mode stripping.
+
+## 8. Dynamic frame contrast over motion and video surfaces
+
+Static contrast calculations fail when text overlays animated canvas sequences, video scrubbing timelines, or moving gradient backgrounds. A heading that passes WCAG AA on the initial frame can become completely illegible when a bright element passes beneath it midway through the timeline.
+
+### Audit methodology for dynamic backgrounds
+
+1. **Timeline frame sweep.** Sample background lightness at the bounding box of each text element across five discrete milestones (0%, 25%, 50%, 75%, 100% of animation progress).
+2. **Worst-case luminance evaluation.** Evaluate contrast against the highest luminance (brightest) and lowest luminance (darkest) frames detected within the text bounding coordinates.
+3. **Localized gradient scrims.** When contrast dips below 4.5:1 for body or 3:1 for headings, require a localized scrim (`linear-gradient` anchored directly beneath the text box) rather than an uncalibrated full-viewport dark overlay.

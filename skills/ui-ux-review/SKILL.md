@@ -41,7 +41,7 @@ Enforce technical standards, layout stability, and accessibility invariants:
 2. **Visible focus rings.** Never accept stripped focus rings. Ensure high-contrast outlines appear on keyboard navigation while suppressing them cleanly on mouse click via `:focus-visible`.
 3. **Concentric border radii.** Ensure nested card shells, buttons, and inner badges maintain concentric curvature. Outer radius must always exceed inner radius by the exact padding and border offset.
 4. **8pt spatial grid.** Enforce spacing on an 8pt or 4pt modular scale. Use discrete semantic surface tokens based on lightness steps instead of semi-transparent white overlays. Align columns using CSS Subgrid. Read `references/layout-and-space.md`.
-5. **APCA and contrast compliance.** Verify APCA and WCAG contrast thresholds across text and interactive controls. Implement DTCG 3-tier token structures, OKLCH scales, dark mode halation mitigation, and Windows High Contrast Mode border fallbacks. Read `references/color-and-contrast.md`.
+5. **APCA and contrast compliance.** Verify APCA and WCAG contrast thresholds across text and interactive controls. Check dynamic frame contrast across video and animated surfaces using localized scrims. Implement DTCG 3-tier token structures, OKLCH scales, dark mode halation mitigation, and Windows High Contrast Mode border fallbacks. Read `references/color-and-contrast.md`.
 6. **Container queries and layout stability.** Use CSS Container Queries (`@container`) for modular components instead of binding solely to viewport media queries. Enforce CSS logical properties on shared components. Declare explicit dimensions and aspect ratios to prevent Cumulative Layout Shift.
 7. **Component mechanics.** Verify Popover API usage, CSS Anchor Positioning, `@starting-style` transitions, and relational `:has()` selectors. Read `references/component-mechanics.md`.
 8. **Typography mechanics.** Verify reading measure between 45 and 75 characters per line, fluid clamp formulas, unitless line heights, and tabular numbers for structured tables. Read `references/typography.md`.
@@ -58,7 +58,7 @@ Enforce human-centered psychology laws, task efficiency, and error resilience:
 5. **Undo for reversible actions.** Prescribe instant execution paired with a 5 to 10 second undo toast notification for reversible actions. Avoid modal confirmation dialogs because habituation renders repeated confirmation prompts ineffective against slips.
 6. **Mobile thumb zones.** Place primary mobile actions and navigation triggers inside the Natural Thumb Zone along the screen bottom. Keep the Ow Zone at the top edges free of primary interactive triggers. Read `references/mobile-touch-ergonomics.md`.
 7. **System status transparency.** Provide clear feedback within 100ms for user actions, display subtle progress indicators for operations taking 400ms to 1000ms, and render skeleton loaders instead of blank spinners. Read `references/system-status-and-states.md`.
-8. **Task flows and information architecture.** Minimize steps to completion, enforce Krug scannability, apply progressive disclosure 80/20 rules, and minimize the Lostness Metric. Read `references/task-flows-and-ia.md`.
+8. **Task flows and information architecture.** Minimize steps to completion, eliminate dead-scroll zones (>300px travel without visual mutation), enforce Krug scannability, apply progressive disclosure 80/20 rules, and minimize the Lostness Metric. Read `references/task-flows-and-ia.md`.
 9. **Usability heuristics and principles.** Check NN/g 10 heuristics, Norman signifiers and constraints, Shneiderman golden rules, and ISO 9241-110 dialogue standards. Read `references/heuristics-and-principles.md`.
 10. **Interface copy clarity.** Ensure action verbs are clear, avoid developer jargon, and provide concrete recovery steps in error copy. Read `references/copy-writing.md`.
 
@@ -164,6 +164,9 @@ Audit implementations against this checklist. Every item represents an automatic
 | Wall of 10+ inputs presented in a single unstructured page | Multi-step flow chunked into 3 to 4 logical fields per step with progress |
 | Empty state rendered as blank white space | Instructive empty state explaining zero data and primary action to populate |
 | Dropdown containing 15+ unranked options without search | Searchable combobox or progressive selection hierarchy |
+| Dead scroll zones where scrolling changes nothing on screen | Continuous feedback or eliminate redundant pinning |
+| Text rendered over dynamic video or canvas without multi-frame contrast check | Localized scrim or contrast-adaptive text fill passing WCAG AA across all frames |
+| Decorative 01 / 06 section counters or animated mouse scroll cues | Omit counters and cues; let content and scannable headings drive discovery |
 
 ## Quick verification checklist
 
@@ -179,4 +182,5 @@ Run this check before completing any review:
 | Cognitive limits | Choices pruned to 5 to 7 items, chunking conforms to 4-item limit |
 | Error resilience | Form recovery, draft persistence, and undo mechanisms verified |
 | Touch ergonomics | Interactive elements meet 48px targets and reside in natural thumb zones |
+| Scroll and timeline | Zero dead-scroll zones (>300px travel), verified dynamic frame contrast over video/motion |
 | Report structure | Max 12 findings formatted with Before-After-Why tables and concrete diffs |
