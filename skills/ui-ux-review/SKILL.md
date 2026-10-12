@@ -60,7 +60,7 @@ Enforce human-centered psychology laws, task efficiency, and error resilience:
 7. **System status transparency.** Provide clear feedback within 100ms for user actions, display subtle progress indicators for operations taking 400ms to 1000ms, and render skeleton loaders instead of blank spinners. Read `references/system-status-and-states.md`.
 8. **Task flows and information architecture.** Minimize steps to completion, eliminate dead-scroll zones (>300px travel without visual mutation), enforce Krug scannability, apply progressive disclosure 80/20 rules, and minimize the Lostness Metric. Read `references/task-flows-and-ia.md`.
 9. **Usability heuristics and principles.** Check NN/g 10 heuristics, Norman signifiers and constraints, Shneiderman golden rules, and ISO 9241-110 dialogue standards. Read `references/heuristics-and-principles.md`.
-10. **Interface copy clarity.** Ensure action verbs are clear, avoid developer jargon, and provide concrete recovery steps in error copy. Read `references/copy-writing.md`.
+10. **Interface copy and lexical consistency.** Enforce outcome verbs on triggers ("Save changes" instead of "Submit"). Maintain lexical cohesion across actions and status toasts ("Publish" triggers "Published"). Name interface concepts using user mental models rather than backend architectures ("Manage notifications" instead of "Webhook configuration"). Never write apologetic error copy; describe what failed and state concrete recovery steps. Omit decorative section counters (01, 02) when content is not an ordered sequence. Read `references/copy-writing.md`.
 
 ## Ordered evaluation sequence
 
@@ -157,7 +157,10 @@ Audit implementations against this checklist. Every item represents an automatic
 | Destructive permanent deletion executed via single regular button | Deliberate friction requiring resource name confirmation or typed prompt |
 | Form fields wiped clean on server validation error or network timeout | Preserve all input state locally and flag only the invalid field |
 | Silent operation with no feedback during 400ms to 1000ms latency | Subtle inline spinner or button loading state |
-| Generic error message stating "An error occurred" | Specific error copy explaining what failed and concrete recovery steps |
+| Generic or apologetic error copy like "Sorry, an error occurred" | Specific statement of what failed followed by concrete recovery steps |
+| Generic passive CTA label like "Submit" or "Click here" | Specific outcome verb matching intent like "Save changes" or "Create project" |
+| Lexical drift between trigger button and status notification | Exact lexical pairing across flow ("Publish" button triggers "Published" toast) |
+| System architecture terminology exposed in user copy | User mental model terms ("Manage notifications" instead of "Webhook settings") |
 | Entire screen replaced by a single spinner on initial page load | Skeleton screens matching destination layout structure |
 | Primary mobile action placed in top corners (Ow Zone) | Sticky bottom button or bottom bar in Natural Thumb Zone |
 | Rejection of telephone or card numbers because of spaces or hyphens | Permit flexible input formatting per Postel's Law and sanitize on submission |
@@ -166,7 +169,7 @@ Audit implementations against this checklist. Every item represents an automatic
 | Dropdown containing 15+ unranked options without search | Searchable combobox or progressive selection hierarchy |
 | Dead scroll zones where scrolling changes nothing on screen | Continuous feedback or eliminate redundant pinning |
 | Text rendered over dynamic video or canvas without multi-frame contrast check | Localized scrim or contrast-adaptive text fill passing WCAG AA across all frames |
-| Decorative 01 / 06 section counters or animated mouse scroll cues | Omit counters and cues; let content and scannable headings drive discovery |
+| Numbered markers (01 / 02 / 03) applied to non-sequential content | Omit numbers; use semantic headings or topic cards unless step order is strictly required |
 
 ## Quick verification checklist
 
@@ -183,4 +186,5 @@ Run this check before completing any review:
 | Error resilience | Form recovery, draft persistence, and undo mechanisms verified |
 | Touch ergonomics | Interactive elements meet 48px targets and reside in natural thumb zones |
 | Scroll and timeline | Zero dead-scroll zones (>300px travel), verified dynamic frame contrast over video/motion |
+| Copy integrity | Actions use outcome verbs, toasts match trigger vocabulary, errors give recovery steps without apologies |
 | Report structure | Max 12 findings formatted with Before-After-Why tables and concrete diffs |

@@ -68,6 +68,8 @@ Name exactly one sanctioned purpose before writing code:
 - **Explanation.** Demonstrate how an onboarding or marketing flow operates.
 - **Delight.** Permitted only at the rare or first-time tier.
 
+Non-user-triggered motion must focus on a single coordinated entrance. Never apply repetitive fade-and-slide-up triggers across every scroll section or universal hover transitions on every card.
+
 If no purpose applies, halt and do not write animation code. Data tables, financial graphs, and reading content must remain stationary.
 
 Completion criterion. Exactly one sanctioned purpose declared before writing animation code.
@@ -223,6 +225,8 @@ Verify code against this checklist before delivering. Every item represents an a
 | Unsynchronized remote webfonts during text entrances               | Priority local woff2 webfonts to eliminate FOUT and CLS                  |
 | Capturing visual test snapshots mid-flight                         | Await full stagger duration before screenshot capture                    |
 | Unmounting or hiding dialogs synchronously on dismiss               | Retain exit transition classes and await duration completion             |
+| Repeated fade-and-slide-up on every scroll section                 | Single coordinated load sequence for the primary hero or instant scroll |
+| Universal hover transitions applied to every card                  | Static cards, reserving hover feedback strictly for primary interactive targets |
 
 ## Quick verification checklist
 
@@ -232,6 +236,6 @@ Verify code against this checklist before delivering. Every item represents an a
 | Purpose           | Exactly one sanctioned purpose declared                                             |
 | Acceleration      | Only `transform`, `opacity`, or documented curtain `clip-path` animated             |
 | Curves and timing | Custom tokens used; under 300ms for functional UI, under 1400ms for editorial       |
-| Origin            | Anchored popovers expand from triggers, modals expand from center            |
-| Accessibility     | `prefers-reduced-motion` and pointer media queries included                  |
-| Self-containment  | Output provides working code first, followed by gate result and parameters   |
+| Origin            | Anchored popovers expand from triggers, modals expand from center                   |
+| Accessibility     | `prefers-reduced-motion` and pointer media queries included                         |
+| Self-containment  | Output provides working code first, followed by gate result and parameters          |

@@ -90,9 +90,9 @@ Apply these foundational disciplines across all frontend tasks:
 Pair high-character sans with monospaced accents. Keep headings upright and roman without italics.
 
 - Display and headings. Use high-character sans families such as Geist, Satoshi, Outfit, or Cabinet Grotesk. Track tight (-0.025em), set fluid clamp scales, and compress line height between 1.1 and 1.2.
-- Body copy. Use the same sans family at weight 400 with relaxed line height between 1.6 and 1.65. Restrict line length to a maximum of 65 characters for readability.
+- Body copy. Use the same sans family at weight 400 with relaxed line height between 1.6 and 1.65. Restrict line length to a maximum of 65 characters for readability. Give serif body copy slightly more line height than sans-serif.
 - Monospace tokens. Use Geist Mono or JetBrains Mono for code blocks, terminal snippets, technical tags, and timestamps. When Density exceeds level 7, render all numbers in monospace.
-- Prohibited typography. Avoid unconfigured default Inter on greenfield marketing and editorial layouts. When working in an existing codebase that already configures Inter as its brand typography, adopt the existing repository font. Never use generic system serifs like Times New Roman, Georgia, or Garamond on dashboards. Reserve modern editorial serifs exclusively for long-form literary publications.
+- Prohibited typography. Avoid unconfigured default Inter on greenfield marketing and editorial layouts. When working in an existing codebase that already configures Inter as its brand typography, adopt the existing repository font. Never use generic system serifs like Times New Roman, Georgia, or Garamond on dashboards. Reserve modern editorial serifs exclusively for long-form literary publications. Never accent a single word in a headline with isolated italics, bolding, or colored text. Never apply all-caps styling to content labels.
 - Editorial pull quotes and marginalia. Structure pull quotes using semantic figure and blockquote containers with left accent borders and fluid clamp scaling. Compartmentalize marginalia columns into distinct structured sub-blocks (formal citations, contextual notes, archive tags) separated by subtle dividers rather than monolithic paragraphs.
 
 ### 2. Color token architecture
@@ -104,6 +104,7 @@ Anchor layouts to neutral bases with at most one restrained accent color.
 - Systematic color spaces. Construct palette steps using OKLCH scales for uniform perceived lightness across tints and shades. Consult references/custom-theme.md.
 - Surface elevation. Differentiate elevation layers using discrete surface lightness steps and subtle borders. Never stack semi-transparent white overlays or neon drop shadows.
 - Dynamic surface tinting. Construct state tints and subtle surface borders using color-mix in oklch space with 5% to 15% accent mix instead of stacking opacity overlays or arbitrary hex codes.
+- Banned AI palette tropes. Avoid formulaic warm cream (#F4F1EA) paired with terracotta (#D97757) and high-contrast serifs, or near-black backgrounds paired with single acid-green or vermilion accents, unless explicitly required by brand guidelines.
 
 ### 3. Layout structure
 
@@ -113,6 +114,7 @@ Construct responsive structural grids with modern CSS and dynamic viewport units
 - Viewport stability. Set full-height hero screens and root wrappers to min-h-[100dvh] instead of h-screen or 100vh to eliminate mobile scroll jumping.
 - Mobile collapse threshold. When Variance exceeds level 4, collapse asymmetric desktop grids into a clean single column below 768px (w-full px-4). Consult references/responsive.md.
 - Layout anti-patterns. Avoid centered three-card feature rows. Use staggered two-column pairs, bento layouts, horizontal scrolls, or index directories. Consult references/anti-patterns.md.
+- Characteristic hero composition. Open with the most representative artifact of the domain, such as an interactive demo, canvas, or direct preview. Avoid generic hero blocks made of large isolated numbers, small labels, and gradient washes. Apply the Chanel restraint principle: pick exactly one focal anchor per view and keep secondary elements quiet.
 - Concentric corner geometry. Maintain proportional nested radii where inner radius equals outer radius minus container padding and border thickness using the formula calc(var(--outer-radius) - var(--padding) - var(--border)). Never use identical radii on nested cards.
 - Container query modularity. Declare container-type inline-size on portable micro-component roots. Trigger internal responsive adaptations and typography clamping using container queries and cqw units instead of coupling components to global viewport breakpoints.
 
@@ -125,6 +127,7 @@ Deliver verifiable production content with authentic brand media.
 - Authentic photography and illustration. Use real team photos, transparent PNG cutouts, or genuine vector art. Never default to generic AI clay dioramas, low-poly pastel 3D toys, or uncredited decorative mesh blobs.
 - Zero synthetic ordinal counters or scroll cues. Omit decorative 01 / 06 section corner counters and animated mouse scroll indicators. Let content, hierarchy, and peeked fold boundaries guide navigation naturally.
 - Zero fake device chrome. Never hand-code simulated browser URL bars, traffic-light window controls, or faux smartphone frames. Let UI content speak for itself.
+- Zero template chrome. Omit tracked-out ALL-CAPS eyebrow labels above headings, metadata strings separated by middle dots ('A · B · C'), dual-fragment headings separated by dashes, and automatic '→' characters on button text.
 - Visual icon sets. Use Phosphor, Radix, or Solar SVG icons with unified stroke weight. Never render raw unicode emojis in user interface labels or copy.
 
 ## Macrostructures and visual genres
@@ -195,3 +198,7 @@ Verify all items before declaring frontend implementation complete:
 | Surface tinting | Dynamic states use color-mix in oklch rather than stacked opacity overlays |
 | Fingerprint divergence | Layout diverges from prior project views on at least 4 of 6 structural dimensions |
 | Section ordinality | Zero decorative 01 / 06 corner counters and zero animated mouse scroll cues |
+| AI visual clichés | Zero template chrome (ALL-CAPS eyebrows, middle dots, single-word accents, or automatic '→' glyphs) |
+| AI palette tropes | Zero formulaic warm cream with terracotta or near-black with acid-green unless project-mandated |
+| Hero composition | Hero opens with subject-matter artifact or interactive moment instead of default stat-plus-gradient block |
+| Boldness focus | Exactly one memorable focal element per view, with secondary elements visually disciplined |
