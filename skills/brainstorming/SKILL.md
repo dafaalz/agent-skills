@@ -10,7 +10,7 @@ Turn ideas into designs you can build before you write code or plans.
 Read project files first. If you change existing code, read official standards, check code against those standards, and compare options. If you build something new, ask one question at a time and show the design in parts. After the user picks an approach, write the spec and call implementation planning.
 
 <HARD-GATE>
-Show the design and get explicit user approval before you write code, write project templates, or call implementation skills. Do not write code before the user says yes. This rule covers every task, no matter how small.
+Write-Target Boundary. Do not modify files in tracked production directories (`src/`, `app/`, `packages/`, `database/`, `tests/`) or call implementation skills before the user approves the design specification. Ephemeral sandbox exploration is permitted exclusively inside `.agents/scratch/prototypes/<variant-id>/` when delegating visual or state spikes to the `prototype` skill.
 </HARD-GATE>
 
 ## Workflow selection
@@ -97,13 +97,14 @@ Clear up requirements through direct talk and check assumptions before you desig
 
 Completion criterion. The user confirms every open branch and zero guesses remain.
 
-### Step 3. Explore approaches
+### Step 3. Explore approaches and prototype spikes
 
 Write 2 to 3 approaches with tradeoffs, put your pick first, and get user confirmation before you write the full spec. Check data growth and reload saves against `references/architecture-scalability.md`.
 - Keep domains apart. If a user pitch mixes unrelated domains or breaks lifecycle behavior, search the web with `search_web` to check industry practice, show a counter-argument with the source, and suggest a split alternative.
-- Show opposite visual directions for open UI tasks. When a frontend request lacks visual direction, do not ask open taste questions. Show three distinct directions picked from opposite schools, such as Information Architecture (rational, data-dense, e.g. Pentagram or Vignelli), Editorial Minimalist (whitespace, refined type, e.g. Dieter Rams or MUJI), Modern Tool (hairline details, dark mode, single accent, e.g. Linear or Raycast), Motion Experimental (generative, kinetic, e.g. Active Theory), Brutalist (raw, high contrast, e.g. Are.na), or Warm Humanist (approachable, organic, e.g. Stripe Press). Never show three options from the same school.
+- Show opposite visual directions for open UI tasks. When a frontend request lacks visual direction, do not ask open taste questions. Show three distinct directions picked from opposite schools, such as Information Architecture, Editorial Minimalist, Modern Tool, Motion Experimental, Brutalist, or Warm Humanist.
+- Run spikes via prototype. If visual density or state ergonomics requires live verification before locking architecture, emit `.agents/state/spike-brief.md` and invoke the `prototype` skill. Require the selected variant locked in `.agents/scratch/prototypes/<variant-id>/PROTOTYPE_LOCK.md` before proceeding.
 
-Completion criterion. The user picks one approach.
+Completion criterion. The user picks one approach or confirms a locked prototype variant.
 
 ## Design presentation and documentation
 
@@ -120,9 +121,27 @@ Ask the user after each section if the direction matches.
 
 Completion criterion. The user confirms the direction matches.
 
-### Step 2. Write the design doc
+### Step 2. Write the design spec
 
-Write the Architecture Decision Record (ADR) to `docs/YYYY-MM-DD-<topic>-design.md` or the path the user names. Read `references/domain-modeling.md` for entity naming and ADR filters.
+Evaluate the change against three Architecture Decision Record filters:
+1. Hard to reverse.
+2. Surprising without context.
+3. Real trade-offs across components.
+
+If all three filters evaluate to false, author a compact Component Spec stating inputs, outputs, UI tokens, and verification commands. If any filter evaluates to true, write an Architecture Decision Record (ADR) to `docs/specs/YYYY-MM-DD-<topic>-adr.md`. Read `references/domain-modeling.md` for entity naming.
+
+Prepend a standardized hand-off header to the spec:
+```yaml
+---
+artifact_type: adr
+lifecycle_state: spec-approved
+source_skill: brainstorming
+next_skill: writing-plans
+selected_option: <option-slug>
+in_scope_paths: ["<path-1>"]
+verification_entrypoints: ["<test-command>"]
+---
+```
 
 Write the record with these fields:
 - **Title.** Short name for the change.
@@ -133,7 +152,7 @@ Write the record with these fields:
 - **Consequences.** Direct results and tradeoffs you accept.
 - **Verification plan.** Automated tests and manual checks you will run.
 
-Completion criterion. You write the ADR file to disk with all fields filled.
+Completion criterion. You write the spec file to disk with the hand-off header and required fields filled.
 
 ### Step 3. Self-review the spec
 
@@ -194,8 +213,8 @@ Check this list before you call implementation planning:
 
 | Check | Passing condition |
 |---|---|
-| Hard gate | User approves design before you call writing-plans or write code |
+| Hard gate | Production write boundary enforced and user approves design before writing code |
 | Code check | You list good code, bad code to fix, and missing code to write with file paths |
 | Questions | You ask with fixed options, you read facts by yourself, zero guesses remain |
-| Spec doc | You write ADR spec to `docs/YYYY-MM-DD-<topic>-design.md` with zero placeholders |
+| Spec doc | You write spec with hand-off header to `docs/specs/` with zero placeholders |
 | User sign-off | User confirms pick and final spec |

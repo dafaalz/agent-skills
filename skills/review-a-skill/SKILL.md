@@ -23,7 +23,7 @@ Load prerequisite skills and target files before auditing:
 1. Locate and read both `unslop` and `writing-for-agents` directly using `view_file` from the active skills root (such as `.agents/skills/`, `~/.agents/skills/`, `~/.gemini/config/skills/`, or the active repository `skills/` directory). Audit memory and state files only when explicitly requested; do not inspect session history or user scratchpad files during standard skill review. Inspect skill files directly and never audit from memory or secondary summaries.
 2. Load the target `SKILL.md` along with any disclosed files in `references/`. Check initial boundary constraints:
    * Directory naming. Confirm that the directory name matches the `name` field in the YAML frontmatter with 1 to 64 lowercase alphanumeric characters and single hyphens.
-   * Context budget. Confirm that the main `SKILL.md` stays under 250 lines. Relocate documentation exceeding 100 lines into `references/`.
+   * Context budget. Confirm that the main `SKILL.md` stays under 250 lines. Relocate documentation exceeding 100 lines into `references/` if needed.
 
 Completion criterion. Prerequisite skills `unslop` and `writing-for-agents` are loaded into context via `view_file`, target skills are ingested, the operating mode is determined, and directory naming plus line budget constraints are cataloged.
 
@@ -66,6 +66,7 @@ Synthesize findings into an actionable evaluation report:
   7. Composability and Citation
 - Grounded verdict. Deliver a direct, blunt assessment in the opening sentence stating whether the candidate is better, worse, or mixed compared to the baseline.
 - Sharp rule grafting. Extract novel or sharper rules from candidate versions. Formulate drop-in replacement snippets that preserve existing structure while sealing loopholes.
+- Automated lint verification. Run `python3 skills/review-a-skill/scripts/lint_skill.py <path-to-skill>` to execute deterministic AST, frontmatter, punctuation, and reference integrity checks.
 - Final checklist verification. Audit the candidate or proposed patch against the quick audit checklist below.
 
 Completion criterion. The evaluation report delivers the dimensional comparison table or single-audit log, a direct verdict, and concrete drop-in patch recommendations.

@@ -78,7 +78,7 @@ File holds steps, reference, or both. Steps mean ordered actions. Reference mean
 Move too little to reference and main file grows past 250 lines. Move too much and agent loses detail it needs. You split file only when split pays its cost:
 
 - Split by sequence when agent sees upcoming steps and skips current one.
-- Split by invocation when skill must run on its own. Read `references/skill-mechanics.md` for invocation modes and router skills.
+- Split by invocation when skill must run on its own. Read `references/skill-mechanics.md` for invocation modes and router skills, and read `references/anthropic-best-practices.md` for harness patterns.
 
 You put concept, rules, and edge cases under one heading. File sprawls when it grows long though each line stays true. When file sprawls, you move reference behind pointers and split task by branch or sequence.
 

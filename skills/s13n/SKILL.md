@@ -42,7 +42,7 @@ Load relevant reference files on demand based on repository language and scope:
 | Python | [references/std-python.md](references/std-python.md) |
 | Go | [references/std-go.md](references/std-go.md) |
 | PHP | [references/std-php.md](references/std-php.md) |
-| Rust | [references/std-rust.md](references/std-rust.md) |
+| Rust and Ruby | [references/std-rust.md](references/std-rust.md), [references/std-ruby.md](references/std-ruby.md) |
 | Java and C# | [references/std-java.md](references/std-java.md), [references/std-csharp.md](references/std-csharp.md) |
 | SQL, Shell, HTML, CSS | [references/std-sql.md](references/std-sql.md), [references/std-shell.md](references/std-shell.md), [references/std-html.md](references/std-html.md), [references/std-css.md](references/std-css.md) |
 | Configuration, Docs, Git | [references/std-yaml-json.md](references/std-yaml-json.md), [references/std-docs.md](references/std-docs.md), [references/std-git.md](references/std-git.md) |

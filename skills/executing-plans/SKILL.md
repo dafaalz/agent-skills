@@ -5,7 +5,7 @@ description: Use when executing written implementation plans batch by batch inli
 
 # Executing implementation plans
 
-Execute implementation plans written in `docs/superpowers/plans/` using either inline batch execution or delegated subagents. Maintain test-driven development discipline across every task, update markdown checkboxes directly inside the plan file, and run verification before completing the branch.
+Execute implementation plans written in `docs/plans/` using either inline batch execution or delegated subagents. Maintain test-driven development discipline across every task, update markdown checkboxes directly inside the plan file, and run verification before completing the branch.
 
 Announce the starting stance at session start:
 `I am using the executing-plans skill to execute this plan.`
@@ -59,7 +59,7 @@ Completion criterion. Plan tasks partitioned into sequential batches of 1 to 3 r
 
 Execute each task in the active batch following red, green, refactor cycles:
 1. Run the failing test. Execute the test command specified in the plan task and confirm failure. Verify the failure matches expected missing functionality rather than broken imports or syntax.
-2. Implement minimum code. Write the minimal code necessary to make the test pass. Apply the reuse hierarchy in order by choosing existing codebase helpers first, standard library features second, installed dependencies third, and minimal new code last. Use existing utilities instead of adding dependencies for small helpers, and implement only requested behaviors.
+2. Implement minimum code. Write the minimal code necessary to make the test pass. Apply the reuse hierarchy in order by choosing existing codebase helpers first, standard library features second, installed dependencies third, and minimal new code last.
 3. Run the passing test. Re-run the test command and verify all assertions pass cleanly.
 4. Clean up refactors. Remove orphan imports, unused variables, and temporary debugging logs.
 5. Update plan status. Change the task checkbox in the plan markdown file from `- [ ]` to `- [x]`.
@@ -81,70 +81,66 @@ Pause at the end of each batch to inspect changes and report progress:
 ```bash
 git diff --stat <base-sha>..HEAD
 ```
-3. Present batch report. Summarize completed tasks, passing test outputs, and git commit hashes to the user:
-```markdown
-Batch checkpoint report
-- Completed tasks including Task 1 and Task 2
-- Passing tests confirmed with zero failures
-- Commit hashes recorded for each task
-- Next batch preview covering Task 3 and Task 4
-```
+3. Present batch report. Summarize completed tasks, passing test outputs, and git commit hashes to the user.
 4. Request user confirmation. Await explicit user approval before proceeding to the next batch.
 
 Completion criterion. Regression tests pass with zero failures and explicit user confirmation is received before advancing to the next batch.
 
 ## Mode 2. Subagent delegation
 
-Execute tasks by orchestrating isolated subagents per task to preserve the primary context window and enforce independent dual-stage review gates.
+Execute tasks by orchestrating isolated subagents per task to preserve the primary context window and enforce zero-paraphrase boundaries.
 
 ### Step 1. Plan parsing and task queue
 
 Initialize execution state from the plan file:
-- Read the plan file in `docs/superpowers/plans/` and extract all tasks.
+- Read the plan file in `docs/plans/` and extract all tasks.
 - Maintain full task specifications in memory, including target files, commands, and acceptance criteria.
 - Keep the plan file synchronized as the single source of truth.
 
 Completion criterion. All tasks parsed from the plan file into a structured task queue with exact paths, commands, and acceptance criteria.
 
-### Step 2. Dispatch implementer subagent
+### Step 2. Dispatch implementer subagent with invariant envelope
 
-Dispatch a fresh subagent for each task using the template at `prompts/implementer-prompt.md`:
-- Provide complete task text, target files, and architectural context directly in the prompt instead of forcing the subagent to read the entire plan file.
-- Map task domains to installed skills and inject mandatory skill paths and reference documents into the prompt per `references/subagent-skill-loading.md`. Require the subagent to read them via `view_file` before writing code:
-  * For testing tasks, require `testing-patterns` and its reference guides.
-  * For frontend tasks, require `frontend-design` and `ui-motion`.
-  * For backend and API tasks, require `codebase-design` and `security-audit`.
-  * For general tasks, require any domain skill covering the touched subsystem.
+Apply the zero-paraphrase protocol. Never paraphrase or summarize task instructions into the prompt string. Instead, pass immutable file pointers and task IDs inside a compiled invariant envelope:
+
+```yaml
+# SUBAGENT INVARIANT ENVELOPE (DO NOT MODIFY)
+task_source_file: docs/plans/<slug>-plan.md
+task_id: "Phase X, Task Y"
+workspace_runtime:
+  package_manager: "<pm>"
+  test_runner: "<test-runner-cmd>"
+required_skills_to_load: ["<path-to-skill-1>/SKILL.md"]
+write_allowlist: ["<target-file-1>", "<target-file-2>"]
+prohibited_actions:
+  rule_1: "Do not modify files outside write_allowlist."
+  rule_2: "Do not alter package.json or lockfiles unless specified."
+  rule_3: "Do not skip the exact verification command."
+```
+
+- Read references for subagent configuration. Read `references/subagent-skill-loading.md` for mandatory skill mapping, and read `references/parallel-dispatch.md` for parallel execution rules.
 - Require skill ingestion confirmation. Implementers must confirm reading the mandated skills in their opening turn before editing code.
-- Ensure the prompt includes exact test commands and relevant interfaces so the subagent operates autonomously.
-- The orchestrator stays in supervisory mode and never writes task code directly.
-- The implementer follows test-driven development, executes tests, commits changes, and self-reviews.
-- The implementer reports one of four lifecycle statuses:
-  * DONE. Implementation complete and tested. Proceed directly to spec compliance review.
-  * DONE_WITH_CONCERNS. Implementation complete but with doubts. Read concerns, resolve blockers, then proceed to review.
-  * NEEDS_CONTEXT. Information is missing. Provide the necessary context and re-dispatch.
-  * BLOCKED. Implementer cannot proceed. Assess whether to supply context, upgrade model strength, or escalate to the user.
-- Dispatch parallel subagents only across disjoint domains per `references/parallel-dispatch.md`, and never dispatch parallel implementers on shared files or overlapping branches.
+- Require evidence-only return receipt. The implementer terminates by reporting task ID, mutated files, verification command, exit code, and raw output tail.
 
-Completion criterion. Implementer subagent completes task execution, confirms skill ingestion, and reports a verified status with clean test output.
+Completion criterion. Implementer subagent completes execution and returns an evidence-only receipt with zero unhandled errors.
 
-### Step 3. Two-stage review cycle
+### Step 3. Boundary validation and two-stage review cycle
 
-Every completed task must pass two independent reviews before acceptance:
+Before accepting subagent claims, enforce a mechanical boundary check:
+1. Validate git diff boundaries. Run `git status --porcelain` and `git diff --name-only`. If any modified file falls outside the declared `write_allowlist`, revert unauthorized files via `git checkout -- <file>` and reject the task.
+2. Spec compliance review. Dispatch a reviewer subagent using `prompts/spec-reviewer-prompt.md`. The reviewer inspects actual git diffs line by line against requirements without trusting implementer claims.
+3. Code quality review. After spec compliance passes, dispatch a reviewer using `prompts/code-quality-reviewer-prompt.md`. The reviewer evaluates single responsibility, interface clarity, and maintainability.
 
-1. Spec compliance review. Dispatch a reviewer subagent using `prompts/spec-reviewer-prompt.md`. The reviewer inspects actual git diffs line by line against requirements without trusting implementer claims. If missing features or scope creep are identified, instruct the implementer to fix them before proceeding.
-2. Code quality review. After spec compliance passes, dispatch a reviewer using `prompts/code-quality-reviewer-prompt.md`. The reviewer evaluates single responsibility, interface clarity, test rigor, and maintainability. The implementer resolves all blocker and high-priority findings.
+Repeat the review loop until both reviewers approve the changes.
 
-Repeat the review loop until both reviewers approve the changes. Run both review stages in sequence and never skip either review stage.
-
-Completion criterion. Independent spec compliance and code quality reviews both pass with zero unresolved high-priority findings.
+Completion criterion. Git diff strictly matches write allowlist and independent spec compliance and code quality reviews both pass.
 
 ### Step 4. Mark task completed and advance
 
-Once both reviews pass:
+Once all checks pass:
 - Update the plan file to mark the task checkbox as completed (`- [x]`).
 - Advance to the next task in the plan.
-- After all tasks complete, dispatch a final code reviewer subagent across the entire implementation before branch handoff:
+- After all tasks complete, verify global diff statistics:
 ```bash
 BASE_SHA=$(git merge-base origin/main HEAD)
 git diff --stat ${BASE_SHA}..HEAD
@@ -152,63 +148,25 @@ git diff --stat ${BASE_SHA}..HEAD
 
 Completion criterion. The completed task checkbox is marked `- [x]` in the plan file and diff statistics are verified before advancing.
 
-## Model selection for subagents
-
-Assign models strategically to conserve resources while maintaining quality:
-- Assign lightweight models to isolated helper functions, mechanical test updates, and straightforward edits.
-- Assign standard models to multi-file integrations, debugging failures, or cross-module refactors.
-- Assign advanced models to spec compliance audits, code quality reviews, and complex architectural seam modifications.
-
-## Execution rules
-
-### Stop conditions
-
-Halt execution immediately and request user guidance when any of these conditions occur:
-- A test failure persists after implementing the changes specified in the plan.
-- The plan lacks required file paths, type definitions, or dependency instructions.
-- A required package, tool, or build command fails to install or execute.
-- Unexpected git conflicts, dirty workspace state, or external modifications arise.
-- An implementer subagent remains blocked after escalation attempts.
-
-Halt execution and request user guidance rather than inventing speculative requirements or bypassing failing tests.
-
-### State tracking
-
-Track progress directly within the plan file:
-- Use standard markdown checkboxes (`- [ ]` and `- [x]`).
-- Synchronize plan file checkboxes with git commits after every completed task.
-- Keep the plan file as the single source of truth for task progress.
-- Protect against context compaction. For extensive plans exceeding 5 tasks, persist milestone reports to disk. When an individual task involves surveying massive datasets or broad codebases, delegate it to a subagent via `invoke_subagent` to keep the primary execution context window lean.
-
-### Minimalist implementation and reuse discipline
-
-Enforce surgical implementation across all tasks:
-- Caller discovery before editing. When modifying a shared function, method, or component, grep every caller in the codebase before editing. Fix the root cause once in the shared code instead of patching individual callers.
-- Shortest working diff. The shortest complete diff wins once all impacted callers, tests, and fixtures are updated.
-- Shortcut notation. If choosing a bounded implementation shortcut, document it inline using `shortcut: <the limit>, <when to upgrade>`.
-- Non-negotiable boundaries. Preserve validation at trust boundaries, error handling that prevents data loss, security invariants, and accessibility instead of cutting them in the name of minimalism.
-
 ## Boundary isolation
 
 Apply execution rules strictly to orchestration, review checkpoints, and git tracking. Keep application code syntax, database schemas, and terminal commands idiomatic, clean, and free of persona artifacts.
 
-## Integration
+## Integration and completion handoff
 
 Coordinate with related workflow skills:
-- `writing-plans` creates the structured implementation plan in `docs/superpowers/plans/` that this skill executes.
-- `testing-patterns`, `frontend-design`, `ui-motion`, `codebase-design`, and `security-audit` provide domain constraints injected during subagent dispatch per `references/subagent-skill-loading.md`.
+- `writing-plans` creates the structured implementation plan in `docs/plans/` that this skill executes.
+- `testing-patterns`, `frontend-design`, `ui-motion`, `codebase-design`, and `security-audit` provide domain constraints injected during subagent dispatch.
 - `code-review` provides templates and evaluation rubrics for code reviewers.
 - `verification-before-completion` conducts final verification of test outputs and git state.
-
-## Handoff to completion
 
 After all tasks in the plan are completed and verified:
 1. Verify that every checkbox in the plan file is marked `- [x]`.
 2. Run the complete automated test suite to ensure system integrity.
-3. Announce transition to `verification-before-completion` to conduct final test verification and prepare the branch for pull request creation.
-4. Transient plan cleanup. After the full test suite passes cleanly and the git diff is verified, purge the temporary plan file from `docs/superpowers/plans/` (or ask the user before deletion) so the repository does not retain stale scaffolding documentation.
+3. Emit execution receipt to `.agents/state/execution-receipt.json`.
+4. Transition to `verification-before-completion` for final test verification and PR preparation.
 
-Completion criterion. All plan checkboxes reflect `[x]`, full test suites pass with zero failures, and the temporary plan file is removed from `docs/superpowers/plans/`.
+Completion criterion. All plan checkboxes reflect `[x]`, execution receipt emitted to `.agents/state/execution-receipt.json`, and full test suites pass with zero failures.
 
 ## Quick audit checklist
 
@@ -217,8 +175,8 @@ Review this table before completing plan execution:
 | Check | Passing condition |
 |---|---|
 | Workspace isolation | Feature branch active and not `main` or `master` |
-| Skill ingestion | Mandated domain skills and references specified in prompt and read by subagent |
-| Test verification | Failing tests confirmed red before green implementation |
+| Zero-paraphrase dispatch | Tasks passed via immutable plan path and task ID inside invariant envelope |
+| Diff boundary check | Mutated files strictly contained within declared `write_allowlist` |
 | Minimal diff | Shortest working diff applied without extra dependencies |
 | Review passes | Spec compliance and code quality reviews approved |
 | Plan synchronization | All plan checkboxes reflect `[x]` and commit hashes recorded |
