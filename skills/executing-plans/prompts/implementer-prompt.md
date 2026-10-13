@@ -16,6 +16,17 @@ Task tool (general-purpose):
 
     [Scene-setting: where this fits, dependencies, architectural context]
 
+    ## Required Skill Ingestion
+
+    Before inspecting codebase files or writing code, read these mandatory skills and their reference files using view_file:
+    [List relevant skill paths and their references/ files based on task domain]
+    - Testing tasks: read testing-patterns and references/ (such as references/tdd-anti-patterns.md, references/frontend-patterns.md, references/backend-patterns.md)
+    - Frontend tasks: read frontend-design and ui-motion
+    - Backend tasks: read codebase-design and security-audit (such as references/attack-classes.md)
+    - Domain tasks: read any relevant subsystem skill
+
+    Confirm that you loaded these skills in your first turn before writing code.
+
     ## Before You Begin
 
     If you have questions about:
@@ -29,12 +40,13 @@ Task tool (general-purpose):
     ## Your Job
 
     Once you're clear on requirements:
-    1. Implement exactly what the task specifies
-    2. Write tests (following TDD if task says to)
-    3. Verify implementation works
-    4. Commit your work
-    5. Self-review (see below)
-    6. Report back
+    1. Ingest mandated skills and state compliance in your opening turn
+    2. Implement exactly what the task specifies
+    3. Write tests (following TDD if task says to)
+    4. Verify implementation works
+    5. Commit your work
+    6. Self-review (see below)
+    7. Report back
 
     Work from: [directory]
 
@@ -101,6 +113,7 @@ Task tool (general-purpose):
 
     When done, report:
     - **Status:** DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
+    - Skills ingested and confirmed
     - What you implemented (or what you attempted, if blocked)
     - What you tested and test results
     - Files changed

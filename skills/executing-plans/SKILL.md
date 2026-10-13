@@ -110,6 +110,12 @@ Completion criterion. All tasks parsed from the plan file into a structured task
 
 Dispatch a fresh subagent for each task using the template at `prompts/implementer-prompt.md`:
 - Provide complete task text, target files, and architectural context directly in the prompt instead of forcing the subagent to read the entire plan file.
+- Map task domains to installed skills and inject mandatory skill paths and reference documents into the prompt per `references/subagent-skill-loading.md`. Require the subagent to read them via `view_file` before writing code:
+  * For testing tasks, require `testing-patterns` and its reference guides.
+  * For frontend tasks, require `frontend-design` and `ui-motion`.
+  * For backend and API tasks, require `codebase-design` and `security-audit`.
+  * For general tasks, require any domain skill covering the touched subsystem.
+- Require skill ingestion confirmation. Implementers must confirm reading the mandated skills in their opening turn before editing code.
 - Ensure the prompt includes exact test commands and relevant interfaces so the subagent operates autonomously.
 - The orchestrator stays in supervisory mode and never writes task code directly.
 - The implementer follows test-driven development, executes tests, commits changes, and self-reviews.
@@ -120,7 +126,7 @@ Dispatch a fresh subagent for each task using the template at `prompts/implement
   * BLOCKED. Implementer cannot proceed. Assess whether to supply context, upgrade model strength, or escalate to the user.
 - Dispatch parallel subagents only across disjoint domains per `references/parallel-dispatch.md`, and never dispatch parallel implementers on shared files or overlapping branches.
 
-Completion criterion. Implementer subagent completes task execution and reports a verified status with clean test output.
+Completion criterion. Implementer subagent completes task execution, confirms skill ingestion, and reports a verified status with clean test output.
 
 ### Step 3. Two-stage review cycle
 
@@ -190,7 +196,7 @@ Apply execution rules strictly to orchestration, review checkpoints, and git tra
 
 Coordinate with related workflow skills:
 - `writing-plans` creates the structured implementation plan in `docs/superpowers/plans/` that this skill executes.
-- `testing-patterns` provides red, green, refactor mechanics and test charter patterns for individual tasks.
+- `testing-patterns`, `frontend-design`, `ui-motion`, `codebase-design`, and `security-audit` provide domain constraints injected during subagent dispatch per `references/subagent-skill-loading.md`.
 - `code-review` provides templates and evaluation rubrics for code reviewers.
 - `verification-before-completion` conducts final verification of test outputs and git state.
 
@@ -211,6 +217,7 @@ Review this table before completing plan execution:
 | Check | Passing condition |
 |---|---|
 | Workspace isolation | Feature branch active and not `main` or `master` |
+| Skill ingestion | Mandated domain skills and references specified in prompt and read by subagent |
 | Test verification | Failing tests confirmed red before green implementation |
 | Minimal diff | Shortest working diff applied without extra dependencies |
 | Review passes | Spec compliance and code quality reviews approved |
