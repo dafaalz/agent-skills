@@ -33,7 +33,7 @@ Run grep sweeps for motion markers:
 Audit candidate code against these categories:
 
 ### 1. Purpose and frequency
-Every motion must serve a functional purpose. Audit targets include animations on keyboard shortcuts, command palettes with open or close transitions (Raycast uses none, which is the correct pattern), and decorative transitions on frequent list items or hover states. High-frequency actions demand instant 0ms state changes.
+Every motion must serve a functional purpose. Audit targets include animations on keyboard shortcuts, command palettes with open or close transitions (Raycast uses none, which is the correct pattern), and decorative transitions on frequent list items or hover states. High-frequency actions demand instant 0ms state changes. Bulk historical data (message logs, conversation histories) must mount instantly without entry animation; gate entrance animations behind reactive flags (`isNew: boolean`) for live events.
 
 ### 2. Easing and duration
 Interactive UI animations must remain under 300ms using custom ease-out curves or springs. Using `ease-in` on interactive UI is always an audit defect. Audit for `ease-in` curves, bare `ease` or `linear` transitions on entrances, and durations over 300ms.
@@ -103,6 +103,7 @@ When discovering new animation opportunities in an interface, search these inter
 - Conditionally rendered blocks appearing or disappearing abruptly. Apply fade and scale entrances from `scale(0.96)` and `opacity: 0` via `@starting-style`.
 - Accordions snapping open without height transitions. Transition `grid-template-rows` from `0fr` to `1fr`.
 - Non-critical list mutations lacking enter or exit transitions.
+- Ephemeral activity indicators (typing indicators, streaming status pills) unmounting abruptly without exit choreography. Apply fade and translateY exit before DOM removal.
 
 ### Spatial continuity seams
 - Popovers and dropdowns appearing without trigger coordinate anchors.

@@ -51,46 +51,23 @@ Anchor layouts to neutral bases with at most one restrained accent color:
 - Systematic color spaces: Construct palette steps using OKLCH scales for uniform perceived lightness across tints and shades. Consult `references/custom-theme.md`.
 - Surface elevation: Differentiate elevation layers using discrete surface lightness steps and subtle borders. Never stack semi-transparent white overlays or neon drop shadows.
 
-### 3. Layout structure
+### 3. Layout structure and modern CSS
 Construct responsive structural grids with modern CSS and dynamic viewport units:
 - CSS Grid architecture: Use CSS Grid multi-column arrangements instead of manual percentage calculations or flexbox math.
 - Viewport stability: Set full-height hero screens and root wrappers to `min-h-[100dvh]` instead of `h-screen` or `100vh` to eliminate mobile scroll jumping.
 - Mobile collapse threshold: When Variance exceeds level 4, collapse asymmetric desktop grids into a clean single column below 768px (`w-full px-4`).
-- Layout anti-patterns: Avoid centered three-card feature rows. Use staggered two-column pairs, bento layouts, horizontal scrolls, or index directories. Consult `references/anti-patterns.md`.
+- Centered measure for chat feeds: Always constrain conversational logs, messaging lists, and message input bars to `max-w-3xl mx-auto w-full` to eliminate eye strain across wide monitors.
 - Concentric corner geometry: Maintain proportional nested radii where `R_inner = max(0, R_outer - (padding + border))`. Never use identical radii on nested cards.
+- Target size compliance: Ensure all interactive controls satisfy WCAG 2.2 AA target size (minimum 24x24px, recommended 44x44px).
 
-### 4. Honest copy and authentic assets
-Deliver verifiable production content with authentic brand media:
-- Zero fabricated metrics: Never invent placeholder percentages, uptime stats, speed multipliers, or fake testimonial quotes. If exact metrics are absent, use organic real-world samples or structural illustrations.
-- Genuine brand marks: Use verified SVG or PNG logos. Omit partner logo walls entirely when authentic proof is unavailable.
-- Authentic photography: Use real team photos or transparent PNG cutouts. Never use generic AI-generated faces or faceless avatars.
-- Zero fake device chrome: Never hand-code simulated browser URL bars, traffic-light window controls, or faux smartphone frames. Let UI content speak for itself.
-- Visual icon sets: Use Phosphor, Radix, or Lucide SVG icons with unified stroke weight. Never render raw unicode emojis in user interface labels or copy.
-
-## Macrostructures and visual genres
-
-Select an intentional macrostructure that matches project content density and narrative role:
-1. Bento grid: Multi-cell asymmetric dashboard or product overview combining stat callouts, interactive previews, and feature callouts.
-2. Split studio: High-contrast two-column arrangement with sticky media preview alongside scrolling explanatory narrative.
-3. Marquee hero: Expansive typographic header paired with flowing preview ribbons or ticker metrics.
-4. Long document: Structured editorial layout with margin notes, fluid typography, and sticky table of contents.
-5. Workbench cockpit: Dense utility layout with collapsible side rails, command bar, and tabular data panes.
-6. Ecosystem index: Categorized directory grid designed for extensibility, plugins, or large asset libraries.
-
-Classify aesthetic direction into one of four visual genres:
-- Editorial: High typographic contrast, generous white space, restrained palettes, and literary discipline.
-- Modern minimal: Precision geometry, crisp monochrome tones, subtle micro-borders, and high functional density.
-- Atmospheric: Deep dark surfaces, diffused backdrops, focused illumination, and tactile depth.
-- Playful: Expressive type, tactile physical feedback, bold accents, and organic rounded forms.
-
-## Component mechanics and interaction states
-
-Implement full lifecycle interaction states and tactile feedback for all components:
-1. Tactile press feedback: Apply tactile physical displacement (`active:scale-[0.98]` or `active:translate-y-[1px]`) to buttons and interactive cards.
-2. Skeleton loaders: Match placeholder skeleton geometries to expected layout dimensions. Avoid generic circular spinners for primary content blocks.
-3. Form validation timing: Delay error messages until input blur, then validate live on subsequent input. Position validation messages directly adjacent to invalid fields.
-4. Hardware-accelerated motion: Animate exclusively via `transform` and `opacity`. Restrict spring physics transitions to motion-enabled elements and respect `prefers-reduced-motion` queries.
-5. Asynchronous network resilience: Handle race conditions with AbortController, and provide optimistic mutations with rollback. Consult `references/api-resilience.md`.
+### 4. Honest copy and anti-patterns
+Deliver verifiable production content and eliminate AI defaults:
+- Zero fabricated metrics: Never invent placeholder percentages, uptime stats, speed multipliers, or fake testimonial quotes.
+- Genuine brand marks and photography: Use verified SVG or PNG logos and authentic images. Never use generic AI faces or faceless avatars.
+- Zero fake device chrome: Never hand-code simulated browser URL bars, traffic-light window controls, or faux smartphone frames.
+- Dynamic text in whitespace-pre: Never separate opening and closing HTML tags with source newlines when wrapping dynamic text in `whitespace-pre-*`. Write `>${escapedText}<` flush against tag boundaries to avoid rendering literal source indentation.
+- State guards: Target empty states with explicit unique semantic identifiers (`#chat-empty-placeholder`) or data attributes (`[data-state="empty"]`), never styling tokens (`.text-muted-foreground`).
+- Clear the design fingerprint gate: When building multiple views, diverge from prior views on at least 4 of 6 structural dimensions (macrostructure, nav treatment, hero device, section rhythm, closing pattern, interactive signature move). Consult `references/anti-patterns.md`.
 
 ## Execution workflow
 
@@ -116,6 +93,7 @@ Evaluate output against anti-slop criteria before completing work:
 - Confirm zero uninstalled packages, zero fake metrics, and zero banned fonts.
 - Confirm full-height wrappers use `min-h-[100dvh]`.
 - Confirm nested card containers satisfy concentric border-radius geometry.
+- Confirm chat/conversational containers are constrained to `max-w-3xl mx-auto`.
 
 ## Pre-flight anti-slop audit checklist
 
@@ -128,6 +106,9 @@ Evaluate output against anti-slop criteria before completing work:
 | Viewport height | Full-height wrappers use `min-h-[100dvh]` instead of `h-screen` |
 | Mobile collapse | Asymmetric grids collapse to single column below 768px |
 | Concentric radii | Inner radii match outer radii minus padding and border offset |
+| Target size | Minimum 24x24px bounding box for all touch/click targets |
+| Chat measure | Feeds and inputs constrained to `max-w-3xl mx-auto w-full` |
+| Bubble flush | Dynamic text in `whitespace-pre-*` written flush against tag boundaries |
 | Copy integrity | Zero fabricated metrics, zero promotional buzzwords or exaggerated claims |
 | Asset authenticity | Real SVG or PNG assets, genuine photography, zero faux browser frames |
 | Emojis | Zero raw unicode emojis used in UI labels, copy, or markup |

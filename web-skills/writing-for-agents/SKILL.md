@@ -26,20 +26,24 @@ Classify target document and context budget:
 2. **On-demand skills** (`SKILL.md`): Keep main body under 250 lines. Move reference tables and specialized guides exceeding 100 lines into `references/`.
 3. **Phased implementation plans**: Break tasks into sequential batches. Each task must have automated verification commands and binary completion criteria.
 
+Completion criterion. Target document classified with line budget allocated.
+
 ### Step 2. Information hierarchy and progressive disclosure
 
 Structure content across three tiers:
 - **Primary tier (Sequential Execution):** Ordered operational steps in the main document. Keep sequential and actionable.
-- **Secondary tier (Invariants & Rules):** Co-located constraints, execution rules, and quick lookup tables.
+- **Secondary tier (Invariants and Rules):** Co-located constraints, execution rules, and quick lookup tables.
 - **Tertiary tier (Disclosed References):** Specialized reference manuals stored in `references/` and consulted on demand.
+
+Completion criterion. Content assigned to proper tier without reference leakage into main entrypoint.
 
 ### Step 3. Drafting with leading words and positive bounds
 
 - **Recruit model priors with leading words:** Use compact terms like *probe, invariant, tracer, audit, baseline, tight, red* instead of verbose explanations.
-- **Pair negative bans with positive actions:** Avoid dangling negative prohibitions. Immediately state what to do instead (e.g., *"Never use `transition: all`. Name exact properties `transform` and `opacity`"*).
-- **Checkable binary completion criteria:** Every step and task must end with an unambiguous passing condition:
-  * Weak: *"Ensure the database query is optimized."*
-  * Strong: *"The query uses the composite index on `(user_id, created_at)` and executes in under 10ms with zero N+1 queries."*
+- **Pair negative bans with positive actions:** Avoid dangling negative prohibitions. Immediately state what to do instead (such as *"Never use `transition: all`. Name exact properties `transform` and `opacity`"*).
+- **Checkable binary completion criteria:** Every step and task must end with an unambiguous passing condition. Consult `references/testing-skills.md`.
+
+Completion criterion. Every negative ban paired with positive action and all steps terminated with binary completion criteria.
 
 ### Step 4. Phased implementation plan structure
 
@@ -51,6 +55,8 @@ When authoring implementation plans from a design specification:
    - **Verification:** Concrete test commands, curl commands, or browser assertions.
    - **Completion criterion:** Binary checkable standard.
 
+Completion criterion. Plan structured into testable, sequential tasks with explicit verification steps.
+
 ### Step 5. Anti-slop and tone calibration
 
 - Strip throat-clearing openings ("Certainly! Below is the plan...") and closing filler.
@@ -58,9 +64,13 @@ When authoring implementation plans from a design specification:
 - Restrict colons to introducing lists, tables, or code blocks.
 - Eliminate passive voice and vague adverbs. Keep one operational instruction per sentence.
 
+Completion criterion. Draft conforms to anti-slop rules with zero em dashes and zero marketing filler.
+
 ### Step 6. Deliverable as Claude Artifact
 
 Render the complete document (`SKILL.md`, `AGENTS.md`, or Implementation Plan) as a standalone Markdown Claude Artifact (`text/markdown`).
+
+Completion criterion. Complete document delivered in a standalone Claude Artifact.
 
 ## Agent skill frontmatter specification
 
@@ -81,9 +91,9 @@ Frontmatter rules:
 
 | Check | Passing condition |
 |---|---|
-| Frontmatter | Contains valid kebab-case name and description with positive/negative triggers |
+| Frontmatter | Contains valid kebab-case name and description with positive and negative triggers |
 | Context load | `SKILL.md` under 250 lines; heavy reference moved to `references/` |
 | Completion criteria | Every operational step or task terminates on a binary, checkable condition |
 | Positive bounds | Every negative prohibition is paired with a direct positive action |
-| Anti-slop | Zero banned vocabulary, zero em dashes, colons only before lists/tables/code |
+| Anti-slop | Zero banned vocabulary, zero em dashes, colons only before lists, tables, or code |
 | Artifact delivery | Complete document rendered as a Claude Artifact |

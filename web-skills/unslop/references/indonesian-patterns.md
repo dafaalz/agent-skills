@@ -1,6 +1,6 @@
 # Pola dan kosakata bahasa Indonesia untuk unslop
 
-Dokumen ini memuat aturan mendeteksi, memotong, dan menulis ulang teks bahasa Indonesia buatan AI agar kembali wajar, lugas, dan berbobot.
+Dokumen ini memuat aturan untuk memotong pola AI dan menulis ulang teks bahasa Indonesia agar kembali lugas.
 
 ## Sumber rujukan dan analisis
 
@@ -23,12 +23,12 @@ Dokumen ini menyintesis kaidah dari 14 rujukan terverifikasi lintas regulator, s
 
 ## Mengapa teks AI bahasa Indonesia terasa kaku
 
-1. Calque dan translationese. Model bahasa besar umumnya berlatih dengan korpus bahasa Inggris. Model menerjemahkan sintaksis dan ungkapan asing secara harfiah ke bahasa Indonesia. Pola ini memicu pemakaian kata hubung rancu seperti "di mana", frasa kaku seperti "memainkan peran penting", dan metafora asing seperti "dalam lanskap".
-2. Perplexity rendah. AI memilih kata dengan probabilitas statistik tertinggi. Pilihan mekanis ini menghasilkan kosakata klise yang seragam tanpa variasi diksi alami.
-3. Burstiness rendah. AI menyusun kalimat dengan panjang dan struktur klausa yang monoton dari awal hingga akhir. Tulisan kehilangan dinamika jeda dan ritme baca.
-4. Pasifisme berlebihan. AI kerap menyamarkan subjek pelaku memakai verba pasif berprefiks di- seperti "dapat dipahami bahwa" atau "hal ini dilakukan guna" demi menjaga netralitas semu.
-5. Retorika simetris dan triadik. AI sering menyusun pasangan klausa biner seperti "tidak hanya X, tetapi juga Y" serta deretan tiga kata sifat secara mekanis.
-6. Basa-basi formulaik. AI membuka tulisan memakai premis usang seperti "di era digital yang serba cepat ini", lalu menutupnya dengan rangkuman hambar tanpa langkah tindak lanjut yang nyata.
+1. Model menerjemahkan calque dan translationese secara harfiah. Model bahasa besar umumnya berlatih dengan korpus bahasa Inggris, lalu memindahkan sintaksis dan ungkapan asing apa adanya ke bahasa Indonesia. Pola ini memicu pemakaian kata hubung rancu seperti "di mana", frasa kaku seperti "memainkan peran penting", dan metafora asing seperti "dalam lanskap".
+2. Perplexity rendah membuat diksi seragam (Mitchell et al. DetectGPT, Stanford 2023, arXiv:2301.11305; Sadasivan et al., 2023). AI memilih kata dengan probabilitas statistik tertinggi, sehingga lonjakan kosakata penanda muncul berulang tanpa variasi diksi alami, sebagaimana dibuktikan oleh Liang et al. (Stanford 2024, arXiv:2404.01268) dan Kobak et al. (Science Advances 2025, arXiv:2406.07016).
+3. Burstiness rendah membuat ritme monoton (Mitchell et al. DetectGPT, Stanford 2023, arXiv:2301.11305). AI menyusun kalimat dengan panjang dan struktur klausa yang seragam dari awal hingga akhir, sehingga tulisan kehilangan dinamika jeda.
+4. Kalimat pasif berlebih menyamarkan pelaku. AI kerap memakai verba pasif berprefiks di- seperti "dapat dipahami bahwa" atau "hal ini dilakukan guna" demi menjaga netralitas semu.
+5. Retorika simetris dan triadik memaksakan keseimbangan (Pangram Labs dan Beutler Ink, 2024, 2025). AI sering menyusun pasangan klausa biner seperti "tidak hanya X, tetapi juga Y" serta deretan tiga kata sifat secara mekanis.
+6. Basa-basi formulaik membuka dan menutup tanpa isi. AI membuka tulisan dengan premis usang seperti "di era digital yang serba cepat ini", lalu menutupnya dengan rangkuman hambar tanpa langkah tindak lanjut.
 
 ## Katalog kosakata dan pola terlarang
 
@@ -53,7 +53,7 @@ Buang klausa pengantar kosong. Tuliskan inti informasi langsung pada kalimat per
 
 ### 2. Konjungsi transisi robotik dan interferensi asing (calque)
 
-Hindari konjungsi majemuk beruntun di setiap awal kalimat. Putus menjadi kalimat mandiri.
+Jangan susun konjungsi majemuk beruntun di awal kalimat. Putus kalimat menjadi klausa mandiri.
 
 | Frasa terlarang | Masalah | Pengganti konkret |
 |---|---|---|
@@ -79,6 +79,12 @@ Hindari konjungsi majemuk beruntun di setiap awal kalimat. Putus menjadi kalimat
 | ujung tombak | Calque harfiah dari spearhead | penggerak utama, fungsi inti |
 | selain itu / di samping itu (diulang berurutan) | Lem transisi otomatis AI | Hubungkan dengan logika sebab akibat atau mulai kalimat baru |
 | oleh karena itu / dengan demikian (beruntun) | Simpulan logika mekanis | Gunakan maka, akibatnya, atau jabarkan hasilnya |
+| dari X hingga Y / mulai dari X hingga Y (false range) | Calque span ranging from X to Y yang memaksakan rentang semu | Sebutkan entitas, target, atau cakupan spesifik secara langsung |
+| pada penghujung hari | Calque harfiah dari at the end of the day | akhirnya, pada akhirnya, atau hapus dan sebut intinya langsung |
+| membawa ke tingkat berikutnya | Calque harfiah dari take to the next level | meningkatkan, mempercepat, atau sebut target metrik terukur |
+| pengubah permainan | Calque harfiah dari game changer | pembaruan utama, atau sebut mekanisme teknis baru secara spesifik |
+| dalam hal | Calque pengisi ruang dari in terms of | untuk, pada, mengenai, atau hapus langsung |
+| secara harfiah | Calque penekan kosong dari literally | Hapus total bila tidak mengacu pada makna leksikal harfiah |
 
 ### 3. Kata sifat dan pengisi abstrak (puffery)
 
@@ -108,10 +114,15 @@ Bersihkan tumpukan kata yang memiliki makna identik atau berlebihan.
 | hanya ... saja | Pleonasme pembatas | hanya, saja |
 | sejak dari | Pleonasme preposisi asal waktu | sejak, dari |
 | contohnya seperti / antara lain misalnya | Pleonasme frasa ilustrasi | contohnya, misalnya |
+| dalam rangka untuk | Pleonasme perangkai tujuan birokratis | untuk, demi |
+| sehubungan dengan | Klise birokrasi perangkai konteks | karena, tentang, atau hapus dan tulis subjek langsung |
+| adapun | Klise birokrasi pengisi ruang | Hapus total dan mulai kalimat langsung dengan subjek |
+| sementara itu (tanpa kontras waktu) | Transisi robotik pengisi ruang | Hapus, atau tulis relasi urutan waktu secara spesifik |
+| kendati demikian | Transisi formal kaku penghubung antar-kalimat | namun, tetapi, atau mulai kalimat mandiri |
 
 ### 5. Pola formulaik simetris dan triadik
 
-Bongkar keseimbangan artifisial yang dipaksakan.
+Bongkar keseimbangan artifisial.
 
 | Pola terlarang | Masalah | Cara perbaikan |
 |---|---|---|
@@ -124,7 +135,7 @@ Bongkar keseimbangan artifisial yang dipaksakan.
 
 ### 6. Nominalisasi berlebih dan verba pelemah
 
-Ganti susunan kata kerja bantu yang dilemahkan dengan verba aktif berimbuhan me- atau ber-.
+Ganti kata kerja bantu dan frasa nominal dengan verba aktif berimbuhan me- atau ber-.
 
 | Pola terlarang | Masalah | Pengganti konkret |
 |---|---|---|
@@ -133,19 +144,43 @@ Ganti susunan kata kerja bantu yang dilemahkan dengan verba aktif berimbuhan me-
 | melakukan optimasi / pembaruan | Diksi birokratis | mengoptimalkan, memperbarui |
 | memiliki kemampuan untuk | Calque has the ability to | dapat, mampu, bisa |
 | bertujuan untuk melakukan perbaikan | Tumpukan frasa pelemah | bertujuan memperbaiki |
-| memberikan dampak terhadap | Verba pasif semu | mempengaruhi, mengubah |
+| memberikan dampak terhadap | Verba bantu melemahkan aksi | memengaruhi, mengubah |
 | memberikan kontribusi pada | Frasa nominal panjang | berkontribusi pada, membantu |
 | berpotensi untuk dapat | Rantai hedging berlebih | dapat, bisa |
 | diharapkan dapat membantu | Eufemisme pelemah kepastian | membantu, mempercepat |
+| melakukan investigasi terhadap | Diksi birokratis melemahkan aksi | menyelidiki, memeriksa |
+| melakukan penutupan koneksi | Frasa nominal panjang | menutup koneksi |
+| melakukan tindakan mitigasi | Verba bantu melemahkan aksi | memitigasi |
+| melakukan koordinasi dengan | Diksi birokratis melemahkan aksi | berkoordinasi dengan |
+| mengambil langkah-langkah untuk | Frasa nominal panjang pelemah aksi | mengambil langkah untuk, atau sebut aksinya langsung |
+| merupakan suatu keharusan | Frasa nominal panjang pelemah imperatif | wajib, harus |
+| melakukan konfigurasi | Verba bantu melemahkan aksi | mengonfigurasi |
+| melakukan penghapusan data | Frasa nominal panjang | menghapus data |
+| melakukan pengiriman data | Frasa nominal panjang | mengirim data |
+| melakukan pemantauan / pelacakan | Diksi birokratis melemahkan aksi | memantau, melacak |
+| melakukan penyimpanan data | Frasa nominal panjang | menyimpan data |
+| melakukan pemeriksaan / pengecekan | Diksi birokratis melemahkan aksi | memeriksa, mengecek |
+| memberikan konfirmasi | Verba bantu melemahkan aksi | mengonfirmasi |
+| mengalami kegagalan / peningkatan | Frasa nominalisasi predikat semu | gagal, meningkat |
 
 ## Kaidah sintaksis dan struktur alami
 
 1. Utamakan kalimat aktif. Pasang subjek pelaku di depan kata kerja. Ubah "Konfigurasi ini dimuat oleh runner" menjadi "Runner memuat konfigurasi ini".
-2. Variasikan panjang kalimat untuk menjaga burstiness. Gabungkan kalimat pendek berbobot (3 sampai 6 kata) untuk penegasan dengan kalimat penjelas sedang (10 sampai 15 kata). Hindari tiga kalimat berturut-turut dengan jumlah klausa sama.
-3. Batasi kalimat majemuk bersarang. Hindari menumpuk anak kalimat dengan konjungsi bertingkat (meskipun, sehingga, karena, yang mana). Putus anak kalimat menjadi kalimat tunggal kedua.
+2. Variasikan panjang kalimat untuk menjaga burstiness. Gabungkan kalimat pendek berbobot (3 sampai 6 kata) untuk penegasan dengan kalimat penjelas sedang (10 sampai 15 kata). Jangan susun tiga kalimat berturut-turut dengan jumlah klausa sama.
+3. Batasi kalimat majemuk bersarang. Jangan tumpuk anak kalimat dengan konjungsi bertingkat seperti meskipun, sehingga, atau karena. Putus anak kalimat menjadi kalimat tunggal kedua.
 4. Pasangkan batasan negatif dengan tindakan positif. Saat melarang sebuah kata atau pola, berikan padanan kata aktif penggantinya pada kalimat yang sama.
 5. Bersihkan pleonasme preposisi. Hapus bentukan mubazir seperti "guna untuk", "demi untuk", atau "disebabkan karena". Gunakan "untuk" atau "karena".
 6. Disiplin tanda baca. Jangan menggunakan em dash atau en dash. Gunakan koma atau titik. Jangan gunakan tanda titik dua di tengah kalimat sebagai pengganti kata hubung atau sebagai pseudo-label. Gunakan titik dua hanya untuk mengawali daftar poin, tabel, atau blok kode.
+7. Terapkan verifikasi faktual pedoman Dewan Pers 1/2025. Hapus konsensus anonim seperti "para ahli sepakat", "penelitian membuktikan", atau "banyak kalangan menilai". Wajibkan pencantuman sumber primer terverifikasi, seperti nama dokumen regulasi, repositori kode, endpoint API, atau data terukur. Hapus seluruh pernyataan klaim tanpa bukti sumber primer terverifikasi.
+8. Lindungi istilah domain teknis dan penanda kode. Jangan terjemahkan secara paksa istilah pinjaman teknis baku ke padanan kata ganjil. Pertahankan istilah seperti "payload", "token JWT", "endpoint", "middleware", "controller", "pipeline CI", dan "cluster Kubernetes" dalam bentuk teknis aslinya. Jangan ubah teks dalam backtick inline seperti simbol fungsi, flag CLI, variabel, atau key skema.
+
+### Pedoman operasional verifikasi dewan pers
+
+Patuhi standar verifikasi Dewan Pers Nomor 1/2025 untuk menjaga akuntabilitas tulisan:
+
+- Hapus konsensus anonim. Jangan gunakan klausa pengabur seperti "para ahli sepakat", "menurut para pakar", atau "penelitian membuktikan" tanpa nama peneliti, institusi, atau tahun publikasi.
+- Wajibkan sumber primer terverifikasi. Cantumkan rujukan langsung ke dokumen spesifikasi, repositori kode, nomor regulasi resmi, endpoint API, atau metrik teknis terukur.
+- Hapus klaim tanpa bukti. Jika pernyataan teknis atau statistik tidak memiliki sumber primer terverifikasi, hapus seluruh kalimat tersebut dari naskah.
 
 ## Contoh perombakan naskah
 
@@ -177,4 +212,4 @@ Tentu saja! Dalam rangka menavigasi kompleksitas deployment, alat yang ampuh ini
 
 #### Naskah hasil perbaikan
 
-Runner mengeksekusi pipeline rilis secara otomatis setiap kali ada tag git baru. Skrip memeriksa status kesehatan container sebelum mengalihkan traffic jaringan. Pasang variabel lingkungan pada dashboard CI agar runner dapat mengakses klaster Kubernetes.
+Runner mengeksekusi pipeline rilis secara otomatis setiap kali ada tag git baru. Skrip memeriksa status kesehatan container sebelum mengalihkan traffic jaringan. Pasang variabel lingkungan pada dashboard CI agar runner dapat mengakses cluster Kubernetes.
