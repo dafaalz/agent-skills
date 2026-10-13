@@ -8,6 +8,30 @@ Each entry: the tell, why it reads as AI-generated, and the fix.
 
 ## Critical (ships as slop)
 
+### The indented whitespace-pre bubble
+
+Placing newlines and indentation spaces inside JavaScript template literals that render inside elements styled with `whitespace-pre-wrap` or `whitespace-pre-line`.
+
+**Why it fails.** The browser renders source-code indentation spaces and leading newlines literally. A one-word string expands into a massive multi-line box with horizontal offset.
+
+**Fix.** Never separate opening and closing HTML tags with source newlines when wrapping dynamic text in `whitespace-pre-*`. Write `>${escapedText}<` flush against tag boundaries, or sanitize output with `.trim()`.
+
+### Styling class as DOM state guard
+
+Querying presentation classes (such as `.text-muted-foreground` or `.text-gray-400`) to check whether an empty state placeholder exists before clearing a container.
+
+**Why it fails.** Child elements like message timestamps, badges, or helper text often share the same utility color tokens. Querying presentation classes mistakenly identifies populated data as placeholders, causing catastrophic data wiping on user submit.
+
+**Fix.** Target empty states with explicit unique semantic identifiers (`#chat-empty-placeholder`) or data attributes (`[data-state="empty"]`), never styling tokens.
+
+### Unconstrained desktop chat canvas
+
+Spanning real-time messaging bubbles edge-to-edge across wide monitor panels without a centered reading measure.
+
+**Why it fails.** When incoming bubbles hug the far left (x=0) and outgoing bubbles hug the far right (x=1000px+), eye-travel exceeds 800 pixels. Readers experience rapid fatigue scanning across empty space.
+
+**Fix.** Wrap messaging feeds and conversational input forms in a centered column constrained to `max-w-3xl mx-auto w-full`.
+
 ### The purple-gradient hero
 
 A hero section with a background gradient from purple to blue or purple to pink, often with white centred text. This is the single most-recognised AI aesthetic.
