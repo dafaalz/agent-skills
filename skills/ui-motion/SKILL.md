@@ -43,6 +43,8 @@ Avoid these core failure modes:
 2. **Using incorrect motion properties.** Avoid `ease-in` on entrances, `scale(0)` on mounting elements, keyframes on rapidly triggered elements, or sluggish durations above 300ms.
 3. **Approximating motion values.** Take every curve, duration, and spring parameter from the reference tables. Never invent arbitrary cubic-bezier coordinates.
 4. **Altering source code during audits.** When auditing repositories, generate structured plans under `plans/` without mutating source files.
+5. **Animating bulk historical data during initial load.** Never bind entrance animations to message histories or bulk collection renders. Render historical logs instantly without motion, and gate animations behind reactive flags (`isNew: boolean`) for live events.
+6. **Tearing down ephemeral elements without exit choreography.** Never call `element.remove()` synchronously on live activity indicators (such as typing indicators). Apply an exit transition (`opacity: 0`, `translateY(4px)`) over 120ms before removing nodes from the DOM.
 
 ## The build sequence
 
