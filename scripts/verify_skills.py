@@ -33,6 +33,7 @@ OPERATIONAL_SKILLS = {
     "laravel",
     "prototype",
     "react",
+    "recursive-research",
     "s13n",
     "schema-migration",
     "security-audit",

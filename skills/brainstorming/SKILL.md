@@ -30,15 +30,17 @@ Run this branch when you update old code, move module boundaries, check if code 
 
 Read official docs before you suggest changes to existing code.
 
-- When the topic spans many sources, ask a subagent to read them. This saves context in the main session.
-- Ask for 3 to 5 trusted sources. Use official framework docs, core contributor posts, official RFCs, and trusted engineering guides.
-- Tell the subagent to return:
+- When the topic crosses domains or needs more sources than a repo read can reach, call the `recursive-research` skill in Targeted mode. Pass the topic, the affected layers, and the request for a brief that feeds a design spec. It writes evidence to `.agents/research/<slug>/`, tiers every source, and returns the five handoff fields.
+- When the topic spans a few official sources, ask a subagent to read them. This saves context in the main session.
+- Ask for 3 to 5 trusted sources, and tier each one against the source tiering table in the `recursive-research` skill. Use official framework docs, core contributor posts, official RFCs, and trusted engineering guides.
+- From either path, require:
   1. Full citations with source titles and exact URLs.
   2. Rules you can apply, grouped by layer or subsystem.
   3. Mistakes and risks the sources name.
-  4. Short output with no filler or small talk.
+  4. The open gaps from `recursive-research`, with the risk each one carries.
+  5. Short output with no filler or small talk.
 
-Completion criterion. You list at least 3 checked sources and the rules you will apply for each affected layer.
+Completion criterion. You list at least 3 checked sources or a brief at `.agents/research/<slug>/`, plus the rules you will apply for each affected layer.
 
 ### Step 2. Check code against standards
 
@@ -100,7 +102,7 @@ Completion criterion. The user confirms every open branch and zero guesses remai
 ### Step 3. Explore approaches and prototype spikes
 
 Write 2 to 3 approaches with tradeoffs, put your pick first, and get user confirmation before you write the full spec. Check data growth and reload saves against `references/architecture-scalability.md`.
-- Keep domains apart. If a user pitch mixes unrelated domains or breaks lifecycle behavior, search the web with `search_web` to check industry practice, show a counter-argument with the source, and suggest a split alternative.
+- Keep domains apart. If a user pitch mixes unrelated domains or breaks lifecycle behavior, call `recursive-research` in Targeted mode to check industry practice, or search the web with `search_web` for a single check, then show a counter-argument with the source and suggest a split alternative.
 - Show opposite visual directions for open UI tasks. When a frontend request lacks visual direction, do not ask open taste questions. Show three distinct directions picked from opposite schools, such as Information Architecture, Editorial Minimalist, Modern Tool, Motion Experimental, Brutalist, or Warm Humanist.
 - Run spikes via prototype. If visual density or state ergonomics requires live verification before locking architecture, emit `.agents/state/spike-brief.md` and invoke the `prototype` skill. Require the selected variant locked in `.agents/scratch/prototypes/<variant-id>/PROTOTYPE_LOCK.md` before proceeding.
 
