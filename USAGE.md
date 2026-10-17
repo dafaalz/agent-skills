@@ -1,6 +1,6 @@
 # Skill usage guide
 
-Run the 31 skills in this repository across the software delivery lifecycle.
+Run the 32 skills in this repository across the software delivery lifecycle.
 
 ## Overview
 
@@ -12,7 +12,7 @@ Codebase docs -> Session init -> Technical design -> Implementation planning -> 
 
 ## 1. Codebase documentation and session initialization
 
-Start every new conversation or project by writing codebase documentation, locking runtime stacks, and setting direct execution rules.
+Write codebase documentation at the start of a project or a conversation. Lock the runtime stack. Set the direct execution rules.
 
 | Skill | Directory | Primary purpose | Command invocation |
 |---|---|---|---|
@@ -27,7 +27,7 @@ Start every new conversation or project by writing codebase documentation, locki
 
 ## 2. Technical design, database, and architecture
 
-Resolve domain contracts, evaluate data scaling, prevent architectural debt, and consult frontier models before you write code.
+Resolve domain contracts before you write code. Check how data scales. Prevent architectural debt. Consult frontier models.
 
 ### Backend architecture, database, and system design
 | Skill | Directory | Primary purpose | Command invocation |
@@ -37,6 +37,11 @@ Resolve domain contracts, evaluate data scaling, prevent architectural debt, and
 | `laravel` | `skills/laravel` | Structure Eloquent models, Livewire components, Inertia adapters, and queue jobs | `$laravel` |
 | `schema-migration` | `skills/schema-migration` | Author zero-downtime database migrations with four-gate safety checks | `$schema-migration` |
 | `vibe-wise` | `skills/vibe-wise` | Design system architectures and model relational data collaboratively | `$vibe-wise` |
+
+### Research and source verification
+| Skill | Directory | Primary purpose | Command invocation |
+|---|---|---|---|
+| `recursive-research` | `skills/recursive-research` | Run regulated research cycles with source tiering, fitness criteria, and disk checkpoints | `$recursive-research` |
 
 ### Frontier web AI consultation
 | Skill | Directory | Primary purpose | Command invocation |
@@ -55,9 +60,9 @@ Resolve domain contracts, evaluate data scaling, prevent architectural debt, and
 
 ### Recommended workflow
 1. Run `$brainstorming` to explore contrasting approaches.
-2. For modules that handle more than 500 items, verify data scaling against `skills/brainstorming/references/architecture-scalability.md` to require server-side pagination.
+2. For modules that handle more than 500 items, check how data scales against `skills/brainstorming/references/architecture-scalability.md`. Require server-side pagination.
 3. For database evolution, run `$schema-migration` to enforce expand-contract phases, batched backfills, and lock timeouts.
-4. When you face complex architectural dilemmas, run `$web-advisor-prompt` to package an adversarial prompt for an external frontier reasoning model like Gemini 4 Argon.
+4. Run `$web-advisor-prompt` when a design decision needs an external review. The skill packages the dilemma into an adversarial prompt for a frontier reasoning model such as Gemini 4 Argon.
 5. Run `$codebase-design` to lock minimal interfaces and inspect database migration files on disk before you create models.
 6. For interface layouts, visual token systems, and UI library selection, run `$frontend-design` to build accessible layouts within the existing stack.
 7. For React and Next.js applications, run `$react` to optimize Server Components, eliminate data waterfalls, and prevent unnecessary client re-renders.
@@ -81,7 +86,7 @@ Deconstruct approved technical specifications into testable task batches and sel
 
 ## 4. Implementation and test-driven development
 
-Write production code using strict vertical slices and test-first iterations.
+Write production code in strict vertical slices with test-first iterations.
 
 | Skill | Directory | Primary purpose | Command invocation |
 |---|---|---|---|
@@ -93,9 +98,9 @@ Write production code using strict vertical slices and test-first iterations.
 
 ### Recommended workflow
 1. Run `$executing-plans` to execute the plan tasks. Choose inline batch execution for coupled changes or subagent task delegation for isolated tasks.
-2. Run `$testing-patterns` to write the failing test first, run the test runner to observe expected failure, write minimal code, and verify green status.
+2. Run `$testing-patterns` to write the failing test first. Run the test runner to observe the expected failure. Write minimal code. Verify the green status.
 3. When you investigate bugs, run `$systematic-debugging`. If the investigation involves large logs or multi-database queries, delegate data collection to a subagent to prevent context compaction.
-4. Commit verified task batches atomically with `$conventional-commit` using selective staging.
+4. Commit verified task batches atomically with `$conventional-commit`. Stage the hunks selectively.
 5. When you find diverging code styles across files, run `$s13n` to standardize patterns and install linter enforcement.
 
 ## 5. Review and quality assurance
@@ -119,7 +124,7 @@ Conduct final safety checks, clean up temporary branches, and write documentatio
 
 | Skill | Directory | Primary purpose | Command invocation |
 |---|---|---|---|
-| `verification-before-completion` | `skills/verification-before-completion` | Hard gate that requires fresh test outputs, scoped linting, and git state checks | `$verification-before-completion` |
+| `verification-before-completion` | `skills/verification-before-completion` | Hard gate that requires fresh test outputs, scoped lint runs, and git state checks | `$verification-before-completion` |
 | `summarize` | `skills/summarize` | Generate structured session execution summaries and evidence tables | `$summarize` |
 | `technical-writing` | `skills/technical-writing` | Write clear human documentation, README files, and RFCs | `$technical-writing` |
 | `writing-for-agents` | `skills/writing-for-agents` | Draft and update `AGENTS.md`, `CODEBASE.md`, prompt runbooks, and skill specifications | `$writing-for-agents` |
@@ -133,7 +138,7 @@ Conduct final safety checks, clean up temporary branches, and write documentatio
 
 ## 7. Meta-skill engineering and reflection
 
-Audit, test, and harden the skills catalog using empirical evidence and failure reflections.
+Audit, test, and harden the skills catalog with empirical evidence and failure reflections.
 
 | Skill | Directory | Primary purpose | Command invocation |
 |---|---|---|---|
@@ -143,8 +148,8 @@ Audit, test, and harden the skills catalog using empirical evidence and failure 
 
 ### Recommended workflow
 1. Run `$review-a-skill` to audit a skill against the AgentSkills specification and run `python3 skills/review-a-skill/scripts/lint_skill.py`.
-2. Run `$skill-testing` to conduct A/B benchmarks across multiple scenarios when you refine complex prompt workflows.
-3. When an agent encounters unexpected friction or user corrections, run `$reflect-to-skill` to extract root causes and graft permanent preventive rules into target skills.
+2. Run `$skill-testing` to conduct paired benchmarks across multiple scenarios when you refine complex prompt workflows.
+3. Run `$reflect-to-skill` when an agent meets unexpected friction or a user correction. The skill extracts the root cause and grafts a preventive rule into the target skill.
 
 ## Complete lifecycle example
 

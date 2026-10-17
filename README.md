@@ -1,6 +1,6 @@
 # Agent skills collection
 
-A collection of 31 modular skills for AI coding agents. Each skill follows the open Agent Skills Specification (`agentskills.io`).
+A collection of 32 modular skills for AI coding agents. Each skill follows the open Agent Skills Specification (`agentskills.io`).
 
 ## Overview
 
@@ -44,7 +44,7 @@ Load and follow the workflow in skills/brainstorming/SKILL.md
 
 ## Skills catalog
 
-The repository provides 31 verified skills:
+The repository provides 32 verified skills:
 
 | Skill | Purpose and trigger context |
 |---|---|
@@ -59,12 +59,13 @@ The repository provides 31 verified skills:
 | `laravel` | Build, modify, review, test, or debug Laravel applications, Eloquent queries, Artisan commands, and queue jobs. |
 | `prototype` | Prototype divergent visual or interaction variants for a UI component, or compare interactive UI explorations. |
 | `react` | Audit, profile, and optimize React and Next.js performance, waterfalls, bundle size, Server Components, and re-renders. |
+| `recursive-research` | Research a topic to expert depth, tier sources by reliability, and map state of the art before a spec or plan. |
 | `reflect-to-skill` | Reflect on conversation sessions, analyze failure modes, and graft preventive rules into agent skills to prevent recurrence. |
 | `review-a-skill` | Review, audit, benchmark, or compare agent skills against AgentSkills specifications and structural guidelines. |
 | `s13n` | Standardize inconsistent code patterns across a repository, resolve architectural divergence, or install linter guards. |
 | `schema-migration` | Author, review, test, and execute zero-downtime database schema migrations, column renames, and batched backfills. |
 | `security-audit` | Audit codebases for security vulnerabilities, conduct threat modeling, review auth boundaries, and evaluate exploitability. |
-| `skill-testing` | Empirically benchmark, A/B test, and iteratively refine agent skills through parallel subagents and human evaluation. |
+| `skill-testing` | Empirically benchmark and refine agent skills through parallel subagents and human evaluation. |
 | `summarize` | Generate structured session execution summaries, root cause documentation, evidence tables, and session handoffs. |
 | `systematic-debugging` | Debug bugs, test failures, unexpected behaviors, and performance regressions before you propose fixes. |
 | `technical-writing` | Write or review human-facing documentation, RFCs, README files, PR descriptions, and technical guides. |
