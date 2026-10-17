@@ -50,6 +50,7 @@ PSEUDO_LABEL_RE = re.compile(
     re.IGNORECASE,
 )
 REF_LINK_RE = re.compile(r"`?references/([a-zA-Z0-9_\-\./]+\.md)`?")
+REF_DIR_RE = re.compile(r"references/(?:[a-zA-Z0-9_\-]+/)+")
 INLINE_CODE_RE = re.compile(r"`[^`\n]*`")
 
 
@@ -204,6 +205,8 @@ def lint_skill(skill_dir: Path) -> list[Finding]:
     # 5. One-hop reference integrity
     ref_matches = set(REF_LINK_RE.findall(content))
     ref_dir = skill_dir / "references"
+    # Directory-scoped pointers such as references/rules/ cover every file inside them.
+    ref_dir_prefixes = {m.group(0) for m in REF_DIR_RE.finditer(content)}
 
     for ref_rel in ref_matches:
         target = ref_dir / ref_rel
@@ -213,19 +216,27 @@ def lint_skill(skill_dir: Path) -> list[Finding]:
     if ref_dir.is_dir():
         for disk_ref in ref_dir.rglob("*.md"):
             rel_name = disk_ref.relative_to(ref_dir).as_posix()
-            if rel_name not in ref_matches:
+            ref_path = f"references/{rel_name}"
+            if rel_name not in ref_matches and not any(
+                ref_path.startswith(prefix) for prefix in ref_dir_prefixes
+            ):
                 findings.append(
                     Finding(
                         "orphan_reference",
-                        f"Orphan reference file not pointed to by SKILL.md: references/{rel_name}",
+                        f"Orphan reference file not pointed to by SKILL.md: {ref_path}",
                         level="WARNING",
                     )
                 )
 
-            # Check for nested reference links inside references/*.md (enforce 1-hop max)
+            # Check for nested links to this skill's own references (enforce 1-hop max).
+            # Cross-skill pointers and paths in the target repository are not multi-hop.
             try:
                 ref_content = disk_ref.read_text(encoding="utf-8")
-                nested_refs = REF_LINK_RE.findall(ref_content)
+                nested_refs = [
+                    nested
+                    for nested in REF_LINK_RE.findall(ref_content)
+                    if (ref_dir / nested).exists()
+                ]
                 if nested_refs:
                     findings.append(
                         Finding(
