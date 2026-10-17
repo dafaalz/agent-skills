@@ -19,7 +19,7 @@ Standards sources:
 {STANDARDS_SOURCES}
 
 Smell baseline:
-Consult references/architectural-lenses.md section 3. Repo standards always override the baseline.
+Consult the architectural-lenses baseline section 3. Repo standards always override the baseline.
 
 Instructions:
 1. Review every modified file and hunk in git diff {BASE_SHA}...{HEAD_SHA}.

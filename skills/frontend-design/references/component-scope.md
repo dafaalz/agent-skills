@@ -18,7 +18,7 @@ If two signals fire, route to component scope.
 - **Step 1. Genre detection.** Editorial, modern minimal, atmospheric, or playful. The component inherits the genre of its surroundings.
 - **Step 2.6. Theme route.** If `tokens.css` or `design.md` exists, the component uses those tokens.
 - **Font discipline.** Use the standard project font pairing.
-- **State discipline.** Every interactive component must support all eight states: default, hover, focus-visible, active, disabled, loading, error, and success. Consult `references/interaction-and-states.md`.
+- **State discipline.** Every interactive component must support all eight states: default, hover, focus-visible, active, disabled, loading, error, and success. Consult `interaction-and-states.md`.
 - **Slop test.** Run visual, microinteraction, contrast, and accessibility gates.
 
 ## What component scope skips

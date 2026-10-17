@@ -48,7 +48,7 @@ N. **[Gerund action naming the guardrail].** Never [prohibited action] on [targe
 
 ## Template 3. Seam hunting and defect category entry
 
-Use this structure when updating audit playbooks or inspection tables in `references/audit-and-plans.md`.
+Use this structure when updating audit playbooks or inspection tables.
 
 ```markdown
 - [Specific UI component or event] [failure verb phrase] without [required protective mechanism]. Apply [exact CSS utility or transition parameters] before [state mutation or DOM teardown].

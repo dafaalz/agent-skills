@@ -15,7 +15,7 @@ Follow these four steps to run the exploratory design pass.
 Summarize the problem space and constraints before dispatching agents:
 
 - State the functional responsibilities the module must deliver.
-- Identify the dependency category from `references/deepening.md`.
+- Identify the dependency category from `deepening.md`.
 - Define any non-negotiable performance, storage, or concurrency requirements.
 - Present a brief, unoptimized signature sketch to establish concrete inputs and outputs.
 

@@ -93,7 +93,7 @@ The parent synthesizes `<output-dir>/architecture.md`, with a hard cap of about 
 5. Trust boundaries and the strongest source-visible control on each.
 6. Repository-relative starting paths.
 7. Prior coverage gaps, changed-source and blocked revalidation targets, and same-source confirmed exclusions.
-8. A short companion-selection summary derived from `references/attack-classes.md`: selected files and the source-visible boundaries that require them.
+8. A short companion-selection summary derived from `attack-classes.md`: selected files and the source-visible boundaries that require them.
 
 Keep the assignment-level ordinary block, selected companion blocks, and excluded blocks with reasons in each ledger unit, not in `architecture.md`. This keeps the architecture cap valid for large runs and makes the exact hunter prompt map machine-checkable.
 

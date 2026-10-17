@@ -177,7 +177,18 @@ Route execution to dedicated reference runbooks based on task requirements:
 4. Pre-built UI components and macrostructures. Browse references/components/ for tested component patterns (navbars, bento cards, hero callouts, footer statements) and references/macrostructures/ for full-page templates.
 5. Micro-interactions and gesture physics. Consult references/ui-patterns.md for button press feedback, bento card mechanics, and cursor interactions. For spring physics, gesture tracking, and frame rate audits, activate the ui-motion skill.
 
-## Pre-flight anti-slop audit checklist
+## Reference index
+
+Consult these runbooks on demand for deep implementation detail:
+
+- Core disciplines. `references/typography.md`, `references/color.md`, `references/layout-and-space.md`, `references/copy.md`, `references/motion.md`, `references/interaction-and-states.md`, `references/microinteractions.md`.
+- Media and assets. `references/assets.md`, `references/imagery-kit.md`, `references/hero-enrichment.md`, `references/custom-craft.md`.
+- Composition. `references/component-cookbook.md`, `references/macrostructures.md`, `references/floating-nav.md`.
+- Genre runbooks. `references/genres/editorial.md`, `references/genres/modern-minimal.md`, `references/genres/atmospheric.md`, `references/genres/playful.md`.
+- Workflow commands. `references/verbs/audit.md`, `references/verbs/redesign.md`.
+- Process and output. `references/study.md`, `references/component-scope.md`, `references/preview-examples.md`, `references/design-md.md`, `references/export-formats.md`, `references/contract.md`, `references/slop-test.md`.
+
+## Quick audit checklist
 
 Verify all items before declaring frontend implementation complete:
 
