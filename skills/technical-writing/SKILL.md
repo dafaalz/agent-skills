@@ -139,7 +139,7 @@ Technical writing governs documentation files only (`*.md`, `docs/`, `RFCs`). Ne
 
 > `budget.mjs` reads the committed budget from `budget.json` and counts files that import protos. If the count exceeds the budget, the CI test fails. Run `budget.mjs --write` only when you must lower the budget count.
 
-## Quick reference checklist
+## Quick audit checklist
 
 Run this check before finishing any human-facing technical text:
 

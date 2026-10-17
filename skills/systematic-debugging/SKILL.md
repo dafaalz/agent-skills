@@ -177,10 +177,10 @@ Related skills to invoke during debugging:
 
 Audit debugging progress against this table before finalizing:
 
-| Anti-pattern | Correct practice |
+| Check | Passing condition |
 |---|---|
-| Modifying code before reproducing | Build a deterministic, red-capable reproduction script first |
-| Shotgun debugging with multiple changes | Formulate ranked falsifiable hypotheses and test one variable |
-| Opportunistic refactoring in bug fixes | Confine edits strictly to root cause and regression test |
-| Leaving temporary debug probes behind | Grep for debug tags and purge all temporary logging probes |
-| Fourth consecutive failed fix attempt | Halt immediately and escalate to human partner for redesign |
+| Reproduction first | Build a deterministic, red-capable reproduction script before modifying code |
+| Single-variable testing | Formulate ranked falsifiable hypotheses and change one variable at a time |
+| Root-cause confinement | Confine edits strictly to the root cause and add a regression test |
+| Probe cleanup | Grep for debug tags and purge all temporary logging probes |
+| Escalation threshold | Halt after the fourth consecutive failed fix and escalate to a human partner for redesign |

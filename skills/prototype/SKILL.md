@@ -114,7 +114,7 @@ Keep prototype code strictly confined to scratch preview paths (`/prototypes/` o
 | `keep <variant>` | Promote that variant into the codebase and delete the prototype surface |
 | `keep <variant>, leave the picker` | Promote that variant while retaining the prototype surface |
 
-## Quick reference checklist
+## Quick audit checklist
 
 Run this check before completing any prototyping pass:
 

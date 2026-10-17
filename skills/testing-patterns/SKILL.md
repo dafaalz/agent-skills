@@ -122,11 +122,11 @@ Confine testing operations strictly to test suites (`tests/`, `spec/`), fixtures
 
 Audit test implementations against this table before finalizing:
 
-| Anti-pattern | Correct practice |
+| Check | Passing condition |
 |---|---|
-| Testing private implementation details | Assert on public interfaces, observable DOM, and return values |
-| Arbitrary sleeps (`sleep()`, `waitForTimeout()`) | Use web-first auto-waiting assertions on visible elements |
-| Brittle selector queries (CSS classes, XPath) | Query accessible roles (`getByRole`) and explicit labels |
-| Flaky shared database state | Run containerized databases on tmpfs mounts with table resets |
-| Mocking fetch directly with monkey patches | Intercept network transport boundaries cleanly with MSW v2 |
-| Redundant test coverage across tiers | Choose distribution model matching target architecture |
+| Public interface assertions | Assert on public interfaces, observable DOM, and return values, never private implementation details |
+| Deterministic waiting | Use web-first auto-waiting assertions on visible elements, never arbitrary sleeps such as `sleep()` or `waitForTimeout()` |
+| Selector resilience | Query accessible roles (`getByRole`) and explicit labels, never brittle CSS class or XPath queries |
+| Database isolation | Run containerized databases on tmpfs mounts with table resets, never shared flaky state |
+| Network boundary mocking | Intercept network transport boundaries cleanly with MSW v2, never direct fetch monkey patches |
+| Coverage distribution | Choose the distribution model that matches the target architecture instead of duplicating coverage across tiers |

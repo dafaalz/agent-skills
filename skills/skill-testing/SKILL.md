@@ -103,7 +103,7 @@ Completion criterion. User evaluation ingested, external search validation compl
 
 Confine skill testing strictly to test harness workspaces and benchmark fixtures. Never alter active production skills without clean test verification and explicit confirmation.
 
-## Never ship checklist
+## Quick audit checklist
 
 Verify execution against this checklist before delivering. Every item represents an automatic rejection:
 

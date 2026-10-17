@@ -138,7 +138,7 @@ When evaluating visual polish and aesthetics beyond mechanical accessibility, ap
 4. **Functionality and deletion test.** Apply the deletion test. If a decorative element or card badge is removed and the interface becomes clearer, delete the element.
 5. **Originality and cliché elimination.** Eliminate formulaic AI templates, unprompted purple gradients, left-border accent stripes, and arbitrary floating shapes.
 
-## Never ship checklist
+## Quick audit checklist
 
 Audit implementations against this checklist. Every item represents an automatic rejection:
 

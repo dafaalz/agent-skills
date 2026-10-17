@@ -198,7 +198,7 @@ When reviewing or proposing UI micro-interaction changes, format findings using 
 | Missing active press feedback         | `transform: scale(0.97)` on active press    | Pressable targets must provide immediate tactile feedback               |
 | `transform-origin: center` on popover | `transform-origin: var(--transform-origin)` | Popovers scale from trigger origin, while dialog modals remain centered |
 
-## Never ship checklist
+## Quick audit checklist
 
 Verify code against this checklist before delivering. Every item represents an automatic rejection:
 

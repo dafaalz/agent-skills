@@ -7,7 +7,7 @@ description: Use when auditing codebases for security vulnerabilities, conductin
 
 Find source-grounded vulnerabilities that violate a real trust boundary, then give owners source evidence, safe reproduction steps, priority calibration, and the smallest effective fix. This is a defensive, source-first workflow. A candidate without an affected principal, concrete resource, and observable security outcome is not a confirmed finding.
 
-## Operating modes
+## Modes
 
 This skill operates in guidance mode by default. Loading it does not authorize unsolicited file creation or execution of the full audit workflow.
 

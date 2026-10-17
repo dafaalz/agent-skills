@@ -207,12 +207,12 @@ Code review operates in an advisory and remediation capacity only. Never modify 
 
 Review this table before completing the code review:
 
-| Anti-pattern | Correct practice |
+| Check | Passing condition |
 |---|---|
-| Performative agreement | State technical facts directly or apply the fix |
-| Blind implementation | Verify suggestions against codebase truth first |
-| Batching fixes without testing | Implement one item at a time and test each |
-| Assuming reviewer is always right | Verify if proposed changes break existing features |
-| Avoiding pushback | Prioritize technical correctness over comfort |
-| Partial implementation | Clarify ambiguous items before writing code |
-| Speculative generalizations | Check YAGNI by grepping for actual callers |
+| Reviewer agreement | State technical facts directly or apply the fix, never performative agreement |
+| Implementation grounding | Verify suggestions against codebase truth before implementing, never blind application |
+| Fix batching | Implement one item at a time and test each before proceeding |
+| Suggestion verification | Confirm proposed changes do not break existing features before accepting them |
+| Pushback discipline | Prioritize technical correctness over reviewer comfort |
+| Implementation completeness | Clarify ambiguous items before writing code |
+| Generalization control | Check YAGNI by grepping for actual callers |

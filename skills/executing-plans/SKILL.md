@@ -10,7 +10,7 @@ Execute implementation plans written in `docs/plans/` using either inline batch 
 Announce the starting stance at session start:
 `I am using the executing-plans skill to execute this plan.`
 
-## Overview and mode selection
+## Modes
 
 Implementation plans define structured tasks with explicit file paths, full code blocks, and automated test commands. Choose between two execution modes depending on task coupling, plan size, and session architecture:
 

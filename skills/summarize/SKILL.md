@@ -159,11 +159,11 @@ Summarization operates strictly in an analytical and reporting capacity. Never e
 
 Audit summaries against this table before finalizing:
 
-| Anti-pattern | Correct practice |
+| Check | Passing condition |
 |---|---|
-| Claiming untested fixes work | Execute verification commands and record exact outputs |
-| Omitting failed attempts | Record failures, discarded paths, and root causes plainly |
-| Speculative completion claims | Record verified facts; never claim plans as modifications |
-| Narrative status descriptions | Use structured tables with command, path, and result columns |
-| Conversational padding | Present findings directly without filler or introductory fluff |
-| Unanchored file references | Cite exact repository file paths and line numbers |
+| Verification evidence | Execute verification commands and record exact outputs, never claim untested fixes work |
+| Failure disclosure | Record failures, discarded paths, and root causes plainly |
+| Completion claims | Record verified facts only, never present plans as modifications |
+| Status structure | Use structured tables with command, path, and result columns |
+| Directness | Present findings directly without filler or introductory fluff |
+| File anchoring | Cite exact repository file paths and line numbers |
