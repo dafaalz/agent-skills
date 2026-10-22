@@ -1,6 +1,6 @@
 # Agent skills collection
 
-A collection of 32 modular skills for AI coding agents. Each skill follows the open Agent Skills Specification (`agentskills.io`).
+A collection of 35 modular skills for AI coding agents. Each skill follows the open Agent Skills Specification (`agentskills.io`).
 
 ## Overview
 
@@ -44,10 +44,11 @@ Load and follow the workflow in skills/brainstorming/SKILL.md
 
 ## Skills catalog
 
-The repository provides 32 verified skills:
+The repository provides 35 verified skills:
 
 | Skill | Purpose and trigger context |
 |---|---|
+| `agent-planning` | Author multi-task execution plans, enforce empirical verification evidence, audit readiness checklists, and respond to audit reviews with bidirectional discipline. |
 | `brainstorming` | Scope new features, explore architectural requirements, plan refactors, or design greenfield components before you write code. |
 | `code-review` | Request reviews for code changes, evaluate review feedback, push back against incorrect suggestions, or verify review fixes. |
 | `codebase-design` | Design module interfaces, evaluate abstraction depth, identify code seams, or turn shallow wrappers into deep modules. |
@@ -58,6 +59,7 @@ The repository provides 32 verified skills:
 | `i18n` | Implement internationalization, localization, locale negotiation, date and number formats, ICU messages, and RTL layouts. |
 | `laravel` | Build, modify, review, test, or debug Laravel applications, Eloquent queries, Artisan commands, and queue jobs. |
 | `prototype` | Prototype divergent visual or interaction variants for a UI component, or compare interactive UI explorations. |
+| `pull-request` | Draft structured pull request descriptions with visual summaries, before-and-after verification evidence, and merge-danger risk assessments. |
 | `react` | Audit, profile, and optimize React and Next.js performance, waterfalls, bundle size, Server Components, and re-renders. |
 | `recursive-research` | Research a topic to expert depth, tier sources by reliability, and map state of the art before a spec or plan. |
 | `reflect-to-skill` | Reflect on conversation sessions, analyze failure modes, and graft preventive rules into agent skills to prevent recurrence. |
@@ -77,6 +79,7 @@ The repository provides 32 verified skills:
 | `verification-before-completion` | Validate work through fresh command execution, scoped lint checks, and test outputs before you claim completion. |
 | `vibe-wise` | Design system architectures, model relational data, plan API boundaries, and learn while you build features. |
 | `web-advisor-prompt` | Package repository context and architectural trade-offs into an adversarial prompt for an external frontier reasoning model. |
+| `wizard` | Generate self-contained interactive terminal scripts that guide humans through manual setup, credential provisioning, or production cutovers. |
 | `workspace-onboarding` | Initialize work on a project, discover the active technology stack, and establish execution constraints. |
 | `writing-for-agents` | Draft and edit agent instructions, AGENTS.md, prompt runbooks, context pointers, design specs, and skill files. |
 | `writing-plans` | Create phased implementation plans with test-first tasks from a design specification before you write code. |

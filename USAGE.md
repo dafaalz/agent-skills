@@ -1,6 +1,6 @@
 # Skill usage guide
 
-Run the 32 skills in this repository across the software delivery lifecycle.
+Run the 35 skills in this repository across the software delivery lifecycle.
 
 ## Overview
 
@@ -75,11 +75,13 @@ Deconstruct approved technical specifications into testable task batches and sel
 
 | Skill | Directory | Primary purpose | Command invocation |
 |---|---|---|---|
+| `agent-planning` | `skills/agent-planning` | Author multi-task plans, verify readiness checklists, and handle audit feedback with empirical evidence | `$agent-planning` |
 | `writing-plans` | `skills/writing-plans` | Convert design specifications into phased implementation plans | `$writing-plans` |
 | `executing-plans` | `skills/executing-plans` | Execute plans via inline batches or delegated subagents with review gates | `$executing-plans` |
 
 ### Recommended workflow
-1. Run `$writing-plans` to generate the implementation plan.
+1. When structuring complex multi-task execution plans spanning multiple files or repositories, run `$agent-planning` to establish empirical verification standards, rate-limit budgets, and audit defense checklists.
+2. Run `$writing-plans` to generate the implementation plan.
 2. Make sure that each task contains exact file targets, complete code snippets, and automated test commands.
 3. Select an execution strategy in `$executing-plans`. Use Mode 1 for inline batch execution with diff checkpoints on coupled tasks. Use Mode 2 for subagent delegation with automated reviews on independent tasks.
 4. If tasks touch disjoint directories, apply parallel dispatch from `skills/executing-plans/references/parallel-dispatch.md` to run subagents without shared state collisions.
@@ -95,6 +97,7 @@ Write production code in strict vertical slices with test-first iterations.
 | `systematic-debugging` | `skills/systematic-debugging` | Identify root causes before you propose patches or bug fixes | `$systematic-debugging` |
 | `s13n` | `skills/s13n` | Standardize inconsistent patterns across files and install linter guards | `$s13n` |
 | `conventional-commit` | `skills/conventional-commit` | Commit task batches as atomic commits with imperative subjects | `$conventional-commit` |
+| `wizard` | `skills/wizard` | Generate self-contained interactive terminal scripts for manual setup or production cutovers | `$wizard` |
 
 ### Recommended workflow
 1. Run `$executing-plans` to execute the plan tasks. Choose inline batch execution for coupled changes or subagent task delegation for isolated tasks.
@@ -102,6 +105,7 @@ Write production code in strict vertical slices with test-first iterations.
 3. When you investigate bugs, run `$systematic-debugging`. If the investigation involves large logs or multi-database queries, delegate data collection to a subagent to prevent context compaction.
 4. Commit verified task batches atomically with `$conventional-commit`. Stage the hunks selectively.
 5. When you find diverging code styles across files, run `$s13n` to standardize patterns and install linter enforcement.
+6. When guiding human operators through manual setup, cloud dashboard configurations, or production cutovers, run `$wizard` to emit a standalone interactive bash script with step confirmation.
 
 ## 5. Review and quality assurance
 
@@ -125,6 +129,7 @@ Conduct final safety checks, clean up temporary branches, and write documentatio
 | Skill | Directory | Primary purpose | Command invocation |
 |---|---|---|---|
 | `verification-before-completion` | `skills/verification-before-completion` | Hard gate that requires fresh test outputs, scoped lint runs, and git state checks | `$verification-before-completion` |
+| `pull-request` | `skills/pull-request` | Draft structured PR descriptions with visual summaries, verification evidence, and risk assessments | `$pull-request` |
 | `summarize` | `skills/summarize` | Generate structured session execution summaries and evidence tables | `$summarize` |
 | `technical-writing` | `skills/technical-writing` | Write clear human documentation, README files, and RFCs | `$technical-writing` |
 | `writing-for-agents` | `skills/writing-for-agents` | Draft and update `AGENTS.md`, `CODEBASE.md`, prompt runbooks, and skill specifications | `$writing-for-agents` |
@@ -132,7 +137,7 @@ Conduct final safety checks, clean up temporary branches, and write documentatio
 ### Recommended workflow
 1. Run `$verification-before-completion` before you make any completion claim.
 2. Run `git status --short` to make sure that no core documentation files were deleted. Run scoped linters on touched files and validate fresh test output.
-3. Commit clean changes with `$conventional-commit` and finalize pull requests.
+3. Commit clean changes with `$conventional-commit` and run `$pull-request` to generate structured pull request descriptions with before-and-after evidence.
 4. Run `$summarize` at the end of a session to record actions, root causes, test verification, and next steps for handoffs.
 5. Update repository documentation with `$technical-writing` for human developers or `$writing-for-agents` for agent guidance files and skill specifications.
 
