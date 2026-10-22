@@ -1,6 +1,6 @@
 ---
 name: workspace-onboarding
-description: Use when starting a new conversation, initializing work on a project, or onboarding to an unfamiliar workspace. Don't use for single-file edits in established sessions with known runtime environments.
+description: Use when starting a new conversation, initializing work on a project, or onboarding to an unfamiliar workspace. Don't use for single-file edits in established sessions with known runtime environments, or creating persistent codebase documentation (use upsert-codebase-docs).
 allowed-tools: Read Bash Glob Grep
 ---
 

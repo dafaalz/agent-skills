@@ -1,6 +1,6 @@
 ---
 name: verification-before-completion
-description: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs, requiring fresh verification command output before making assertions. Don't use for initial exploratory brainstorming or rough drafting phases.
+description: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs, requiring fresh verification command output before making assertions. Don't use for initial exploratory brainstorming (use brainstorming) or rough drafting phases.
 ---
 
 # Verification before completion
@@ -57,6 +57,20 @@ State the completion claim citing the exact command run, test counts, and exit s
 
 Completion criterion. The user receives a factual statement backed by terminal evidence, with zero unverified assumptions.
 
+## Adversarial falsification gate (doubt-driven check)
+
+A confident agent assertion is not proof of correctness. Before asserting completion on non-trivial logic, schema migrations, security boundaries, or multi-file refactoring, execute an adversarial falsification check:
+
+1. Identify the core invariant. State the primary assumption that must hold true for the change to succeed without side effects.
+2. Formulate a disproof hypothesis. Ask: under what specific input, empty state, permission boundary, concurrent access, or error payload will this implementation fail?
+3. Execute the falsification test. Run a targeted negative test case, curl command, or edge query specifically designed to trigger the failure mode:
+   * For APIs: send empty payloads, malformed JSON, unauthorized tokens, or missing boundary parameters.
+   * For database migrations: verify rollback execution (`down` or reverse migration) before accepting forward migration as complete.
+   * For stateful UI: test rapid double-clicks, empty collections, and offline network state.
+4. Reconcile evidence. If the disproof test exposes an unhandled error or silent failure, stop immediately. Do not rationalize or dismiss edge cases as unlikely in production.
+
+Completion criterion. Core invariant challenged with at least one concrete negative test case, confirming graceful handling and zero silent failures.
+
 ## Common failures
 
 | Claim | Requires | Not sufficient |
@@ -68,6 +82,7 @@ Completion criterion. The user receives a factual statement backed by terminal e
 | Regression test works | Red-green cycle verified | Test passes once |
 | Agent completed | VCS diff shows changes | Agent reports "success" |
 | Requirements met | Line-by-line checklist | Tests passing |
+| Core invariant holds | Falsification test confirms graceful handling | Assumed safe, tested only happy path |
 
 ## Red flags
 
@@ -90,6 +105,7 @@ Completion criterion. The user receives a factual statement backed by terminal e
 | "I'm tired" | Exhaustion does not excuse verification |
 | "Partial check is enough" | Partial check proves nothing |
 | "Different words so rule does not apply" | Procedural invariants apply to all claims |
+| "Edge case is impossible" | Run negative test case to prove boundary handling |
 
 ## Key patterns
 
@@ -141,3 +157,4 @@ For web applications with automated auditing configured, consult `references/lig
 | Repository safety | Git working tree clean and protected documentation files intact |
 | Scoped linting | Modified files pass configured linters with zero errors |
 | Factual claims | Completion claim cites exact commands and passing counts |
+| Adversarial check | Negative boundary test confirms invariant holds without silent failure |

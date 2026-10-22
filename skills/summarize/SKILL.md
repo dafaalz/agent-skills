@@ -1,6 +1,6 @@
 ---
 name: summarize
-description: Use when generating structured session execution summaries, documenting root causes, evidence tables, or transferring context between agent sessions. Don't use for human-facing documentation or pull request bodies.
+description: Use when generating structured session execution summaries, documenting root causes, evidence tables, or transferring context between agent sessions. Don't use for human-facing documentation (use technical-writing) or pull request bodies (use pull-request).
 ---
 
 # Summarize

@@ -10,6 +10,8 @@ Reference guide for spotting structural AI patterns and auditing prose for synth
 - **Show, don't tell the reader what to think.** Let facts, mechanisms, and outcomes carry weight. Delete commentary that labels a point as important, surprising, subtle, or obvious. Trust the reader to see the point.
 - **Protect specific facts.** Never dilute concrete details into generic statements. Replace "improved performance" with the measured metric, such as "reduced p99 latency from 250ms to 45ms".
 - **Preserve useful edge and character.** Retain strong stances, developer slang, honest admissions, and self-corrections when they reflect the author's authentic perspective.
+- **Weight indicators before editing.** Primary tells (formulaic contrasts, staged run-ups, forced triads, decorative dashes, repetitive closers) justify an edit on first sighting. Secondary tells (stacked qualifiers, hyphenated pairs) require corroborating patterns in the same passage before you act.
+- **Respect writing samples.** When the user supplies a writing sample, observe and match its sentence length, word choices, punctuation, and transitions. The sample overrides default style preferences, provided meaning remains clear.
 
 ## Structural patterns to eliminate
 
@@ -104,6 +106,14 @@ Mechanical contrast templates force artificial antithesis onto simple factual co
 
 Broad platitudes and synthetic optimism frame technical topics with generic fluff. Typical markers include "In today's fast-paced world", "In an era of rapid technological advancement", "The future looks bright", and "Together we can achieve excellence". Open directly with the core technical subject and close with the immediate next action.
 
+### 19. Re-explaining what the reader knows (wrong reader)
+
+When replying in an active thread or ongoing conversation, language models often recap the problem, walk through the diagnosis, and present evidence before finally giving the decision on the last line. In an ongoing conversation, the reader already knows the background. Rebuilding context buries the actionable decision. Lead with the decision or answer. Keep only the reasoning that would change whether the reader agrees, and move lengthy proof or diagnosis to an issue ticket or follow-up document.
+
+### 20. Avoiding simple linking verbs (is, are, has)
+
+Language models frequently avoid plain verbs like "is", "are", and "has", replacing them with inflated verbs like "serves as", "acts as", "boasts", "features", "functions as", or "stands as". When describing an attribute or condition, use the direct linking verb. "The repository boasts comprehensive test coverage" becomes "The repository has comprehensive test coverage." "The file serves as the configuration entrypoint" becomes "The file is the configuration entrypoint."
+
 ## Research and editorial references
 
 - **Liang et al. (Stanford 2024, arXiv:2404.01268).** Documented sharp frequency surges of characteristic marker vocabulary (including "delve", "testament", "intricate", "pivotal", and "showcase") in peer-reviewed scientific papers after LLM release.
@@ -112,6 +122,7 @@ Broad platitudes and synthetic optimism frame technical topics with generic fluf
 - **Pangram Labs and Beutler Ink (2024, 2025).** Documented statistical overrepresentation of negative parallelism ("not only X, but also Y"), rhetorical triad lists ("rule of three"), and spurious span ranges ("from X to Y") in LLM outputs.
 - **Wikipedia WikiProject AI Cleanup (WP:AIC).** Cataloged structural patterns common in synthetic writing, emphasizing process narration ("Upon closer inspection"), inanimate agency (attributing consciousness to code or abstract concepts), and dropped actors in passive constructions.
 - **Paul Graham (2024).** Identified false formality, inflated diction substitutes, and synthetic earnestness as immediate indicators of machine-generated text.
+- **blader/humanizer (2025).** Documented wrong-reader reply recaps, indicator weighting thresholds, voice sample matching overrides, and artificial evasion of basic linking verbs.
 - **Dewan Pers (Peraturan No. 1/2025).** Mandated human verification, primary source attribution, and journalistic accountability while banning synthetic consensus claims.
 - **Narabahasa (Ivan Lanin dan Yudhistira).** Analyzed English syntax interference, translationese calques, and robotic transition chains in modern Indonesian prose.
 

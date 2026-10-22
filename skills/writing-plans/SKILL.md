@@ -1,6 +1,6 @@
 ---
 name: writing-plans
-description: Use when creating phased implementation plans with test-first tasks from a design specification before writing code. Don't use for initial design ideation, exploratory research, or direct code execution.
+description: "Use when creating phased implementation plans with test-first tasks from a design specification before writing code. Don't use for initial design ideation (use brainstorming), exploratory research (use recursive-research), direct code execution (use executing-plans), or multi-task plan verification and audit defense (use agent-planning)."
 ---
 
 # Writing implementation plans
@@ -44,6 +44,8 @@ Completion criterion. Target files mapped to explicit responsibilities and verif
 Draft the implementation plan using the templates in the reference section below:
 - Add the required plan document header at the top of the file.
 - Divide the work into bite-sized tasks. Each task must represent a single component or slice that takes 2 to 5 minutes to execute.
+- Tracer-bullet vertical slices. Build an end-to-end thin slice spanning all required layers first to prove integration before broadening feature breadth.
+- Declare blocking dependencies. Every task must declare its blocking dependencies (`Depends on: Task X`) to form an explicit Directed Acyclic Graph (DAG) for concurrent subagent execution across the ready frontier.
 - Enforce test-driven development order for every task:
   1. Write the failing test.
   2. Run the test and confirm failure.
@@ -99,10 +101,12 @@ Every plan must start with this header block:
 
 ### Task structure template
 
-Structure each task with explicit file lists, step checkboxes, interface contracts, and test commands:
+Structure each task with explicit file lists, dependencies, step checkboxes, interface contracts, and test commands:
 
 ````markdown
 ### Task N. [Component name]
+
+**Dependencies.** Depends on Task 1. Blocks Task 3.
 
 **Files**
 - Create `exact/path/to/file.py`
@@ -162,6 +166,7 @@ Transform abstract requirements into concrete, verifiable test goals:
 |---|---|
 | Header structure | Mandatory plan header present with goal, architecture, and stack |
 | Task granularity | Bite-sized 2 to 5 minute tasks with test-first sequence |
+| Dependency graph | Every task declares explicit blocking dependencies (DAG) with tracer-bullet sequencing |
 | Verification commands | Exact test commands and expected exit codes or failure messages provided |
 | Zero placeholders | Zero instances of TODO, TBD, or speculative application logic |
 | Reference isolation | Scaffolding plans placed under `docs/superpowers/plans/` |

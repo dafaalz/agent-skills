@@ -1,6 +1,6 @@
 ---
 name: schema-migration
-description: Use when authoring, reviewing, testing, or executing database schema migrations, column renames, type conversions, table splits, or backfills. Don't use for raw application query optimization, static mock data seeding, or schema-less document modeling.
+description: Use when authoring, reviewing, testing, or executing database schema migrations, column renames, type conversions, table splits, or backfills. Don't use for raw application query optimization, static mock data seeding (use testing-patterns), or schema-less document modeling.
 ---
 
 # Schema migration

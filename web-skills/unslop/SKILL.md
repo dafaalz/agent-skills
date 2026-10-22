@@ -29,6 +29,8 @@ Pick the mode before you scan. Default to Detect unless the user asks for edits.
   2. Structural puffery, faux-insight setups, colon reveals, and fake-profound kickers.
   3. Chatbot filler, process narration, and inanimate agency.
   4. Punctuation and syntax defects such as em dashes, mid-sentence colons, and relative "di mana".
+- Weight indicators before editing. Primary tells like formulaic contrasts, staged run-ups, forced triads, decorative dashes, and repetitive closers justify an edit on first sighting. Secondary tells like stacked qualifiers and hyphenated pairs require supporting indicators in the same passage.
+- Respect writing samples. When the user supplies a writing sample, match its sentence length, word choice, and punctuation. The sample overrides default style restrictions, provided meaning remains clear.
 
 When handling an English task, read `references/slop-patterns.md` for word swaps and structural patterns.
 When handling an Indonesian task, read `references/indonesian-patterns.md` for calque and pleonasm tables.
@@ -97,6 +99,8 @@ Do not force translation on standard technical loan terms in Indonesian prose. P
 - **[C15] Delete false ranges.** Remove spurious span constructions like "ranging from simple scripts to complex architectures" or "from startups to Fortune 500 companies". State the specific entity or scope directly.
 - **[C16] Delete rhetorical setups and self-answers.** Drop presentation gimmicks like "What if I told you...", "Think about it", "Plot twist", or immediate self-answering questions. State the technical claim directly.
 - **[C17] Delete negative listing.** Replace "Not X. Not Y. Z" with Z stated directly.
+- **[C18] Cut quotables.** Rewrite any sentence that sounds like a pull-quote. State the mechanism directly.
+- **[C19] Cut redundant background in replies.** In a thread reply or ongoing conversation, lead with the decision, action, or answer. Never recap the problem, diagnosis, or context the reader already knows before stating the decision.
 
 ### Use plain words
 
@@ -108,6 +112,8 @@ Pick plain words and direct verbs. Read the matching reference guide for word sw
 - **[V2] Use active voice.** Place the actor before the action. Change "the file is loaded by the runner" to "the runner loads the file", and "file dimuat oleh runner" to "runner memuat file".
 - **[V3] Use direct action verbs.** Replace fake-strong verbs and inflated bureaucratic phrases with direct verbs that name the system mechanism. Replace "serves as a hub for" or "acts as a catalyst to enable" with direct verbs like "tracks", "routes", or "runs".
 - **[V4] Convert figurative metaphors and personified code to literal system terms.** Replace literary flourishes, poetic metaphors, and personified code with literal system terms. State execution rules directly instead of writing poetic fragments like "the plan holds the truth", and replace figurative verbs like "rides along" or "stands on" with direct technical relationships like "invokes" or "depends on".
+- **[V5] Ban lazy extremes.** Replace `every`, `always`, `never`, `everyone`, and `nobody` with the specific set, count, or scope.
+- **[V6] Use plain linking verbs for attributes.** Write `is`, `are`, or `has` instead of straining for decorative substitute verbs like `boasts`, `features`, `serves as`, `functions as`, or `stands as`.
 
 ### Fix punctuation and styling
 
@@ -119,6 +125,8 @@ Pick plain words and direct verbs. Read the matching reference guide for word sw
 - **[S6] Prevent over-compression.** Write complete sentences with articles and active verbs. Expand telegram-style fragments and symbol-speak like "parser fails bad date, exit 2, no write" into clear prose, such as "the parser rejects invalid dates, returns exit code 2, and writes no data to disk".
 - **[S7] Use sentence case headings.** Capitalize only the first word and proper nouns in headings.
 - **[S8] Remove decorative elements.** Strip emojis from headings and bullet lists, and convert curly quotes to straight quotes.
+- **[S9] Ban Wh- openers and throat-clearing starts.** Restructure sentences that start with What, When, Where, Which, Who, Why, or How. Lead with the subject or verb. Delete paragraph openers `So` and `Look,`.
+- **[S10] Vary paragraph endings.** Never close two consecutive paragraphs with a punchy one-liner. End on a file path, command, metric, or next action.
 
 ### Cut chatbot filler
 
@@ -141,6 +149,7 @@ Remove conversational filler, meta-announcements, process narration, and artific
 | Pangram Labs and Beutler Ink (2024, 2025) | Negative parallelism, rule-of-three triads, and false ranges as empirical markers |
 | Wikipedia WikiProject AI Cleanup (WP:AIC) | Process narration, inanimate agency, and missing human actors in generated articles |
 | Paul Graham (2024) | False formality, synthetic earnestness, and formulaic essay structure |
+| blader/humanizer (2025) | Wrong-reader reply recaps, voice sample overrides, indicator weighting, and avoidance of linking verbs |
 | Dewan Pers (Peraturan No. 1/2025) | Verification rules, human editorial accountability, and ban on unverified AI text |
 | Narabahasa (Ivan Lanin dan Yudhistira) | Foreign syntax calques, robotic conjunction chains, and translationese patterns |
 
@@ -164,10 +173,16 @@ Run this check before finishing any writing task.
 | Cut fake structure | Zero faux-insight setups, zero fake-profound kickers, zero negative listings, and zero trailing "-ing" clauses |
 | Name the actor | Every action sentence names the active subject |
 | Cut process narration | Zero conversational setups like "After reviewing..." or inanimate agency |
+| Cut reply recaps | Lead with the decision or answer in replies with zero recaps of known background |
+| Use plain linking verbs | Use is, are, or has instead of boasts, features, or serves as for attributes |
 | Cut adverbs | Zero bolstering or empty adverbs |
 | Fix headings | Sentence case without decorative emojis |
 | Cite evidence | Claims cite a specific metric, command, or source |
 | Replace nominalizations | Zero smothered verb and abstract noun chains |
 | Delete wrap-ups | Zero conclusion paragraphs or summary kickers |
 | Break list symmetry | Natural syntactic variation with zero repeated bold pseudo-labels |
+| Ban Wh- openers | Zero sentences starting with What, When, Where, Which, Who, Why, or How plus zero `So` and `Look,` openers |
+| Cut quotables | Zero pull-quote sentences without a stated mechanism |
+| Vary endings | No two consecutive paragraphs share a punchy one-liner ending |
+| Ban extremes | Zero vague `every`, `always`, `never`, `everyone`, or `nobody` without a specific scope |
 | Protect boundaries | Functional code, backticked symbols, CLI flags, technical domain terms, and schemas remain untouched |

@@ -1,6 +1,6 @@
 ---
 name: systematic-debugging
-description: Use when debugging any bug, test failure, unexpected behavior, or performance issue before proposing fixes. Don't use for feature additions, code generation, or routine refactoring.
+description: Use when debugging any bug, test failure, unexpected behavior, or performance issue before proposing fixes. Don't use for feature additions (use brainstorming), code generation (use executing-plans), or routine refactoring (use codebase-design).
 ---
 
 # Systematic debugging

@@ -1,6 +1,6 @@
 ---
 name: skill-testing
-description: Use when empirically benchmarking, A/B testing, stress-testing against golden production benchmarks, and iteratively refining agent skills through multi-scenario parallel subagent execution and human evaluation. Don't use for static linting, application code test execution, or single-agent drafting.
+description: Use when empirically benchmarking, A/B testing, stress-testing against golden production benchmarks, and iteratively refining agent skills through multi-scenario parallel subagent execution and human evaluation. Don't use for static linting (use review-a-skill), application code test execution (use testing-patterns), or single-agent drafting (use writing-for-agents).
 ---
 
 # Empirical skill testing arena

@@ -1,6 +1,6 @@
 ---
 name: reflect-to-skill
-description: Use when reflecting on conversation sessions, analyzing failure modes, bugs, or user corrections, and grafting preventive rules into agent skills to prevent recurrence. Don't use for generic session summaries without skill updates, application code debugging, or writing end-user documentation.
+description: Use when reflecting on conversation sessions, analyzing failure modes, bugs, or user corrections, and grafting preventive rules into agent skills to prevent recurrence. Don't use for generic session summaries without skill updates (use summarize), application code debugging (use systematic-debugging), or writing end-user documentation (use technical-writing).
 ---
 
 # Reflect to skill

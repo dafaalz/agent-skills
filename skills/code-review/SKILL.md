@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Use when requesting review for code changes, evaluating review feedback, pushing back against incorrect suggestions, or verifying review fixes. Don't use for automated test execution or lint fixing.
+description: Use when requesting review for code changes, evaluating review feedback, pushing back against incorrect suggestions, or verifying review fixes. Don't use for automated test execution (use testing-patterns) or lint fixing.
 ---
 
 # Code review
@@ -16,6 +16,7 @@ Follow these core principles:
 - Two-axis separation. Review changes independently across Standards (repo standards and baseline code smells) and Spec (originating issue or requirements). Run axes in parallel sub-agents to prevent context pollution.
 - Verify before implementing. Never accept reviewer suggestions blindly. Check codebase truth and test suites first.
 - Technical correctness over social comfort. Maintain skepticism. Push back with concrete facts when suggestions degrade architecture.
+- Adversarial disproof. Apply doubt-driven evaluation. Never assume code is correct because it looks clean or passes happy-path tests. Actively formulate disproof hypotheses showing where invariants could break.
 - Structural audit depth. Consult `references/architectural-lenses.md` for classical engineering lenses, logic defects, and Fowler code smell baseline.
 - Comment hygiene. Consult `references/comment-hygiene.md` to prune AI conversational narration while preserving critical business context.
 
@@ -151,14 +152,14 @@ Never guess intent or apply partial assumptions when review comments lack clarit
 
 Apply this clarification protocol:
 - Stop immediately when any item in a review list is ambiguous.
-- Do not implement clear items prematurely if ambiguous items may alter shared architecture.
+- Do not implement clear items prematurely if ambiguous items may alter shared architecture; hold implementation until shared architecture is confirmed.
 - State exactly which items are understood and ask targeted questions regarding the unclear items.
 - Resume implementation only after requirements are fully unambiguous.
 
 ### Architectural integrity and counter-argument protocol
 
 Protect system boundaries when suggestions violate Single Responsibility Principle, introduce tight coupling, or cause lifecycle mismatches:
-- Never accept anti-patterns to avoid interpersonal friction.
+- Require technical correctness and push back with concrete facts; never accept anti-patterns to avoid interpersonal friction.
 - Check blast radius across modules. Verify whether the suggestion forces unrelated domains into a shared file or puts request-time logic into static initialization.
 - Ground counter-arguments in external consensus. Run targeted searches using official framework documentation or industry standards before responding.
 - Formulate a structured technical counter-argument. State the concrete tradeoff, cite the authoritative source, and propose a clean, decoupled alternative that satisfies the caller's true requirement.
@@ -199,6 +200,17 @@ Navigate disagreements with technical facts:
 
 Reply directly in the comment thread for inline GitHub pull request comments rather than submitting top-level PR comments. Keep all discussion tied to the relevant line diff.
 
+## Adversarial falsification protocol
+
+Reviewers must not evaluate code solely on happy-path execution or cosmetic cleanliness. When auditing diffs touching core business logic, permissions, migrations, or shared utilities:
+
+1. Formulate a failure hypothesis. Ask: under what boundary condition or concurrent state will this change corrupt data or throw unhandled exceptions?
+2. Trace the blast radius. Grep all call sites to verify that changed return types, modified parameter orders, or altered error contracts do not break downstream consumers.
+3. Verify failure behavior. Inspect whether the code fails loudly and safely when downstream services, network calls, or invalid parameters arrive.
+4. Challenge unverified assertions. When a pull request author asserts "this cannot happen", require concrete evidence (a failing-then-passing test or compiler constraint) before accepting the assertion.
+
+Completion criterion. High-stakes review items evaluated with explicit disproof hypotheses and verified downstream blast radius.
+
 ## Boundary isolation
 
 Code review operates in an advisory and remediation capacity only. Never modify unrelated files, refactor working logic outside the reviewed commit range, or change formatting conventions across files not touched by the review.
@@ -216,3 +228,4 @@ Review this table before completing the code review:
 | Pushback discipline | Prioritize technical correctness over reviewer comfort |
 | Implementation completeness | Clarify ambiguous items before writing code |
 | Generalization control | Check YAGNI by grepping for actual callers |
+| Adversarial disproof | Review evaluated against boundary failure hypotheses and blast radius |

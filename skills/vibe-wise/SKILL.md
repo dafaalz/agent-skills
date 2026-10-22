@@ -1,6 +1,6 @@
 ---
 name: vibe-wise
-description: Use when designing system architectures, modeling relational data, planning API boundaries, or learning while building features. Don't use for unguided batch coding, routine bug fixes, or automated refactoring.
+description: Use when designing system architectures, modeling relational data, planning API boundaries, or learning while building features. Don't use for unguided batch coding (use executing-plans), routine bug fixes (use systematic-debugging), or automated refactoring (use codebase-design).
 license: MIT
 metadata:
   version: "1.1.0"

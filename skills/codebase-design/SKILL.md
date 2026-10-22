@@ -1,6 +1,6 @@
 ---
 name: codebase-design
-description: Use when designing module interfaces, evaluating abstraction depth, identifying code seams, or turning shallow pass-through wrappers into deep modules. Don't use for syntax styling, single-line bug fixes, or minor formatting changes.
+description: Use when designing module interfaces, evaluating abstraction depth, identifying code seams, or turning shallow pass-through wrappers into deep modules. Don't use for syntax styling or minor formatting changes (use s13n), or single-line bug fixes.
 ---
 
 # Codebase design
@@ -54,6 +54,8 @@ Formulate the interface and identify module boundaries using deep module princip
 5. Simplicity first and reuse hierarchy. Take the first option that fully works. Prioritize an existing codebase helper or pattern first, the standard library or platform feature second, an installed dependency third, and minimum new code last. Never add a dependency for a few lines. Never introduce abstractions, generics, or configurability layers for single-use code.
 6. Shortcut discipline and essential boundaries. When taking an intentional implementation shortcut, mark it in code using `shortcut: <the limit>, <when to upgrade>`. Never cut trust boundary validation, data loss error handling, security invariants, or accessibility in the name of minimalism.
 7. Align interface with test surface. Ensure callers and automated tests cross the same external seam. Do not leak internal test hooks into the public interface.
+8. Subtract before you add. When evolving or refactoring a system, remove complexity first, then build. Sequence removal before construction. Delete dead code, redundant validation checks, and unused stub references before adding new capabilities. Leave the design simpler and more capable behind the same or smaller surface than you found it.
+9. Migrate callers then delete legacy APIs. When introducing a new internal module interface, migrate all in-tree callers and purge the deprecated API in the same wave. Avoid long-lived compatibility shims, forwarding aliases, or wrapper layers for internal code. Update tests to assert the new contract, and delete tests that only protect pre-refactor implementation details.
 
 Completion criterion. A written interface specification defining inputs, outputs, error states, and concrete seam placement.
 
@@ -106,6 +108,8 @@ Run this check before finishing the skill execution:
 | Deletion test | Deleting module causes complexity to reappear across callers |
 | Seam discipline | No interface port created for single-adapter dependencies |
 | Test surface | Tests exercise the module through the same seam used by callers |
+| Subtraction first | Dead code, redundant guards, and stubs removed before adding new features |
+| In-tree caller migration | Deprecated internal APIs and shims purged in the same wave with callers updated |
 | Progressive disclosure | Deepening and multi-agent rules loaded from `references/` |
 | Reuse hierarchy | Prioritizes existing helpers and platform features before new dependencies |
 | Pipeline handoff | Transition offered to `writing-plans` upon design approval |

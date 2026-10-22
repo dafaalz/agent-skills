@@ -1,6 +1,6 @@
 ---
 name: brainstorming
-description: Use when scoping new features, exploring architectural requirements, planning refactors, stress-testing design decisions, or designing greenfield components before writing implementation plans or code. Don't use for direct implementation, writing code, or generating commit messages.
+description: Use when scoping new features, exploring architectural requirements, planning refactors, stress-testing design decisions, or designing greenfield components before writing implementation plans or code. Don't use for direct implementation or writing code (use executing-plans), or generating commit messages (use conventional-commit).
 ---
 
 # Brainstorming ideas into designs
@@ -97,7 +97,7 @@ Clear up requirements through direct talk and check assumptions before you desig
 - For tangled requirements, unclear scope, or explicit stress-test requests, follow `references/grilling.md`. Map picks to a design tree, ask frontier questions in rounds, and close every dependency until the frontier empties.
 - Ask about fixed limits, including inputs, outputs, error handling, storage, and user roles.
 
-Completion criterion. The user confirms every open branch and zero guesses remain.
+Completion criterion. The user confirms every open branch in the design tree or requirements checklist with zero open questions remaining.
 
 ### Step 3. Explore approaches and prototype spikes
 
@@ -121,7 +121,7 @@ Show the design in sections sized to complexity. Cover:
 
 Ask the user after each section if the direction matches.
 
-Completion criterion. The user confirms the direction matches.
+Completion criterion. The user confirms the direction matches for each presented section covering boundaries, data schemas, endpoints, and test checklist with zero open objections.
 
 ### Step 2. Write the design spec
 
@@ -177,7 +177,7 @@ Ask the user to read the written spec:
 
 Wait for explicit user approval. If the user asks for changes, update the file and run the check again.
 
-Completion criterion. The user approves the written spec.
+Completion criterion. The user approves the written spec file at `docs/specs/` with zero open change requests.
 
 ### Step 5. Move to implementation planning
 

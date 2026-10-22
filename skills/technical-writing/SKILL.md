@@ -1,6 +1,6 @@
 ---
 name: technical-writing
-description: Use when writing or reviewing human-facing documentation, RFCs, README files, PR descriptions, or technical guides. Don't use for drafting internal agent instructions, prompt runbooks, or skill documentation.
+description: Use when writing or reviewing human-facing documentation, RFCs, README files, PR descriptions, or technical guides. Don't use for drafting internal agent instructions, prompt runbooks, or skill documentation (use writing-for-agents).
 ---
 
 # Technical writing
@@ -100,7 +100,7 @@ Pick one mode for each document:
 ### Audience and tone
 
 - Speak directly to the reader as a knowledgeable peer.
-- Ban condescending words such as "simply", "easy", "just", or "obviously".
+- State facts and instructions directly, and ban condescending words such as "simply", "easy", "just", or "obviously".
 - Strip promotional vocabulary and corporate buzzwords.
 - Write links using descriptive destinations or page titles instead of phrases like "click here".
 

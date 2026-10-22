@@ -1,6 +1,6 @@
 ---
 name: recursive-research
-description: Use when researching a topic to expert depth, tiering sources by reliability, or mapping state of the art before a design spec or a plan. Don't use for session summaries, code review, or packaging prompts for an external model.
+description: Use when researching a topic to expert depth, tiering sources by reliability, or mapping state of the art before a design spec or a plan. Don't use for session summaries (use summarize), code review (use code-review), or packaging prompts for an external model (use web-advisor-prompt).
 ---
 
 # Recursive research

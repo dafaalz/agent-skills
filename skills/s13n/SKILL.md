@@ -1,6 +1,6 @@
 ---
 name: s13n
-description: Use when standardizing inconsistent code patterns across a repository, resolving architectural divergence, or installing linter guards. Don't use for deep module redesign or single-file refactoring.
+description: Use when standardizing inconsistent code patterns across a repository, resolving architectural divergence, or installing linter guards. Don't use for deep module redesign (use codebase-design) or single-file refactoring.
 allowed-tools: Read Write Edit Glob Grep Bash
 ---
 

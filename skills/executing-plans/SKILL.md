@@ -1,6 +1,6 @@
 ---
 name: executing-plans
-description: Use when executing written implementation plans batch by batch inline in the current session or task by task via delegated subagents. Don't use for architectural design, plan authoring, or open-ended ideation.
+description: "Use when executing written implementation plans batch by batch inline in the current session or task by task via delegated subagents. Don't use for architectural design (use codebase-design), plan authoring (use writing-plans), open-ended ideation (use brainstorming), or multi-task plan verification and audit defense (use agent-planning)."
 ---
 
 # Executing implementation plans

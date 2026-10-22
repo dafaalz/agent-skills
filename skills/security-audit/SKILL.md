@@ -1,6 +1,6 @@
 ---
 name: security-audit
-description: Use when auditing codebases for security vulnerabilities, conducting threat modeling, reviewing auth boundaries, evaluating exploitability, or verifying security fixes. Don't use for feature development, code formatting, or routine dependency upgrades.
+description: Use when auditing codebases for security vulnerabilities, conducting threat modeling, reviewing auth boundaries, evaluating exploitability, or verifying security fixes. Don't use for feature development (use executing-plans), code formatting (use s13n), or routine dependency upgrades.
 ---
 
 # Security audit

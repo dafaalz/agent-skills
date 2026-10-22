@@ -1,6 +1,6 @@
 ---
 name: conventional-commit
-description: Use when creating atomic git commits adhering to the Conventional Commits specification, staging selective hunks, or writing commit messages. Don't use for merge commits or branch cleanup.
+description: Use when creating atomic git commits adhering to the Conventional Commits specification, staging selective hunks, or writing commit messages. Don't use for merge commits (use pull-request) or branch cleanup.
 allowed-tools: Bash Read Grep Glob
 ---
 
