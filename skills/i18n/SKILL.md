@@ -1,6 +1,6 @@
 ---
 name: i18n
-description: Use when implementing internationalization, localization, locale negotiation, date/number formatting, ICU messages, or RTL/BiDi layouts. Don't use for single-language text editing or translation of prose.
+description: "Use when implementing internationalization, localization, locale negotiation, date/number formatting, ICU messages, RTL/BiDi layouts, or text expansion resilience. Don't use for CSS styling (use frontend-design), UX copy review (use ui-ux-review), animation choreography (use ui-motion), React component profiling (use react), or multi-task execution plans (use agent-planning)."
 ---
 
 # Internationalization (i18n)
@@ -23,6 +23,21 @@ Rules for narrowed requests:
 1. A narrowed language set narrows configuration, not code correctness. If only `en` and `es` are requested, use logical CSS properties, locale-aware formatting APIs, and ICU messages so future locales require only configuration changes.
 2. A narrowed domain set does not excuse breaking sibling domains. Note out-of-scope defects in findings without fixing them unless the user expands the scope.
 3. When the target language set is ambiguous, ask the user before implementing.
+
+## Reference quick routing
+
+| Domain | Reference module | Scope |
+|---|---|---|
+| Text expansion | [references/text-expansion-resilience.md](references/text-expansion-resilience.md) | Dynamic text expansion resilience & overflow handling |
+| Language & negotiation | [references/intl-language.md](references/intl-language.md) | Language tags, BCP 47 vocabulary, & negotiation |
+| Dates & times | [references/intl-date-and-time-format.md](references/intl-date-and-time-format.md) | Timestamps, calendar systems, & time zone formatting |
+| Numbers & currencies | [references/intl-number-and-currency.md](references/intl-number-and-currency.md) | Currencies, units, percentages, & notation scales |
+| Bidirectional & RTL | [references/intl-bidi.md](references/intl-bidi.md) | RTL mirroring, BiDi algorithms, & logical properties |
+| Pluralization & ICU | [references/intl-pluralization.md](references/intl-pluralization.md) | Plural rules, gender inflection, & ICU syntax |
+| Collation & sorting | [references/intl-collation-and-sorting.md](references/intl-collation-and-sorting.md) | Locale-sensitive string comparison & sorting |
+| Unicode text processing | [references/intl-text-processing.md](references/intl-text-processing.md) | Segmenter boundaries, grapheme clusters, & case folding |
+| Content & catalogs | [references/intl-content-and-assets.md](references/intl-content-and-assets.md) | Translation catalog layout, formats, & asset localization |
+| Testing & QA | [references/intl-testing-and-qa.md](references/intl-testing-and-qa.md) | Pseudolocalization, visual verification, & test gates |
 
 ## Workflow
 

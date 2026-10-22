@@ -1,6 +1,6 @@
 ---
 name: ui-ux-review
-description: Use when auditing user interfaces and user experience, web accessibility standards, CSS layout architecture, cognitive friction, or design token compliance. Don't use for backend logic review, database schema auditing, or build pipeline debugging.
+description: "Use when auditing user interfaces, conducting UX heuristic critiques, evaluating WCAG accessibility compliance, checking copy clarity, or diagnosing layout defects. Don't use for visual layouts (use frontend-design), CSS animations (use ui-motion), live browser prototyping (use prototype), React rendering profiling (use react), or multi-task execution plans (use agent-planning)."
 ---
 
 # UI and UX review
@@ -29,6 +29,20 @@ Identify user intent and route execution immediately:
 2. **Screen and layout surface audits.** When inspecting an entire view, page route, or dashboard, read `references/layout-and-space.md`, `references/typography.md`, and `references/color-and-contrast.md`. Inspect 8pt spatial scales, CSS Subgrid alignment, container query boundaries, fluid typography clamps, color token tiering, and Cumulative Layout Shift mitigation.
 3. **Task flows and journey audits.** When inspecting multi-step workflows like onboarding, checkout, registration, or wizards, read `references/task-flows-and-ia.md`. Inspect step branching, progress indicators, drop-off risks, and the Lostness Metric.
 4. **Pull request and git diff reviews.** When reviewing git commits or pull requests, read `references/scope-and-diff.md`. Inspect modified files for visual regressions, broken keyboard flows, stripped focus rings, hardcoded hex values, and premature validation triggers.
+
+## Reference quick routing
+
+| Domain | Reference module | Scope |
+|---|---|---|
+| UX scoring | [references/ux-scoring-rubric.md](references/ux-scoring-rubric.md) | Quantitative 100-point UX audit rubric |
+| Persona testing | [references/persona-testing.md](references/persona-testing.md) | User persona simulation & journey walks |
+| Critique workflow | [references/ux-critique-workflow.md](references/ux-critique-workflow.md) | Systematic design critique methodology |
+| Heuristic scoring | [references/heuristic-scoring-guide.md](references/heuristic-scoring-guide.md) | Nielsen-Norman heuristic evaluation framework |
+| Extended heuristics | [references/heuristics-extended-notes.md](references/heuristics-extended-notes.md) | Deep heuristic edge cases & notes |
+| Copy clarity | [references/copy-clarity-and-component-review.md](references/copy-clarity-and-component-review.md) | Microcopy, labels, error messages, & button text |
+| Technical UI audit | [references/technical-ui-audit.md](references/technical-ui-audit.md) | DOM nesting, responsive behavior, & CSS sanity |
+| Onboarding heuristics | [references/onboarding-heuristics.md](references/onboarding-heuristics.md) | First-run UX, progressive onboarding, & cognitive load |
+| Responsive inspection | [references/responsive-inspection.md](references/responsive-inspection.md) | Multi-device layout inspection & viewport stress-tests |
 
 ## Execution invariants
 

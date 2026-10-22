@@ -77,6 +77,14 @@ Pick one accent per project:
 ## 6. Layout principles
 
 - **Grid first.** Use CSS Grid for all major sections. Do not use flexbox percentage calculations such as `calc(33% - 1rem)`.
+- **Pre-code ASCII wireframe.** Draft a structural wireframe to test alignment, column spans, and focal anchor before drafting markup:
+  ```text
+  +-------------------------------------------------------------+
+  | Hero: [Headline + CTA (left 58%)] | [Interactive Demo (42%)] |
+  +-------------------------------------------------------------+
+  | Bento: [Wide Primary Callout (66%)] | [Dense Data Rail (33%)] |
+  +-------------------------------------------------------------+
+  ```
 - **Feature sections.** Do not use three equal cards in a horizontal row. Use a two-column zig-zag, an asymmetric bento grid (such as `2fr 1fr 1fr`), or a horizontal scroll gallery.
 - **Containment.** Center all content inside `max-width: 1400px`. Apply horizontal padding of `1rem` on mobile, `2rem` on tablet, and `4rem` on desktop.
 - **Full height sections.** Use `min-height: 100dvh`. Do not use `height: 100vh` to avoid mobile browser address bar jumps.

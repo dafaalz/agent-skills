@@ -101,6 +101,13 @@ The clipped-edge mockup keeps its visual extension; the page no longer scrolls h
 
 The hero or section that *contains* the overflowing element keeps `overflow: visible` (so the figure renders past the parent edge); the global clip on `html` and `body` is the only safety net needed.
 
+## Section spacing and specificity collisions
+
+Combining element type selectors with component utility classes often causes selector specificity conflicts and canceled rules.
+
+- **Prefer container padding or gap over section margins.** Vertical margins on adjacent sections collapse unpredictably and clash with layout wrappers. Use `py-*` padding on sections or `gap` on the layout parent container.
+- **Avoid element-tag selectors for spacing.** Applying margin or padding to bare tags like `section` or `article` overrides scoped utility classes and breaks component isolation.
+
 ## When in doubt
 
 If the layout looks fine but flat, do one of these before shipping:

@@ -26,6 +26,13 @@ Use this table to map user descriptions to concrete animation patterns:
 | Toolbar tooltips open instantly after the first one is open | Warm-start tooltip | Skip delay and entrance transition when cursor travels across sibling triggers | Set `transition-duration: 0ms` while tooltip group has an active target |
 | Gesture updates stay 120fps during heavy JS parsing | UI thread isolation | Touch callbacks and transforms calculate directly on platform UI thread | Use Reanimated 4 worklets, Compose graphicsLayer lambdas, or compositor transforms |
 | Screen movement causes dizziness or vestibular discomfort | Optical flow conflict | Large-area motion triggers mismatch between retinal signals and inner ear | Replace 3D scaling and parallax scrolling with 2D opacity crossfades |
+| App surfaces orient to physical inputs and persistent homes | Spatial consistency | Establishes a mental map of where intangible digital entities live | Anchor origin to physical buttons, app icons, or Dynamic Island bounds |
+| Motion front-loads travel distance so it feels snappy | Front-loaded velocity | Curve distributes 70% to 80% progress in initial 30% of elapsed time | Apply custom ease-out `cubic-bezier(0.23, 1, 0.32, 1)` |
+| Instant 0ms operation causes user skepticism or distrust | Perception delta | Gap between instant technical completion and user confidence in high-stakes actions | Insert artificial 350ms to 450ms confirmation sequence to confirm settlement |
+| Essential impact remains visible when animation is off | State feedback invariant | Retaining visual or tactile proof of registration (The Pokémon principle) | Apply instantaneous 30-frame screen shake or high-contrast border flash |
+| Blur gets progressively stronger toward device fold or boundary | Progressive blur | Directional gradient blur isolating physical depth or hinge transition | Layered backdrop blur with CSS mask or WebGL shader |
+| System predicts touch path ahead of VSYNC signal | Touch trajectory prediction | Extrapolating coordinates to align inputs with display refresh intervals | Android 5ms touch buffer paired with 80ms motion extrapolation |
+| Expansion mask concealing cold boot frame rendering | Launch screen mask | Window expands from trigger concealing initial frame draw within 400ms | Display static launch layout matching initial screen geometry |
 
 ---
 
@@ -52,6 +59,16 @@ When multiple terms appear similar, use these structural distinctions:
 
 - **Productive motion.** Applied to everyday task workflows, dropdowns, buttons, toggles, and data tables. Keeps durations under 240ms, avoids overshoot, and prioritizes efficiency.
 - **Expressive motion.** Applied to landmark transitions, milestone celebrations, modal dialogues, and onboarding. Uses durations between 300ms and 500ms with spatial trajectory and subtle spring dynamics.
+
+### Productive restraint versus Artificial trust delay
+
+- **Productive restraint.** Strips motion to 0ms on keyboard actions and high-frequency productivity surfaces to eliminate waiting.
+- **Artificial trust delay.** Intentionally inserts a 350ms to 450ms transition on sensitive, irreversible, or financial operations where 0ms settlement triggers user anxiety or distrust.
+
+### State feedback versus Spatial motion
+
+- **Spatial motion.** Translates or scales elements across coordinates to teach spatial relationships. Disqualified on keyboard actions or reduced motion.
+- **State feedback.** Signals state registration immediately via blinks, flashes, or shakes. Must persist even when spatial motion is disqualified or disabled (The Pokémon principle).
 
 ### Off-Main-Thread Animation (OMTA) versus Main-thread animation
 

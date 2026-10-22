@@ -1,7 +1,6 @@
 ---
 name: prototype
-description: Use when prototyping divergent visual or interaction variants for a UI component, or comparing interactive UI explorations. Don't use for production release hardening or performance auditing.
-disable-model-invocation: true
+description: "Use when running live interactive prototyping sessions, generating design variants, rapid mockups, or establishing browser sandbox loops. Don't use for production components (use frontend-design), UX audits (use ui-ux-review), CSS animations (use ui-motion), React profiling (use react), or multi-task execution plans (use agent-planning)."
 ---
 
 # Prototyping variants
@@ -25,6 +24,15 @@ Select an execution branch based on user invocation:
 - Render the picker component exactly as defined in [PICKER.md](PICKER.md) instead of restyling it with project tokens or theme colors.
 - Emit a viewable v0 draft containing layout skeletons, design tokens, and explicit module placeholders (such as `[image]` or `[icon]`) to confirm direction with the user before investing in complex interaction choreography or micro-motion.
 - Delete the prototype harness and unselected variants once the user confirms a winning direction.
+
+## Reference quick routing
+
+| Workflow domain | Reference module | Scope |
+|---|---|---|
+| Live session loop | [references/live-session-loop.md](references/live-session-loop.md) | Live browser prototyping session control |
+| Variant generation | [references/variant-generation.md](references/variant-generation.md) | Generative design permutations & A/B variants |
+| Live generate workflow | [references/live-generate-workflow.md](references/live-generate-workflow.md) | Generation pipelines & artifact output |
+| Live setup guide | [references/live-setup-guide.md](references/live-setup-guide.md) | First-time configuration & server prerequisites |
 
 ## Workflow
 
@@ -101,8 +109,8 @@ Completion criterion. The chosen component is integrated into the destination co
 ## Boundary isolation
 
 Keep prototype code strictly confined to scratch preview paths (`/prototypes/` or temporary HTML files):
-- Never modify production component files, routing tables, or global build configurations during exploration.
-- Do not commit prototype harnesses or scratch dependencies to production bundles.
+- Keep prototype edits confined to scratch preview paths; never modify production component files, routing tables, or global build configurations during exploration.
+- Strip prototype harnesses and scratch dependencies before merging; do not commit prototype harnesses or scratch dependencies to production bundles.
 
 ## Invocation variants
 

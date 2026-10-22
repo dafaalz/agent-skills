@@ -653,3 +653,139 @@ export function TooltipGroup({ children }: { children: React.ReactNode }) {
 
 In the tooltip item, conditionally set entrance duration to 0ms when `hasActiveTooltip` is true. This makes toolbar exploration instantaneous while protecting the interface against accidental hover triggers.
 
+---
+
+## 25. Right-click context menu with selection blink and exit fade
+
+Context menus serve repetitive workflows and must display in 0ms without entrance animation. Upon item selection, trigger a rapid visual blink on the selected target before fading out over 120ms:
+
+```css
+.context-menu {
+  /* 0ms entrance: display immediately without motion delay */
+  opacity: 1;
+  transform: none;
+}
+
+.context-menu-item.is-selected {
+  animation: context-menu-blink 80ms ease-out forwards;
+}
+
+.context-menu.is-closing {
+  opacity: 0;
+  transition: opacity 120ms var(--ease-out);
+}
+
+@keyframes context-menu-blink {
+  0% { background-color: var(--color-accent-subtle); }
+  50% { background-color: var(--color-accent); color: var(--color-accent-contrast); }
+  100% { background-color: var(--color-accent-subtle); }
+}
+```
+
+This delivers instant utility on invocation while giving visual confirmation of the chosen action before the menu unmounts.
+
+---
+
+## 26. High-stakes trust confirmation (The Wise pattern)
+
+Completing asynchronous operations in 0ms can induce user anxiety during irreversible or financial workflows. When operations complete instantaneously, insert a synthetic 350ms to 450ms confirmation sequence to close the perception delta:
+
+```jsx
+import * as React from "react";
+import { motion } from "motion/react";
+
+export function TrustTransferConfirmation({ isComplete, onFinish }: TrustConfirmationProps) {
+  React.useEffect(() => {
+    if (!isComplete) return;
+    // Artificial 400ms duration to allow perception of completed settlement
+    const timer = setTimeout(() => {
+      onFinish();
+    }, 450);
+    return () => clearTimeout(timer);
+  }, [isComplete, onFinish]);
+
+  return (
+    <div className="relative flex items-center justify-center p-4">
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+        className="flex items-center gap-2 text-sm font-medium text-emerald-600"
+      >
+        <svg className="w-5 h-5 text-emerald-500 animate-checkmark" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" />
+          <path d="M7 13l3 3 7-7" stroke="currentColor" strokeWidth="2" fill="none" />
+        </svg>
+        <span>Payment confirmed</span>
+      </motion.div>
+    </div>
+  );
+}
+```
+
+This prevents user panic and repeated click attempts caused by instant invisible state settlement.
+
+---
+
+## 27. State feedback fallback under disabled motion (The Pokémon pattern)
+
+Disabling animations via user preference or frequency gating must never eliminate state change confirmation. When motion is disqualified, replace spatial translation with instant tactile or visual feedback (such as a 30-frame screen shake or high-contrast border flash):
+
+```css
+/* Screen shake fallback for critical impacts when standard animations are disabled */
+.damage-container[data-impact="true"] {
+  animation: state-shake 200ms ease-out;
+}
+
+@keyframes state-shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Replace spatial shake with an instantaneous high-contrast border flash */
+  .damage-container[data-impact="true"] {
+    animation: state-flash 160ms ease-out;
+    transform: none !important;
+  }
+}
+
+@keyframes state-flash {
+  0% { outline: 2px solid var(--color-error); }
+  100% { outline: 2px solid transparent; }
+}
+```
+
+This preserves state registration without forcing vestibular motion upon users.
+
+---
+
+## 28. Hardware-anchored spatial volume slider (The Pixel pattern)
+
+Anchor transient software controls directly to the physical hardware input location. When triggering volume adjustments, animate the slider horizontally out of the screen edge adjacent to the physical rocker button:
+
+```css
+.volume-overlay {
+  position: fixed;
+  right: 0;
+  top: var(--hardware-button-offset-y, 25%);
+  transform-origin: right center;
+  transform: translateX(100%);
+  opacity: 0;
+  transition:
+    transform 180ms var(--ease-out),
+    opacity 180ms var(--ease-out);
+}
+
+.volume-overlay[data-visible="true"] {
+  transform: translateX(0);
+  opacity: 1;
+}
+```
+
+Anchoring the software surface to the physical hardware button reinforces the user mental map of control ownership.
+
