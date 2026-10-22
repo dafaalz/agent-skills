@@ -1,6 +1,6 @@
 ---
 name: web-advisor-prompt
-description: Use when packaging repository context, architectural dilemmas, or design trade-offs into an adversarial zero-context advisory prompt for an external frontier web AI or reasoning model. Don't use for local subagent dispatch, internal routine code generation, or user-facing chat.
+description: Use when packaging repository context, architectural dilemmas, or design trade-offs into an adversarial zero-context advisory prompt for an external frontier web AI or reasoning model. Don't use for local subagent dispatch (use executing-plans), multi-task plan verification (use agent-planning), internal routine code generation, or user-facing chat.
 ---
 
 # Web advisor prompt
@@ -34,8 +34,9 @@ Extract essential codebase facts, schemas, and architectural boundaries while di
 2. Read project convention files (`AGENTS.md`, `CODEBASE.md`) and database schemas (`schema.prisma`, migrations, or model files) to ground domain terms.
 3. Isolate the exact decision boundary, performance constraints, and external dependencies.
 4. Filter out chat conversational baggage, personal commentary, and unresolved speculative tangents.
+5. Capture target host environment details: operating system (e.g., macOS Darwin vs Linux), shell dialect (e.g., zsh vs bash), and userland utility versions (e.g., BSD sed vs GNU sed) to prevent platform-incompatible recommendations.
 
-Completion criterion. An isolated text dossier containing the core proposal, concrete schema definitions, performance constraints, and explicit trade-off questions.
+Completion criterion. An isolated text dossier containing the core proposal, concrete schema definitions, target environment specs, performance constraints, and explicit trade-off questions.
 
 ### Step 2. Anti-sycophantic frame and role calibration
 
@@ -44,13 +45,14 @@ Calibrate the system directive to disarm model agreeableness and prevent convers
 2. Prohibit praise, sycophantic validation, and conversational pleasantries.
 3. Enforce an inverted order of reasoning. Require the external model to articulate fatal flaws and unhandled race conditions before providing recommendations.
 4. Establish a four-tier severity classification rubric: Fatal Flaw, Structural Flaw, Serious Flaw, Cosmetic Flaw.
+5. Bind the advisor to empirical verification invariants: mandate target OS CLI compatibility, require quota/rate-limit feasibility arithmetic, enforce narrow boundary-scoped assertions, and demand fresh stdout or AST ground truth over memory recall.
 
-Completion criterion. A written system directive block mandating ruthless skepticism, flaw prioritization, and zero conversational flattery.
+Completion criterion. A written system directive block mandating ruthless skepticism, flaw prioritization, environmental grounding, and zero conversational flattery.
 
 ### Step 3. XML payload packaging and delimiter isolation
 
 Assemble the complete prompt payload following long-context Gemini prompt engineering standards:
-1. Structure payload sections using uppercase XML delimiters: `<system_directive>`, `<codebase_context>`, `<current_proposal>`, `<evaluation_criteria>`, and `<required_output_schema>`. Consult `references/prompt-templates.md`.
+1. Structure payload sections using uppercase XML delimiters: `<system_directive>`, `<target_environment>`, `<codebase_context>`, `<current_proposal>`, `<evaluation_constraints>`, and `<required_output_schema>`. Consult `references/prompt-templates.md`.
 2. Place massive background context, schema documents, and interface definitions at the beginning of the prompt body. Consult `references/gemini-argon-mechanics.md`.
 3. Position actionable instructions, evaluation questions, and output schemas at the absolute end of the prompt to focus attention.
 4. Avoid redundant step-by-step reasoning instructions. Rely on native thinking capabilities without cluttering output.
@@ -73,6 +75,11 @@ Completion criterion. The validated prompt is output inside a copyable code fenc
 |---|---|---|
 | Leading question | External model flatters user bias | Frame dilemma as neutral trade-off between two concrete variants |
 | Missing schema context | Model hallucinates generic abstractions | Paste verified database schemas and route definitions into `<codebase_context>` |
+| Platform-blind commands | Advisor prescribes GNU commands failing on macOS/BSD (e.g. BSD sed delimiter collision) | Declare host OS and shell in `<target_environment>` and enforce POSIX/BSD compliance |
+| Unbudgeted retry loops | Advisor suggests speculative waiting or retries without feasibility math | Mandate explicit rate-limit arithmetic, time-to-completion, and quota exhaustion limits |
+| Naive curl / WAF blocks | External web requests fail with HTTP 403 / Cloudflare Error 1010 | Specify browser-grade user-agent headers and authenticated API endpoints |
+| Unbounded grep assertions | Verification queries catch valid sibling files or false positives | Enforce exact boundary assertions and targeted file path filters |
+| Hallucinated inventories | Model invents file names or line numbers from ungrounded memory | Mandate raw filesystem stdout or AST listings before asserting inventories |
 | Instructions at prompt top | Instructions get diluted by long context payloads | Move actionable tasks and output schemas to the bottom of the prompt |
 | Unconstrained output format | Model outputs unfocused conversational essays | Enforce numbered Markdown sections and comparison tables |
 | Redundant CoT prompts | Clutters Gemini 4 Argon native thinking engine | Specify clear evaluation criteria instead of manual step-by-step guidance |
@@ -88,7 +95,10 @@ Run this check before emitting the advisor prompt:
 | Check | Passing condition |
 |---|---|
 | Zero context self-containment | All domain models and constraints fully specified without local repository dependencies |
+| Target environment declared | Host operating system (macOS/BSD vs Linux/GNU) and shell dialect specified |
 | Anti-sycophancy directive | Explicitly mandates skepticism and prioritizes fatal flaws before advice |
+| Quota and rate-limit math | Feasibility calculations required for any polling, retries, or bulk operations |
+| Scoped verification | Verification assertions use narrow file path filters instead of repo-wide scans |
 | Long-context layout | Context documents positioned at top; instructions and output schema at bottom |
 | Delimiter integrity | Distinct XML tags isolate system directive, context, proposal, and tasks |
 | Neutrality | Dilemmas presented without telegraphing a preferred choice |

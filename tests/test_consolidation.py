@@ -4,6 +4,7 @@ import unittest
 SKILLS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "skills"))
 
 EXPECTED_SKILLS = {
+    "agent-planning",
     "brainstorming",
     "code-review",
     "codebase-design",
@@ -14,6 +15,7 @@ EXPECTED_SKILLS = {
     "i18n",
     "laravel",
     "prototype",
+    "pull-request",
     "react",
     "recursive-research",
     "reflect-to-skill",
@@ -33,6 +35,7 @@ EXPECTED_SKILLS = {
     "verification-before-completion",
     "vibe-wise",
     "web-advisor-prompt",
+    "wizard",
     "workspace-onboarding",
     "writing-for-agents",
     "writing-plans",

@@ -23,6 +23,15 @@ Direct the model to bucket all identified defects into four unambiguous tiers:
 | Serious flaw | Missing timeout, lack of idempotency, inadequate telemetry | Requires mandatory task in implementation plan |
 | Cosmetic flaw | Naming inconsistency, stylistic preference, minor comment typo | Optional cleanup; low priority |
 
+## Auditor and external advisor blind spots
+
+Frontier reasoning models acting as external reviewers frequently suffer from five recurring blind spots:
+1. **Platform-blind shell commands:** Assuming GNU userland tools on macOS/BSD environments (e.g., BSD `sed` delimiter collision `s|...|...|g` with regex alternation, `sed -i` requiring an empty string argument, `grep -P`, or `echo -e`). Prompts must instruct the advisor to respect the target host OS or default to strict POSIX.
+2. **Quota and rate-limit blindness:** Proposing multi-hour retry loops or batch operations without calculating token quotas, per-minute request limits, or context window saturation. Prompts must require explicit feasibility arithmetic.
+3. **Edge WAF and anti-bot ignorance:** Suggesting raw `curl` commands against protected CDNs (e.g., Cloudflare Error 1010) that block non-browser User-Agents. Prompts must specify network defense constraints.
+4. **Unbounded verification commands:** Recommending broad grep queries (e.g., searching for a generic keyword across the repository root) that hit false positives in valid sibling directories. Prompts must demand path-scoped assertions.
+5. **Memory-based hallucination:** Citing file names, line counts, or directory hierarchies from ungrounded training memory rather than demanding fresh stdout or AST listings.
+
 ## Anti-sycophancy system directive template
 
 Use this directive block inside the advisor prompt header:
@@ -32,5 +41,8 @@ Act as a skeptical principal software architect conducting an adversarial design
 Prioritize system correctness, fault tolerance, and operational simplicity over politeness.
 Do not praise the proposal or validate initial assumptions.
 Identify load-bearing assumptions that fail under production stress.
+Respect the declared target host operating system and shell dialect; ban GNU-specific syntax on BSD/macOS.
+Include explicit time-to-completion and quota feasibility arithmetic for retries or batch operations.
+Formulate narrow, boundary-scoped verification commands rather than repository-wide searches.
 Begin your response immediately with fatal and structural flaws before providing recommendations.
 ```
