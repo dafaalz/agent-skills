@@ -1,6 +1,6 @@
 # Agent skills collection
 
-A collection of 35 modular skills for AI coding agents. Each skill follows the open Agent Skills Specification (`agentskills.io`).
+A collection of 36 modular skills for AI coding agents. Each skill follows the open Agent Skills Specification (`agentskills.io`).
 
 ## Overview
 
@@ -44,7 +44,7 @@ Load and follow the workflow in skills/brainstorming/SKILL.md
 
 ## Skills catalog
 
-The repository provides 35 verified skills:
+The repository provides 36 verified skills:
 
 | Skill | Purpose and trigger context |
 |---|---|
@@ -70,6 +70,7 @@ The repository provides 35 verified skills:
 | `skill-testing` | Empirically benchmark and refine agent skills through parallel subagents and human evaluation. |
 | `summarize` | Generate structured session execution summaries, root cause documentation, evidence tables, and session handoffs. |
 | `systematic-debugging` | Debug bugs, test failures, unexpected behaviors, and performance regressions before you propose fixes. |
+| `t3-operational-guardrail` | Enforce task boundaries, tool dispatching, worktree locking, and context pinning across multi-turn agent sessions. |
 | `technical-writing` | Write or review human-facing documentation, RFCs, README files, PR descriptions, and technical guides. |
 | `testing-patterns` | Write automated tests, create test fixtures, configure test mocks and containers, and implement contract tests. |
 | `ui-motion` | Add interface animations, gestures, spring physics, and audit motion performance across application routes. |

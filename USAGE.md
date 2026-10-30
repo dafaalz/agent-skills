@@ -1,6 +1,6 @@
 # Skill usage guide
 
-Run the 35 skills in this repository across the software delivery lifecycle.
+Run the 36 skills in this repository across the software delivery lifecycle.
 
 ## Overview
 
@@ -78,13 +78,15 @@ Deconstruct approved technical specifications into testable task batches and sel
 | `agent-planning` | `skills/agent-planning` | Author multi-task plans, verify readiness checklists, and handle audit feedback with empirical evidence | `$agent-planning` |
 | `writing-plans` | `skills/writing-plans` | Convert design specifications into phased implementation plans | `$writing-plans` |
 | `executing-plans` | `skills/executing-plans` | Execute plans via inline batches or delegated subagents with review gates | `$executing-plans` |
+| `t3-operational-guardrail` | `skills/t3-operational-guardrail` | Enforce fail-closed tool dispatching, semantic worktree locking, and context pinning | `$t3-operational-guardrail` |
 
 ### Recommended workflow
 1. When structuring complex multi-task execution plans spanning multiple files or repositories, run `$agent-planning` to establish empirical verification standards, rate-limit budgets, and audit defense checklists.
 2. Run `$writing-plans` to generate the implementation plan.
-2. Make sure that each task contains exact file targets, complete code snippets, and automated test commands.
-3. Select an execution strategy in `$executing-plans`. Use Mode 1 for inline batch execution with diff checkpoints on coupled tasks. Use Mode 2 for subagent delegation with automated reviews on independent tasks.
-4. If tasks touch disjoint directories, apply parallel dispatch from `skills/executing-plans/references/parallel-dispatch.md` to run subagents without shared state collisions.
+3. Make sure that each task contains exact file targets, complete code snippets, and automated test commands.
+4. Select an execution strategy in `$executing-plans`. Use Mode 1 for inline batch execution with diff checkpoints on coupled tasks. Use Mode 2 for subagent delegation with automated reviews on independent tasks.
+5. If tasks touch disjoint directories, apply parallel dispatch from `skills/executing-plans/references/parallel-dispatch.md` to run subagents without shared state collisions.
+6. When orchestrating autonomous agent workflows across many turns or multiple subagents, use `$t3-operational-guardrail` to enforce pre-flight brief contracts, lock coupled files across sessions, and gate destructive operations behind HMAC approval tokens.
 
 ## 4. Implementation and test-driven development
 
