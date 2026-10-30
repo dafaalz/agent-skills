@@ -26,6 +26,7 @@ EXPECTED_SKILLS = {
     "skill-testing",
     "summarize",
     "systematic-debugging",
+    "t3-operational-guardrail",
     "technical-writing",
     "testing-patterns",
     "ui-motion",
