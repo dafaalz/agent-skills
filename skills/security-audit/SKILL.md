@@ -1,11 +1,15 @@
 ---
 name: security-audit
-description: Use when auditing codebases for security vulnerabilities, conducting threat modeling, reviewing auth boundaries, evaluating exploitability, or verifying security fixes. Don't use for feature development (use executing-plans), code formatting (use s13n), or routine dependency upgrades.
+description: Use when auditing codebases for security vulnerabilities, conducting threat modeling, reviewing auth boundaries, evaluating exploitability, or verifying security fixes. Don't use for feature development (use executing-plans), code formatting (use s13n), or routine dependency upgrades (author dependency updates directly or use package manager commands).
 ---
 
 # Security audit
 
 Find source-grounded vulnerabilities that violate a real trust boundary, then give owners source evidence, safe reproduction steps, priority calibration, and the smallest effective fix. This is a defensive, source-first workflow. A candidate without an affected principal, concrete resource, and observable security outcome is not a confirmed finding.
+
+<HARD-GATE>
+Write-Target Boundary. Read-only against the target repository. Write only under `<output-dir>/` declared in Full audit setup. Do not commit, push, or modify files inside the target repository. Do not probe external endpoints, shared infrastructure, production identities, or live control planes. Local processes must run inside an isolated local sandbox. Any deviation requires explicit user approval recorded in `<output-dir>/sandbox-exception.md`.
+</HARD-GATE>
 
 ## Modes
 
@@ -109,10 +113,10 @@ Completion criterion. Explicit user approval is recorded for the selected audit 
 Assign ledger units to focused hunter agents in waves:
 - Hunter agents inspect source invariants and execute sandboxed local checks where safe.
 - Hunters output structured JSON candidates with source traces, proof-of-concept inputs, and observed results.
-- Run a coverage critic wave after hunter execution to identify gaps or reassignments.
+- Run at most 3 waves total (initial plus two critic-triggered). After wave 3, record all unresolved units as `deferred` and proceed to Phase 4. Emit `.agents/state/security-audit/wave-log.json` with `wave_number`, `units_assigned`, `units_candidate`, `units_deferred`, and `terminal: true` when waves end.
 - Consult `references/hunting.md` and `references/attack-classes.md` for hunting rules.
 
-Completion criterion. All planned ledger units resolve to candidate, covered, or deferred states with zero unassigned units.
+Completion criterion. All planned ledger units resolve to candidate, covered, or deferred states with zero unassigned units, and `.agents/state/security-audit/wave-log.json` is written to disk.
 
 ### Phase 4. Exploitability verification
 
@@ -122,7 +126,7 @@ Subject every candidate vulnerability to independent verification:
 - Verifiers attempt independent reproduction and confirm source invariants.
 - Consult `references/validation-and-reporting.md` for verification protocols.
 
-Completion criterion. Every candidate receives an evaluation from an isolated verifier and an assigned confirmed, needs-validation, or rejected verdict.
+Completion criterion. Every candidate receives an evaluation from an isolated verifier and an assigned confirmed, needs-validation, or rejected verdict. The count of `needs-validation` verdicts must be less than 30 percent of total candidates. If 30 percent or more are `needs-validation`, stop and ask the user whether to widen sandbox scope or reduce candidate scope before proceeding.
 
 ### Phase 5. Remediation guidance
 
@@ -138,7 +142,7 @@ Completion criterion. Both validation scripts execute with exit code 0 against t
 
 Re-verify confirmed records against current target source and generate audit deliverables:
 - Re-verify that code references and line numbers match current target source.
-- Resolve any discrepancies or state changes.
+- If the target source has moved since Phase 5, record the delta SHA in `.agents/state/security-audit/source-drift.json` and re-verify only the findings whose primary source path changed. Do not re-run hunter waves. If more than 10 findings are affected by drift, stop and ask the user whether to close the current audit against the pinned SHA or restart with the new SHA as the new `source_ref`.
 - Produce `REPORT.md` with executive posture, methodology, and coverage metrics.
 - Produce `FINDINGS-DETAIL.md` with confirmed vulnerabilities, source traces, and fixes.
 - Produce `NEEDS-VALIDATION.md` with hypotheses blocked on external environment facts.
@@ -157,16 +161,16 @@ Only confirmed records receive severity ratings. Overall severity must not excee
 
 ## Anti-patterns
 
-| Anti-pattern | Required practice |
-|---|---|
-| Presenting checklist omissions as vulnerabilities | Require an exploitable trust boundary and demonstrable impact |
-| Offering general hardening advice | Ground all findings in a proven breach of a source invariant |
-| Attempting network testing against external systems | Test strictly against local sandboxed processes and mock endpoints |
-| Guessing cloud, proxy, or browser behaviors | Assert behaviors declared directly in repository configuration |
-| Treating authorized same-principal actions as bugs | Validate multi-principal or unauthenticated privilege boundaries |
-| Skipping scoping gate before hunting waves | Secure explicit user confirmation on approach, scope, and budget |
-| Reporting prose-only findings without evidence | Back every finding with structured JSON reproduction evidence |
-| Modifying target repository code during audit | Keep target source files read-only and emit patch files externally |
+| ID | Title | Pattern description | Why it fails | Concrete fix |
+|---|---|---|---|---|
+| SEC-1 | Checklist as vulnerability | Reports a framework or config checklist omission without an exploit path | Not actionable; inflates finding count without confirming trust-boundary violation | Require an exploitable trust boundary and demonstrable impact |
+| SEC-2 | Hardening advice | Emits general best-practice prose without a source-grounded finding | Cannot be validated against repository evidence | Ground all findings in a proven breach of a source invariant |
+| SEC-3 | External network probe | Sends traffic to deployed systems outside the sandbox | Violates universal execution safety and audit scope | Test only against local sandboxed processes and mock endpoints |
+| SEC-4 | Cloud config guess | Asserts cloud, proxy, or browser behavior not declared in repo config | Fails source-grounding bar | Assert only behaviors declared directly in repository configuration |
+| SEC-5 | Same-principal confusion | Treats authorized self-service actions as privilege escalation | Miscategorized severity; erodes trust in findings | Validate multi-principal or unauthenticated boundaries only |
+| SEC-6 | Scoping skip | Launches hunter waves before user confirms approach and budget | Violates Phase 2 completion criterion | Secure explicit user confirmation on approach, scope, and budget |
+| SEC-7 | Prose-only finding | Emits markdown findings without JSON reproduction evidence | Not machine-verifiable; cannot be re-tested | Back every finding with structured JSON reproduction evidence |
+| SEC-8 | Target mutation | Edits target repository code or configs during audit | Corrupts the audit baseline and violates HARD-GATE | Keep target read-only; emit patches externally |
 
 ## Boundary isolation
 

@@ -4,12 +4,12 @@ Reference manual for formulating zero-context prompts tailored to Google DeepMin
 
 ## Architecture and reasoning traits
 
-Gemini 4 Argon (`gemini-4-argon`) features deep multi-step reasoning capabilities, native multimodal understanding, and a 1-million-token context window.
+Gemini 4 Argon (`gemini-4-argon`) has deep multi-step reasoning capabilities, native multimodal understanding, and a 1-million-token context window.
 
-Key prompt engineering implications documented by Google DeepMind and Google Cloud:
+Key prompt engineering implications for frontier reasoning models:
 1. Native thinking replaces artificial Chain-of-Thought. Avoid instructing the model to think step by step; redundant CoT prompting interferes with the model internal reasoning graph. Provide objective success criteria and let the engine construct its intermediate reasoning path.
 2. Context placement order. When delivering large payloads of code or documentation, position context and source documents at the top of the prompt. Place active queries, instructions, and output format schemas at the bottom.
-3. XML delimiter boundaries. Separate reference material from instructions using explicit XML delimiters (`<context>`, `<codebase>`, `<constraints>`, `<task>`). This eliminates prompt injection and prevents context data from leaking into behavioral directives.
+3. XML delimiter boundaries. Separate reference material from instructions using explicit XML delimiters (`<context>`, `<codebase>`, `<constraints>`, `<task>`). This separates data from instructions and reduces prompt injection risk. It does not eliminate injection, so the directive must still mark context as untrusted.
 4. Direct tone calibration. Gemini 4 Argon defaults to concise, direct outputs. Directives should enforce bluntness and eliminate politeness hedging.
 
 ## Long-context anchor pattern

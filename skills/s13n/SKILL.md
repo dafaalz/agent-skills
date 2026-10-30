@@ -1,12 +1,16 @@
 ---
 name: s13n
-description: Use when standardizing inconsistent code patterns across a repository, resolving architectural divergence, or installing linter guards. Don't use for deep module redesign (use codebase-design) or single-file refactoring.
+description: Use when standardizing inconsistent code patterns across a repository, resolving architectural divergence, or installing linter guards. Don't use for deep module redesign (use codebase-design) or single-file refactoring (apply the edit directly without invoking this skill; see AGENTS.md for edit conventions).
 allowed-tools: Read Write Edit Glob Grep Bash
 ---
 
 # Standardization (s13n)
 
 Normalize diverging patterns across a repository into a single canonical architecture protected by automated linter guards.
+
+<HARD-GATE>
+Write-Target Boundary. In Audit mode, do not modify any file outside `.agents/state/s13n/`. In Normalize mode, modify only source files under the resolved repository root and only after Phase 3 completion criterion passes. Never modify `vendor/`, `node_modules/`, `dist/`, `build/`, lockfiles, or generated files. Any write outside these bounds requires explicit user approval recorded in `.agents/state/s13n/write-approval.md`.
+</HARD-GATE>
 
 ## Modes
 
@@ -67,7 +71,7 @@ find . -type f -not -path './.git/*' -not -path '*/node_modules/*' -not -path '*
 
 If the repository is mid-migration (indicated by `TODO(migrate)` comments or dual implementations), clarify migration intent before touching files.
 
-Completion criterion. The inventory records repository convention files, active formatters, and language distribution counts.
+Completion criterion. The inventory is recorded in `.agents/state/s13n/inventory.md` listing convention files, active formatters, and language distribution counts.
 
 ### Phase 2. Detect divergences
 
@@ -81,7 +85,7 @@ grep -rn --exclude-dir={node_modules,.git,dist,build,vendor} -E "throw new|raise
 
 Record each divergence with exact file counts and sample locations. Check git history for recent changes in minority variants to distinguish intentional modernizations from accidental deviations.
 
-Completion criterion. The divergence catalog documents file counts and sample snippets for every identified variant.
+Completion criterion. The divergence catalog is recorded in `.agents/state/s13n/divergences.md` documenting file counts and sample snippets for every identified variant.
 
 ### Phase 3. Resolve canonical variants
 
@@ -94,7 +98,7 @@ When code patterns conflict and rank 1 or 2 does not specify a rule, present opt
 - Identify counter-signals such as newer modules or recent commit ranges.
 - Cap questions to at most four major divergences per round.
 
-Completion criterion. A confirmed canonical variant is recorded with backing references from convention files, tool configurations, or explicit user authorization.
+Completion criterion. A confirmed canonical variant is recorded in `.agents/state/s13n/canonical.md` with rank from the Precedence hierarchy and backing references.
 
 ### Phase 4. Normalize
 
@@ -121,7 +125,7 @@ gofmt -w . && goimports -w .
 
 Confine normalization edits to project source files; never modify generated files, lockfiles, or external vendor dependencies (`vendor/`, `node_modules/`, `dist/`).
 
-Completion criterion. Every instance of the deprecated variant is replaced across the codebase, and automated linter guards prevent regressions.
+Completion criterion. `grep -rn "<deprecated-pattern>" --exclude-dir={node_modules,.git,dist,build,vendor} .` returns zero matches, and the linter guard commit hash is recorded in `.agents/state/s13n/guard-commit.txt`.
 
 ### Phase 5. Verify
 
@@ -139,14 +143,14 @@ Completion criterion. Build command exits with zero, all tests pass, and grep re
 
 ## Common mistakes
 
-| Mistake | Consequence | Correct Approach |
-| --- | --- | --- |
-| Selecting majority pattern automatically | Destroys ongoing architectural migrations | Verify git history and confirm with user when ambiguous |
-| Asking questions answered by `AGENTS.md` | Wastes user attention and invites documentation drift | Inspect convention documents first |
-| Hand-editing formatting discrepancies | Introduces typos and contradicts formatter rules | Run project formatter directly |
-| Modifying definitions without updating callers | Breaks builds and unit tests | Search repository for all caller references |
-| Omitting automated linter guard | Divergence returns in subsequent pull requests | Add linter restriction rule to config |
-| Normalizing third-party or generated directories | Edits get overwritten on subsequent builds | Exclude vendor and build output paths |
+| Title | Pattern description | Why it fails | Concrete fix |
+|---|---|---|---|
+| Selecting majority pattern automatically | Adopts the most frequent variant without checking git history | Destroys ongoing architectural migrations | Verify git history and confirm with user when ambiguous |
+| Asking questions answered by docs | Asks the user a question already answered by `AGENTS.md` | Wastes user attention and invites documentation drift | Inspect convention documents first |
+| Hand-editing formatting discrepancies | Manually adjusts whitespace to match formatter output | Introduces typos and contradicts formatter rules | Run project formatter directly |
+| Modifying definitions without updating callers | Changes a definition and updates only the definition site | Breaks builds and unit tests | Search repository for all caller references |
+| Omitting automated linter guard | Applies the canonical pattern without an automated guard | Divergence returns in subsequent pull requests | Add linter restriction rule to config |
+| Normalizing third-party or generated directories | Applies normalization inside `vendor/` or generated directories | Edits get overwritten on subsequent builds | Exclude vendor and build output paths |
 
 ## Boundary isolation
 

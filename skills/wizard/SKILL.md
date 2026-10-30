@@ -1,6 +1,6 @@
 ---
 name: wizard
-description: Use when generating self-contained interactive bash scripts or terminal wizards that guide a human through manual setup, credential provisioning, third-party dashboards, or one-off cutovers. Don't use for unattended batch scripts, CI pipelines, or automated test runners (use testing-patterns).
+description: Use when generating self-contained interactive bash scripts or terminal wizards that guide a human through manual setup, credential provisioning, third-party dashboards, or one-off cutovers. Don't use for unattended batch scripts (author shell scripts directly), CI pipelines (author CI configuration directly), or automated test runners (use testing-patterns).
 allowed-tools: Bash Read Write Edit Glob Grep
 ---
 
@@ -20,15 +20,19 @@ Wizard generation creates temporary or helper operational scripts (typically und
 4. Immediate validation. Verify credentials against live endpoints or test commands immediately after input before proceeding to the next step.
 5. Clear visual separation. Use distinct terminal formatting, step banners, and explicit browser URLs to guide the operator without ambiguity.
 
+<HARD-GATE>
+Write-Target Boundary. Write generated scripts only to `scripts/wizards/` or `.agents/state/wizard/`. Do not write to production application source, database configs, or secrets stores. Generated scripts must never write secrets into tracked files; only into gitignored environment files. Refuse to write to any path matching `**/.env`, `**/.env.*`, or `**/*credentials*` unless the path is confirmed in `.gitignore` at runtime using `git check-ignore --quiet <path>`.
+</HARD-GATE>
+
 ## Modes
 
 Select a mode before Step 1:
 - Generate mode (default). Draft a complete, executable bash wizard script and grant execution permissions.
 - Audit mode. Review existing manual setup runbooks or scripts to identify missing interactive confirmation guards.
 
-## Workflow
+## Workflow (Generate mode)
 
-Follow these four steps in sequence.
+Steps 1 to 4 apply to Generate mode only. Audit mode workflow follows in Step 5.
 
 ### Step 1. Identify human prerequisites and manual boundaries
 
@@ -41,7 +45,7 @@ Isolate the exact operations requiring human agency before drafting code:
 2. Map required inputs: identify variable names, validation patterns, and target destination files (such as `.env.local`).
 3. Define completion criteria: determine what endpoint check or exit code proves the setup succeeded.
 
-Completion criterion. List of manual steps, required inputs, and validation checks cataloged in working memory.
+Completion criterion. `.agents/state/wizard/manual-steps.md` exists on disk and lists every manual step, required input, destination file, and validation command.
 
 ### Step 2. Draft script structure and terminal interaction
 
@@ -78,20 +82,40 @@ Add immediate verification checks to prevent invalid state propagation:
      exit 1
    fi
    ```
-2. Test credentials against real APIs using curl before saving:
+2. Test credentials against real APIs using curl before saving. Handle network failure separately from HTTP failure so that `set -e` does not mask the diagnostic message:
    ```bash
-   HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${API_SECRET}" https://api.example.com/v1/auth-check)
+   HTTP_CODE_FILE="$(mktemp "${TMPDIR:-/tmp}/wizard-http.XXXXXX")"
+   if ! curl -s -o /dev/null -w "%{http_code}" --max-time 10 \
+        -H "Authorization: Bearer ${API_SECRET}" \
+        https://api.example.com/v1/auth-check \
+        > "${HTTP_CODE_FILE}"; then
+     echo "Error: network failure reaching auth endpoint. Check connectivity and DNS." >&2
+     rm -f "${HTTP_CODE_FILE}"
+     exit 1
+   fi
+   HTTP_CODE="$(cat "${HTTP_CODE_FILE}")"
+   rm -f "${HTTP_CODE_FILE}"
    if [[ "${HTTP_CODE}" -ne 200 ]]; then
      echo "Verification failed with status ${HTTP_CODE}. Check your token." >&2
      exit 1
    fi
    ```
-3. Write verified variables safely into the target environment file:
+3. Write verified variables safely into the target environment file. Abort on any write or read failure:
    ```bash
-   # Append or replace safely without overwriting other keys
-   grep -v "^API_KEY=" .env > .env.tmp 2>/dev/null || true
-   echo "API_KEY=${API_SECRET}" >> .env.tmp
-   mv .env.tmp .env
+   ENV_FILE="${ENV_FILE:-.env}"
+   TMP_FILE="$(mktemp "${TMPDIR:-/tmp}/wizard-env.XXXXXX")"
+
+   if [[ -f "${ENV_FILE}" ]]; then
+     if ! grep -v "^API_KEY=" "${ENV_FILE}" > "${TMP_FILE}"; then
+       echo "Error: cannot read ${ENV_FILE}. Aborting to prevent data loss." >&2
+       rm -f "${TMP_FILE}"
+       exit 1
+     fi
+   fi
+
+   printf 'API_KEY=%s\n' "${API_SECRET}" >> "${TMP_FILE}"
+   mv -- "${TMP_FILE}" "${ENV_FILE}"
+   chmod 600 "${ENV_FILE}"
    ```
 
 Completion criterion. Script contains live validation checks and safe file persistence.
@@ -111,6 +135,17 @@ Write the script to disk and make it runnable:
    ```
 
 Completion criterion. Script file saved, permissions confirmed with `ls -l`, and invocation instructions provided to the operator.
+
+### Step 5. Audit existing wizard scripts
+
+Applies only when `Audit mode` is selected:
+
+1. Locate the target script path recorded in `.agents/state/wizard/audit-target.txt`.
+2. Read the script and check for the six invariants in `## Quick audit checklist`.
+3. Emit `.agents/state/wizard/audit-report.md` with one row per invariant: `invariant | status (pass/fail) | evidence line number`.
+4. Do not modify the target script in Audit mode. Emit suggested patches as separate files under `.agents/state/wizard/patches/`.
+
+Completion criterion. `.agents/state/wizard/audit-report.md` exists on disk and covers all six invariants with line-number evidence.
 
 ## Quick audit checklist
 

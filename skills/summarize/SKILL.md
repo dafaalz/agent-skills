@@ -5,13 +5,17 @@ description: Use when generating structured session execution summaries, documen
 
 # Summarize
 
-Produce an accurate, structured record of session execution. Write for two consumers. The primary consumer is the user who verifies changes. The secondary consumer is a subsequent agent session that continues the work without rediscovery.
+Produce an accurate, structured record of session execution. Write for two consumers: the user who verifies changes and a subsequent agent session that continues the work without rediscovery.
+
+<HARD-GATE>
+Write-Target Boundary. Summarization operates strictly in a read-only and reporting capacity. Write only to `.agents/state/summarize/` or user-facing execution reports. Never edit application code, alter configuration files, or execute mutating commands while creating summaries.
+</HARD-GATE>
 
 ## Modes
 
-Select a summarization mode before Step 1:
-- Summary mode (default). Distill session activities, modifications, and findings into structured evidence tables.
-- Handoff mode. Package system state, active variables, and next immediate steps for a subsequent agent or user.
+Declare the active operating mode before executing any steps:
+- Summary mode (default): Distill session activities, modifications, and findings into structured evidence tables. Run Steps 1 through 3 sequentially and emit `.agents/state/summarize/session-summary.md`.
+- Incident and handoff mode: Package system state, active variables, and failure timelines for incident audits or agent handoffs. Run Steps 1 through 4 sequentially and emit `.agents/state/summarize/incident.json` alongside the summary document.
 
 ## Integrity rule
 
@@ -40,11 +44,11 @@ Follow these four steps in sequence:
 
 Run status, diff, and log commands to inspect the exact working tree changes and recorded command runs from the session.
 
-Completion criterion. An inventory of all modified, created, and deleted files cross-referenced with executed terminal commands.
+Completion criterion. `.agents/state/summarize/state-inventory.json` exists on disk with `modified_files`, `created_files`, `deleted_files`, and `executed_commands`.
 
 ### Step 2. Synthesize actions and root causes
 
-Draft the overview, chronological actions table, and root-cause breakdowns citing concrete file paths and test outputs.
+Draft overview, chronological actions table, and root-cause breakdowns citing concrete file paths and test outputs.
 
 Completion criterion. Chronological actions and resolved issues drafted with zero unverified claims and zero omitted failures.
 
@@ -52,24 +56,22 @@ Completion criterion. Chronological actions and resolved issues drafted with zer
 
 Construct the verification evidence table and document known gaps, unverified edge cases, and next steps plainly.
 
-Completion criterion. Every automated verification command is tabulated with exact exit status and unverified areas are explicitly listed.
+Completion criterion. `.agents/state/summarize/session-summary.md` exists on disk containing the verification evidence table with exact exit codes and unverified items explicitly cataloged.
 
 ### Step 4. Context handoff assembly
 
-When transferring work to another agent, append the structured handoff block that contains branch, entry point, verification commands, and open tasks.
+When operating in Incident and handoff mode, package system state, branch pointers, entry points, and root-cause details into machine-readable handoff artifacts.
 
-Completion criterion. A complete session execution summary rendered to the user or persisted to disk.
+Completion criterion. `.agents/state/summarize/incident.json` exists on disk recording `incident_trigger`, `root_cause`, `preventive_rule`, and `handoff_block`.
 
 ## Execution summary structure
 
-Render sections in sequence. Omit a section only when empty, stating the omission explicitly.
+Render sections in sequence. Omit a section only when empty, stating the omission explicitly:
 
 ### 1. Overview
-
 Two to three sentences stating session purpose, final status, and present state. The first sentence must answer whether the objective was met.
 
 ### 2. Actions taken
-
 List chronological operations with concrete evidence in a table:
 
 | # | Action | Target | Result |
@@ -79,29 +81,15 @@ List chronological operations with concrete evidence in a table:
 | 3 | Run | `npm test -- auth` | 14 passed, 0 failed |
 | 4 | Run | `npx tsc --noEmit` | Clean run with 0 errors |
 
-Group by category when the list grows. Categorize entries by files created, files edited, files removed, and commands executed. State what changed and why for each path.
-
 ### 3. Issues and root causes
-
 Document every encounter with bugs or failures:
-
-```markdown
-#### Issue 1. [Concise symptom description]
-
-**Symptom** Observed error text and stack traces.
-**Root cause** Underlying system defect and mechanism.
-**Evidence** File path, line number, or command output proving the root cause.
-**Fix** Architectural modification addressing the root cause.
-**Verification** Command executed to validate the fix.
-```
-
-Distinguish between three categories:
-- User-reported defects.
-- Discovered defects found during implementation.
-- Pre-existing defects present before the session started.
+- Symptom: Observed error text and stack traces.
+- Root cause: Underlying system defect and mechanism.
+- Evidence: File path, line number, or command output proving the root cause.
+- Fix: Architectural modification addressing the root cause.
+- Verification: Command executed to validate the fix.
 
 ### 4. Verification evidence table
-
 Record verification commands with exact output:
 
 | Check | Command | Result |
@@ -111,29 +99,17 @@ Record verification commands with exact output:
 | Linter | `npm run lint` | Passed. Clean output |
 | Build | `npm run build` | Passed. Output generated in `dist/` |
 
-List every unverified check under Known gaps.
-
 ### 5. Known gaps and unverified items
-
-State gaps without softening:
-- Untested code paths due to missing fixtures or unavailable external APIs.
-- Unverified deployment or integration behaviors.
-- Open questions that require external decisions.
+State gaps without softening: untested code paths, unverified deployment steps, or open questions requiring decisions.
 
 ### 6. Actionable next steps
-
-Numbered list of concrete next tasks:
-1. Add regression test for boundary conditions at `src/auth/session.ts`.
-2. Update callers that reference deprecated function signatures.
-3. Fix pre-existing type warnings in legacy files.
+Numbered list of concrete next tasks.
 
 ### 7. Agent handoff block
-
-To transfer context to another agent, append this structured block:
+Append this structured block for subsequent agents:
 
 ```markdown
 ## Context handoff
-
 **State** Completed feature implementation, pending PR creation.
 **Branch** `feat/session-refresh`
 **Entry point** `src/auth/session.ts`
@@ -142,18 +118,20 @@ To transfer context to another agent, append this structured block:
 **Caution** Do not revert schema migration timestamp constraint.
 ```
 
+## Anti-patterns
+
+| ID | Title | Pattern description | Why it fails | Concrete fix |
+|---|---|---|---|---|
+| SUM-1 | Ungrounded claims | Asserts tests passed without running the verification command | Subsequent agents inherit broken state | Execute command and record raw exit code |
+| SUM-2 | Narrative walls | Packs actions and diffs into continuous narrative paragraphs | Handoff details get lost in conversational text | Tabulate actions and verification in tables |
+| SUM-3 | Emotional spin | Phrases outcomes as "We made amazing progress on the bug" | Masks unresolved risks and blocker items | Use objective metrics and explicit gap lists |
+| SUM-4 | Unanchored paths | References modified files without line numbers or paths | Readers cannot inspect or verify changes | Format all modified paths as markdown links |
+| SUM-5 | Concealed failure | Omits failed attempts or intermediate errors from report | Future agents repeat the identical failing path | Document failed attempts and underlying causes |
+| SUM-6 | Hollow handoff | Transfers context without exact verification commands | Incoming agent wastes turns rediscovering state | Include exact entry point and verification commands |
+
 ## Boundary isolation
 
 Summarization operates strictly in an analytical and reporting capacity. Never edit application code, alter configuration files, or execute mutating commands while creating summaries.
-
-## Anti-slop and precision guidelines
-
-- State factual outcomes immediately in leading sentences.
-- Prefer tables over narrative paragraphs for enumerable data.
-- Cite exact file paths with line references (`src/auth/session.ts:42`).
-- Quote exact error messages and exit codes verbatim.
-- Drop conversational padding such as "successfully", "carefully", or "it is worth noting".
-- Strip emojis and decorative styling.
 
 ## Quick audit checklist
 
@@ -161,9 +139,10 @@ Audit summaries against this table before finalizing:
 
 | Check | Passing condition |
 |---|---|
-| Verification evidence | Execute verification commands and record exact outputs, never claim untested fixes work |
+| Verification evidence | Execute verification commands and record exact outputs |
 | Failure disclosure | Record failures, discarded paths, and root causes plainly |
 | Completion claims | Record verified facts only, never present plans as modifications |
 | Status structure | Use structured tables with command, path, and result columns |
 | Directness | Present findings directly without filler or introductory fluff |
+| Anti-patterns | Anti-pattern table adheres to 5-column schema with stable IDs |
 | File anchoring | Cite exact repository file paths and line numbers |

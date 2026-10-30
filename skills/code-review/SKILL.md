@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Use when requesting review for code changes, evaluating review feedback, pushing back against incorrect suggestions, or verifying review fixes. Don't use for automated test execution (use testing-patterns) or lint fixing.
+description: "Use when requesting review for code changes, evaluating review feedback, pushing back against incorrect suggestions, or verifying review fixes. Don't use for automated test execution (use testing-patterns) or lint fixing (apply the lint fix directly and verify with the linter's own command)."
 ---
 
 # Code review
@@ -19,25 +19,24 @@ Follow these core principles:
 - Adversarial disproof. Apply doubt-driven evaluation. Never assume code is correct because it looks clean or passes happy-path tests. Actively formulate disproof hypotheses showing where invariants could break.
 - Structural audit depth. Consult `references/architectural-lenses.md` for classical engineering lenses, logic defects, and Fowler code smell baseline.
 - Comment hygiene. Consult `references/comment-hygiene.md` to prune AI conversational narration while preserving critical business context.
+- Feedback discipline. Consult `references/feedback-protocol.md` for counter-arguments, YAGNI verification, and anti-performative response rules.
+
+<HARD-GATE>
+Write-Target Boundary. In Request mode, write only to `.agents/state/code-review/`. In Feedback mode, modify only files that appear in the reviewed commit range. Never refactor working logic outside the reviewed commit range, change formatting conventions across unreviewed files, or run destructive git commands (`reset --hard`, `rebase -i`, `push --force`). Do not modify files owned by the `conventional-commit` or `pull-request` skills' write targets.
+</HARD-GATE>
 
 ## Modes
 
-Select the operating mode before Step 1:
-- Request mode (Phase 1). Run when requesting review on a branch or task. Extract commit boundaries and dispatch parallel reviewer subagents.
-- Feedback mode (Phase 2). Run when evaluating received review comments. Verify feedback against codebase reality, push back on invalid points, and remediate accepted items.
+Select one operating mode before Step 1:
+- Request mode (default). Run Steps 1 through 4 to dispatch and aggregate review findings. Emit `.agents/state/code-review/review.md`.
+- Feedback mode. Run Steps 5 and 6 only, consuming `.agents/state/code-review/review.md` if it exists. Emit `.agents/state/code-review/feedback-response.md`.
+- End-to-end mode. Run Steps 1 through 6 in sequence.
+
+Do not interleave modes. Steps 1 through 4 belong exclusively to Request mode or the first half of End-to-end mode. Steps 5 and 6 belong exclusively to Feedback mode or the second half of End-to-end mode.
 
 ## Phase 1. Requesting code review
 
-Dispatch isolated reviewer sub-agents across Standards and Spec axes to catch defects before they cascade downstream. Provide precise git ranges and requirements without polluting reviewers with conversational session history.
-
-### When to request review
-
-Request code review under the following mandatory conditions:
-- After completing each task in subagent-driven development.
-- After finishing a major feature branch.
-- Before merging any working branch into the main trunk.
-
-Request review optionally when encountering complex bug fixes, before significant refactoring, or when stuck and requiring an objective fresh perspective.
+Dispatch isolated reviewer sub-agents across Standards and Spec axes to catch defects before they cascade downstream.
 
 ### Step 1. Commit boundary extraction and pre-flight validation
 
@@ -46,13 +45,13 @@ Follow this procedure to extract commit boundaries and validate git references:
 1. Identify the fixed point reference, such as a commit SHA, branch name, tag, or merge base. When unspecified, prompt the user for the reference.
 2. Resolve commit references:
 ```bash
-git rev-parse --verify ${FIXED_POINT}
-BASE_SHA=$(git merge-base ${FIXED_POINT} HEAD)
+git rev-parse --verify "${FIXED_POINT}"
+BASE_SHA=$(git merge-base "${FIXED_POINT}" HEAD)
 HEAD_SHA=$(git rev-parse HEAD)
 ```
 3. Inspect diff statistics and verify that the target diff is non-empty:
 ```bash
-git diff --stat ${BASE_SHA}...${HEAD_SHA}
+git diff --stat "${BASE_SHA}"..."${HEAD_SHA}"
 ```
 If `git rev-parse` fails or if the diff contains zero changes, stop execution immediately.
 
@@ -76,18 +75,44 @@ Completion criterion. Specification text and repository standards files are loca
 
 ### Step 3. Two-axis parallel reviewer dispatch
 
-Dispatch the Standards and Spec reviewer sub-agents in parallel using templates in `references/code-reviewer-prompt.md`:
+Dispatch the Standards and Spec reviewer sub-agents in parallel using templates in `references/code-reviewer-prompt.md`. Pass each sub-agent the following invariant envelope without paraphrasing or summarizing:
 
-1. Standards sub-agent receives:
-- The diff command `git diff ${BASE_SHA}...${HEAD_SHA}` and commit list from `git log ${BASE_SHA}..HEAD --oneline`.
-- Documented repo standard files.
-- The 12 Fowler code smells from `references/architectural-lenses.md`.
-- Instruction to report hard standard violations and smell heuristics under 400 words, and omit tooling-enforced lints.
+```yaml
+# STANDARDS ENVELOPE (DO NOT MODIFY)
+axis: standards
+diff_command: "git diff BASE_SHA...HEAD_SHA"
+commit_log_command: "git log BASE_SHA..HEAD --oneline"
+base_sha: "<sha>"
+head_sha: "<sha>"
+standard_files:
+  - "<explicit path 1>"
+  - "<explicit path 2>"
+smell_reference: "skills/code-review/references/architectural-lenses.md#section-3"
+required_output_schema:
+  - "id"
+  - "tier"
+  - "file"
+  - "line"
+  - "finding"
+  - "suggested_fix"
+word_budget: 400
+```
 
-2. Spec sub-agent receives:
-- The diff command and commit list.
-- Specification text or path.
-- Instruction to report missing requirements, scope creep, and incorrect implementations with exact spec quotes under 400 words.
+```yaml
+# SPEC ENVELOPE (DO NOT MODIFY)
+axis: spec
+diff_command: "git diff BASE_SHA...HEAD_SHA"
+spec_source: "<explicit path or URL or 'unavailable'>"
+required_output_schema:
+  - "id"
+  - "tier"
+  - "file"
+  - "line"
+  - "spec_quote"
+  - "finding"
+  - "suggested_fix"
+word_budget: 400
+```
 
 If the specification is marked unavailable, dispatch only the Standards sub-agent.
 
@@ -105,18 +130,11 @@ Aggregate findings from both sub-agents without merging or cross-ranking finding
 - Important. Missing error handling, architectural debt, smell baseline issues, or test gaps. Address these before merging.
 - Minor. Style inconsistencies or documentation improvements. Address these after functional items pass.
 
-Completion criterion. Findings are rendered under distinct Standards and Spec sections with zero cross-axis reranking, each categorized by priority tier.
-
-### Workflow integration
-
-Align review cadence with development workflows:
-- Subagent-driven development. Review after each task to catch issues before they compound.
-- Executing plans. Review after each batch of tasks, apply verified fixes, and proceed.
-- Ad-hoc development. Review before branch merges or whenever architectural doubts arise.
+Completion criterion. `.agents/state/code-review/review.md` exists on disk. The file contains two top-level sections, `## Standards` and `## Spec`. Every finding under each section is a table row with columns `ID | Tier (Critical|Important|Minor) | File | Line | Finding | Suggested fix`. The `## Spec` section is omitted (with an explicit `spec: skipped` line) only if Step 2 marked the Spec axis unavailable.
 
 ## Phase 2. Evaluating and receiving feedback
 
-Review comments represent hypotheses to evaluate, not unilateral commands to execute. Process every piece of feedback through deliberate verification.
+Review comments represent hypotheses to evaluate, not unilateral commands to execute. Process every piece of feedback through deliberate verification. Consult `references/feedback-protocol.md` for detailed rules on banned performative agreement, ambiguity clarification, YAGNI verification, and technical pushback.
 
 ### Step 5. Feedback verification and pushback loop
 
@@ -128,52 +146,7 @@ Follow this six-step loop for every review item:
 5. Respond. Provide a factual technical response or reasoned pushback.
 6. Plan remediation. Queue approved modifications for Step 6 and run tests after each subsequent edit.
 
-Completion criterion. All review comments verified against codebase truth, with ambiguous items clarified and grounded counter-arguments formulated where architecture is degraded.
-
-### Banned performative agreement
-
-Never generate performative agreement, excessive gratitude, or subservient conversational fillers.
-
-Strictly avoid phrases like these:
-- "You're absolutely right!"
-- "Great point!" or "Excellent catch!"
-- "Thanks for pointing that out!"
-- "Let me implement that right away!"
-
-Respond instead with direct technical substance:
-- State the factual requirement or issue directly.
-- Point to the specific file and line under review.
-- Confirm the fix factually, such as "Fixed date validation in search.ts by rejecting non-ISO strings."
-- Jump directly to running tests and showing diffs.
-
-### Handling unclear items
-
-Never guess intent or apply partial assumptions when review comments lack clarity.
-
-Apply this clarification protocol:
-- Stop immediately when any item in a review list is ambiguous.
-- Do not implement clear items prematurely if ambiguous items may alter shared architecture; hold implementation until shared architecture is confirmed.
-- State exactly which items are understood and ask targeted questions regarding the unclear items.
-- Resume implementation only after requirements are fully unambiguous.
-
-### Architectural integrity and counter-argument protocol
-
-Protect system boundaries when suggestions violate Single Responsibility Principle, introduce tight coupling, or cause lifecycle mismatches:
-- Require technical correctness and push back with concrete facts; never accept anti-patterns to avoid interpersonal friction.
-- Check blast radius across modules. Verify whether the suggestion forces unrelated domains into a shared file or puts request-time logic into static initialization.
-- Ground counter-arguments in external consensus. Run targeted searches using official framework documentation or industry standards before responding.
-- Formulate a structured technical counter-argument. State the concrete tradeoff, cite the authoritative source, and propose a clean, decoupled alternative that satisfies the caller's true requirement.
-
-### YAGNI verification
-
-Reviewers frequently recommend building speculative abstraction layers, extra configuration flags, or unused data exports.
-
-Verify necessity using this process:
-1. Search the codebase for actual call sites using grep or file search tools.
-2. If the feature has zero active callers, reject the abstraction and propose removing dead code instead.
-3. If active callers exist, implement the minimum clean logic required to satisfy those callers without speculative generalizations.
-4. Enforce the reuse hierarchy. Existing codebase helpers and standard library utilities beat writing custom wrappers or adding third-party dependencies.
-5. Protect essential boundaries. Never sacrifice trust boundary validation, error handling preventing data loss, security invariants, or accessibility in the name of YAGNI.
+Completion criterion. All review comments verified against codebase truth, recorded in `.agents/state/code-review/feedback-response.md`, with ambiguous items clarified and grounded counter-arguments formulated where architecture is degraded.
 
 ### Step 6. Surgical remediation and regression pass
 
@@ -189,17 +162,6 @@ Execute accepted review changes methodically to avoid compound regressions:
 
 Completion criterion. Accepted fixes implemented one by one, each verified by targeted test runs, followed by a clean full test suite pass.
 
-### Handling pushback and corrections
-
-Navigate disagreements with technical facts:
-- When pushing back, reference test results, benchmark metrics, or architectural constraints rather than personal preference.
-- If you pushed back and later discover the reviewer was correct, acknowledge the facts directly without lengthy apologies.
-- State the verified finding plainly, such as "Verified the 10.15 backward compatibility requirement. Implementing the fallback branch now."
-
-### Thread replies
-
-Reply directly in the comment thread for inline GitHub pull request comments rather than submitting top-level PR comments. Keep all discussion tied to the relevant line diff.
-
 ## Adversarial falsification protocol
 
 Reviewers must not evaluate code solely on happy-path execution or cosmetic cleanliness. When auditing diffs touching core business logic, permissions, migrations, or shared utilities:
@@ -211,21 +173,17 @@ Reviewers must not evaluate code solely on happy-path execution or cosmetic clea
 
 Completion criterion. High-stakes review items evaluated with explicit disproof hypotheses and verified downstream blast radius.
 
-## Boundary isolation
-
-Code review operates in an advisory and remediation capacity only. Never modify unrelated files, refactor working logic outside the reviewed commit range, or change formatting conventions across files not touched by the review.
-
 ## Quick audit checklist
 
 Review this table before completing the code review:
 
-| Check | Passing condition |
-|---|---|
-| Reviewer agreement | State technical facts directly or apply the fix, never performative agreement |
-| Implementation grounding | Verify suggestions against codebase truth before implementing, never blind application |
-| Fix batching | Implement one item at a time and test each before proceeding |
-| Suggestion verification | Confirm proposed changes do not break existing features before accepting them |
-| Pushback discipline | Prioritize technical correctness over reviewer comfort |
-| Implementation completeness | Clarify ambiguous items before writing code |
-| Generalization control | Check YAGNI by grepping for actual callers |
-| Adversarial disproof | Review evaluated against boundary failure hypotheses and blast radius |
+| ID | Title | Pattern description | Why it fails | Concrete fix |
+|---|---|---|---|---|
+| CR-1 | Performative agreement | Responds with "You're absolutely right!" or "Great catch!" instead of a technical statement | Masks whether the agent verified the suggestion; trains the user to expect praise instead of evidence | State the factual finding and file path; cite the verification step |
+| CR-2 | Blind implementation | Applies a reviewer suggestion without inspecting codebase truth | May break existing behavior that the reviewer did not consider | Run the review protocol Steps 5.1-5.6; verify against tests and callers |
+| CR-3 | Fix batching | Applies all findings in one edit and tests once at the end | Regressions compound and become hard to attribute | Implement one item at a time; run targeted test after each |
+| CR-4 | Unverified claim of fix | States the fix is done without a targeted test run | User deploys broken code believing it is fixed | Run `verification-before-completion` after each fix |
+| CR-5 | Pushback without facts | Disagrees based on preference | Erodes trust and hides real defects | Cite tests, benchmarks, or architectural constraints |
+| CR-6 | Skipped clarification | Implements ambiguous items while others remain unclear | Order of operations may invalidate already-applied fixes | Apply the clarification protocol; hold all changes until ambiguity resolves |
+| CR-7 | Speculative abstraction | Adds config flags or exports with no call sites | Violates YAGNI and adds maintenance surface | Grep for call sites first; reject if zero |
+| CR-8 | Happy-path review | Reviews without adversarial falsification on high-stakes diffs | Boundary, permission, or migration defects ship undetected | Apply the Adversarial falsification protocol before completion |

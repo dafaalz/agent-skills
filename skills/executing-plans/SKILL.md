@@ -5,10 +5,14 @@ description: "Use when executing written implementation plans batch by batch inl
 
 # Executing implementation plans
 
-Execute implementation plans written in `docs/plans/` using either inline batch execution or delegated subagents. Maintain test-driven development discipline across every task, update markdown checkboxes directly inside the plan file, and run verification before completing the branch.
+Execute implementation plans written in `docs/superpowers/plans/` using either inline batch execution or delegated subagents. Maintain test-driven development discipline across every task, update markdown checkboxes directly inside the plan file, and run verification before completing the branch.
 
 Announce the starting stance at session start:
 `I am using the executing-plans skill to execute this plan.`
+
+<HARD-GATE>
+Write-Target Boundary. Write only to paths declared in the active plan task `Files` block, the plan file itself for checkbox updates, and `.agents/state/` for receipts and blockers. Do not modify files outside that set. Do not run `git commit --amend`, `git reset --hard`, `git push --force`, or any destructive command without explicit user approval. Mode 1 and Mode 2 both inherit this gate.
+</HARD-GATE>
 
 ## Modes
 
@@ -30,9 +34,9 @@ When the user specifies an execution mode, apply it directly. When the mode is n
 ## Pre-execution verification
 
 Complete these preparation steps before editing code under either mode:
-1. Verify workspace isolation. Confirm work proceeds on a dedicated feature branch. Run `git rev-parse --abbrev-ref HEAD` and verify the branch is not `main` or `master`.
+1. Verify workspace isolation. Confirm work proceeds on a dedicated feature branch. Run `git rev-parse --abbrev-ref HEAD` and verify the branch is not `main` or `master`. Exception: repository maintenance, skill audits, or prompt updates under `skills/` or `.agents/` may be committed directly to `main` when operating in single-branch maintenance mode.
 2. Inspect plan completeness. Confirm every task specifies exact file targets, interface contracts, and executable test commands. Ensure no placeholders like TODO or TBD remain.
-3. Establish test baseline. Run the existing test suite once before making changes to confirm a clean starting state. If baseline tests fail, resolve them before touching plan code.
+3. Establish test baseline. Run the existing test suite once before making changes to confirm a clean starting state. If baseline tests fail, record the failing command and output in `.agents/state/baseline-failures.md`, stop, and ask the user whether to repair baseline or abort. Do not repair unrelated baseline failures without approval.
 4. Synchronize git status. Ensure the working tree is clean:
 ```bash
 git status --porcelain
@@ -40,7 +44,7 @@ git status --porcelain
 Commit or stash any unrelated modifications before beginning execution.
 5. Prioritize compiler and test diagnostics over plan snippets. When compiler errors, linter rules, or test failures contradict code examples in the plan markdown, resolve the issue using live toolchain feedback rather than forcing invalid plan code. The live toolchain takes precedence over markdown text.
 
-Completion criterion. Git status confirms a clean working tree on a non-main feature branch and baseline test suites pass with exit code 0.
+Completion criterion. Git status confirms a clean working tree on a non-main feature branch (or documented maintenance mode on main) and baseline test suites pass with exit code 0.
 
 ## Mode 1. Inline batch execution
 
@@ -93,7 +97,7 @@ Execute tasks by orchestrating isolated subagents per task to preserve the prima
 ### Step 1. Plan parsing and task queue
 
 Initialize execution state from the plan file:
-- Read the plan file in `docs/plans/` and extract all tasks.
+- Read the plan file in `docs/superpowers/plans/` and extract all tasks.
 - Maintain full task specifications in memory, including target files, commands, and acceptance criteria.
 - Keep the plan file synchronized as the single source of truth.
 
@@ -105,7 +109,7 @@ Apply the zero-paraphrase protocol. Never paraphrase or summarize task instructi
 
 ```yaml
 # SUBAGENT INVARIANT ENVELOPE (DO NOT MODIFY)
-task_source_file: docs/plans/<slug>-plan.md
+task_source_file: docs/superpowers/plans/<slug>-plan.md
 task_id: "Phase X, Task Y"
 workspace_runtime:
   package_manager: "<pm>"
@@ -127,13 +131,13 @@ Completion criterion. Implementer subagent completes execution and returns an ev
 ### Step 3. Boundary validation and two-stage review cycle
 
 Before accepting subagent claims, enforce a mechanical boundary check:
-1. Validate git diff boundaries. Run `git status --porcelain` and `git diff --name-only`. If any modified file falls outside the declared `write_allowlist`, revert unauthorized files via `git checkout -- <file>` and reject the task.
+1. Validate git diff boundaries. Run `git status --porcelain` and `git diff --name-only`. If any modified file falls outside the declared `write_allowlist`, stop the task. If the unauthorized change is uncommitted, run `git restore --source=HEAD --staged --worktree -- <file>`. If it is committed, record the commit SHA and stop. Do not rewrite history without explicit user approval.
 2. Spec compliance review. Dispatch a reviewer subagent using `prompts/spec-reviewer-prompt.md`. The reviewer inspects actual git diffs line by line against requirements without trusting implementer claims.
 3. Code quality review. After spec compliance passes, dispatch a reviewer using `prompts/code-quality-reviewer-prompt.md`. The reviewer evaluates single responsibility, interface clarity, and maintainability.
 
-Repeat the review loop until both reviewers approve the changes.
+Run at most 3 review cycles per task. On cycle 3 failure, stop. Write `.agents/state/execution-blocker.json` with `task_id`, `failed_review`, `diff_sha`, and `reviewer_output`. Ask the user to resolve the blocker. Do not dispatch another reviewer for the same task.
 
-Completion criterion. Git diff strictly matches write allowlist and independent spec compliance and code quality reviews both pass.
+Completion criterion. Git diff strictly matches write allowlist, review cycles remain at or under 3, and independent spec compliance and code quality reviews both pass.
 
 ### Step 4. Mark task completed and advance
 
@@ -142,8 +146,9 @@ Once all checks pass:
 - Advance to the next task in the plan.
 - After all tasks complete, verify global diff statistics:
 ```bash
-BASE_SHA=$(git merge-base origin/main HEAD)
-git diff --stat ${BASE_SHA}..HEAD
+BASE_REF=$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null || printf 'main')
+BASE_SHA=$(git merge-base "$BASE_REF" HEAD)
+git diff --stat "${BASE_SHA}..HEAD"
 ```
 
 Completion criterion. The completed task checkbox is marked `- [x]` in the plan file and diff statistics are verified before advancing.
@@ -155,7 +160,7 @@ Apply execution rules strictly to orchestration, review checkpoints, and git tra
 ## Integration and completion handoff
 
 Coordinate with related workflow skills:
-- `writing-plans` creates the structured implementation plan in `docs/plans/` that this skill executes.
+- `writing-plans` creates the structured implementation plan in `docs/superpowers/plans/` that this skill executes.
 - `testing-patterns`, `frontend-design`, `ui-motion`, `codebase-design`, and `security-audit` provide domain constraints injected during subagent dispatch.
 - `code-review` provides templates and evaluation rubrics for code reviewers.
 - `verification-before-completion` conducts final verification of test outputs and git state.
@@ -164,9 +169,17 @@ After all tasks in the plan are completed and verified:
 1. Verify that every checkbox in the plan file is marked `- [x]`.
 2. Run the complete automated test suite to ensure system integrity.
 3. Emit execution receipt to `.agents/state/execution-receipt.json`.
-4. Transition to `verification-before-completion` for final test verification and PR preparation.
+4. Read the plan header `Source spec` field. If it names a path, verify the referenced file header declares `artifact_type: component-spec` before recording `component_spec_path_abs`. If the field is `none` or absent, skip component-spec purge entirely. Never infer the component spec path from the plan file name.
+5. Derive the repo-relative plan path before recording recovery:
+   * `plan_path_rel`: output of `git ls-files --full-name -- "$plan_path_abs"`
+   * If `git ls-files` returns empty (file untracked), record `plan_recovery_command: "not-recoverable"` and `plan_tracked: false`.
+   * Otherwise record `plan_recovery_command`: `git show <plan_last_commit_sha>:<plan_path_rel>`.
+   * Record `plan_path_rel` alongside `plan_path_abs` in the receipt.
+   * If a component spec is present, derive `component_spec_path_rel` and its recovery command using the same git check.
+6. Present `plan_recovery_command` to the user with the confirmation gate. After explicit user confirmation, run `rm -f -- "$plan_path_abs"`. When a component spec is present, run `rm -f -- "$component_spec_path_abs"`. The `--` flag prevents paths beginning with a dash from being parsed as options. Record `plan_cleanup: "confirmed"` in the receipt. On refusal, record `plan_cleanup: "user-declined"`.
+7. Transition to `verification-before-completion` for final test verification and PR preparation.
 
-Completion criterion. All plan checkboxes reflect `[x]`, execution receipt emitted to `.agents/state/execution-receipt.json`, and full test suites pass with zero failures.
+Completion criterion. All plan checkboxes reflect `[x]`, execution receipt emitted to `.agents/state/execution-receipt.json` with recovery provenance, plan cleanup decision recorded, and full test suites pass with zero failures.
 
 ## Quick audit checklist
 
@@ -174,9 +187,10 @@ Review this table before completing plan execution:
 
 | Check | Passing condition |
 |---|---|
-| Workspace isolation | Feature branch active and not `main` or `master` |
+| Hard gate | Write-target boundary active across Mode 1 and Mode 2 |
+| Workspace isolation | Feature branch active and not `main` or `master` (except documented maintenance mode) |
 | Zero-paraphrase dispatch | Tasks passed via immutable plan path and task ID inside invariant envelope |
 | Diff boundary check | Mutated files strictly contained within declared `write_allowlist` |
 | Minimal diff | Shortest working diff applied without extra dependencies |
-| Review passes | Spec compliance and code quality reviews approved |
+| Review passes | Spec compliance and code quality reviews approved within 3 cycles |
 | Plan synchronization | All plan checkboxes reflect `[x]` and commit hashes recorded |

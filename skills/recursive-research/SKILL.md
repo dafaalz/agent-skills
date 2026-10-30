@@ -9,6 +9,10 @@ Research a topic to expert depth before you write a design spec or a plan. Run r
 
 Read `references/source-tiering.md` when you assign a tier to a source or pick seed sources. Read `references/decision-frameworks.md` before an autonomous pick and before you declare fitness. Read `references/cycle-protocol.md` at every cycle checkpoint and when you resume a saved run.
 
+<HARD-GATE>
+Write-Target Boundary. Write evidence only under `.agents/research/<slug>/`. Do not edit application source, schemas, migrations, configuration files, or shell history. Confirm the slug and root before Step 1.
+</HARD-GATE>
+
 ## Modes
 
 Select a mode before Step 1.
@@ -69,8 +73,8 @@ Completion criterion. `cycle-NN.md` and `state.md` both carry the current cycle 
 
 Test the five criteria. Move to Step 6 only when all five pass.
 
-1. Coverage at 80 percent or higher on every seed thread.
-2. Three or more T1 sources per thread, or T1 plus T2 when the field holds few T1 sources.
+1. Coverage is the number of required subtopics in `threads.md` with at least one T1 or T2 source divided by the total required subtopics, reaching 80 percent or higher on every seed thread. Record the numerator, denominator, and percentage.
+2. Each thread has at least 3 T1 sources, or at least 2 T1 and 3 T2 sources when the domain contains fewer than 3 T1 sources. Record the count in `threads.md`.
 3. Saturation at 5 percent or lower for three consecutive cycles.
 4. Munger inversion written into `gaps.md` for the current knowledge state.
 5. Three or more explicit links between different threads.
@@ -103,13 +107,13 @@ Write evidence only inside `.agents/research/<slug>/`. Leave application source 
 
 ## Anti-patterns
 
-| Rejected pattern | Why it fails | Fix |
-|---|---|---|
-| Flat search | Repeats queries with synonyms and never deepens | Open the source and harvest facts |
-| Source picked for comfort | Confirms the first answer | Add the contradicting source from the inversion |
-| Missing checkpoint | Five cycles of work lost to compaction | Write `cycle-NN.md` before the next cycle |
-| Tier 3 without a citation trail | Spreads an unverified claim | Reject the source or move it to Rejected |
-| Self-declared expert depth | Skips the measured criteria | State pass or fail per criterion with the number |
+| ID | Title | Pattern description | Why it fails | Concrete fix |
+|---|---|---|---|---|
+| RR-1 | Flat search | Repeats queries with synonyms and never opens sources | Produces no new evidence | Open the source and harvest facts |
+| RR-2 | Source picked for comfort | Confirms the first answer | Hides contradicting evidence | Add the contradicting source from the inversion |
+| RR-3 | Missing checkpoint | Five cycles of work lost to compaction | Destroys resumability | Write `cycle-NN.md` before the next cycle |
+| RR-4 | Tier 3 without a citation trail | Spreads an unverified claim | Corrupts the evidence base | Reject the source or move it to Rejected |
+| RR-5 | Self-declared expert depth | Skips the measured criteria | Produces false confidence | State pass or fail per criterion with the number |
 
 ## Quick audit checklist
 

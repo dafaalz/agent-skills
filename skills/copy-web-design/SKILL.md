@@ -20,6 +20,10 @@ This runbook defines sequential execution steps. Read detailed reference manuals
 | CDP extraction, SVG sanitization, Tailwind compilation, and Core Web Vitals | `references/tooling-and-code-synthesis.md` |
 | Browser console token extraction helper | `scripts/extract_tokens.js` |
 
+<HARD-GATE>
+Write-Target Boundary. Read-only against target URLs and external sites. Write only under the repository `src/`, `app/`, or `components/` trees after Phase 1 legal and ethical triage passes. Never save vendor source to disk. Never authenticate, bypass paywalls, or reuse authenticated browser sessions. If a page requires authentication, stop and record `target_ineligible: authentication` in `.agents/state/copy-web-design/legal-triage.md`.
+</HARD-GATE>
+
 ## Modes
 
 Select the replication mode before Phase 1:

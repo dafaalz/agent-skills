@@ -9,15 +9,17 @@ Author intentional visual interfaces, establish token architectures, and elimina
 
 ## Overview
 
-Frontend design provides an engineering runbook for layout structure, token architecture, component mechanics, and anti-slop safeguards. It replaces generic AI defaults such as neon gradients, generic serif headings on dashboards, centered three-card rows, and fabricated metrics with intentional design systems. Every interface must feature authentic content, stable layout structure, accessible interaction models, and verified production libraries.
+Frontend design provides an engineering runbook for layout structure, token architecture, component mechanics, and anti-slop safeguards. It replaces generic AI defaults with authentic content, stable layout structure, accessible interaction models, and verified production libraries. Consult reference documents in references/ on demand.
 
-Consult reference documents in references/ on demand for deep implementation patterns.
+<HARD-GATE>
+Write-Target Boundary. Modify only markup, CSS, and design tokens inside the target component directory. Do not modify component props, state hooks, side effects, event handlers, or API query wiring. Do not write to `references/`. Emit audit reports to `.agents/state/frontend-design/`. Any change to DESIGN.md or global tokens requires explicit user approval recorded in `.agents/state/frontend-design/token-approval.md`.
+</HARD-GATE>
 
 ## Modes
 
 Select an execution mode before Step 1:
-- Greenfield mode (default). Author new views, generate DESIGN.md, and establish visual tokens from scratch.
-- Audit and restyle mode. Inspect existing components, calculate delta scores against references/impeccable-delta.md, and present recommendations before modifying markup.
+- Greenfield mode (default). Steps 1 through 4 execute in order.
+- Audit and restyle mode. Step 1 executes; Steps 2 and 3 are skipped unless token regeneration is approved in `.agents/state/frontend-design/token-approval.md`; Step 4 executes as verification. Emit `.agents/state/frontend-design/audit-report.md` at Step 4.
 
 ## Reference quick routing
 
@@ -40,9 +42,15 @@ Select an execution mode before Step 1:
 | Color & typeset | [references/color-and-typeset-enhancement.md](references/color-and-typeset-enhancement.md) | Contrast harmony & typographic pairing |
 | Layout extraction | [references/layout-and-token-extraction.md](references/layout-and-token-extraction.md) | CSS grid/flex extraction & layout normalization |
 | Project init | [references/project-init-and-shaping.md](references/project-init-and-shaping.md) | Design system bootstrapping & layout scaffolding |
+| Core disciplines | [references/core-disciplines.md](references/core-disciplines.md) | Typography, color, layout, copy, and performance rules |
+| CSS Grid & structure | [references/structure.md](references/structure.md) | CSS grid, subgrid, and container query layouts |
+| Responsive collapse | [references/responsive.md](references/responsive.md) | Breakpoint collapse, mobile constraints, & viewport handling |
+| Anti-pattern catalog | [references/anti-patterns.md](references/anti-patterns.md) | Banned AI visual tropes and layout defaults |
+| Custom themes & bespoke | [references/custom-theme.md](references/custom-theme.md) | Made-to-measure palettes, bespoke structure, & token forks |
+| Component mechanics | [references/component-mechanics.md](references/component-mechanics.md) | Tactile feedback, hit targets, loaders & focus |
+| Network resilience & API | [references/api-resilience.md](references/api-resilience.md) | Race conditions, retry backoff, & optimistic updates |
 
 ## Execution workflow
-
 Follow these four steps in sequence:
 
 ### Step 1. Environment audit and dial calibration
@@ -90,7 +98,6 @@ Apply styling exclusively to markup, layout, and visual tokens:
 - Maintain existing accessibility attributes intact.
 
 ## Baseline dial calibration
-
 Calibrate interface constraints across four numerical dials on a 1 to 10 scale before drafting layouts or tokens:
 
 | Dial | Default | Low (1 to 3) | Mid (4 to 7) | High (8 to 10) |
@@ -163,7 +170,6 @@ Apply platform-level performance constraints to eliminate layout shifts, interfa
 - Bundle transfer discipline. Use granular named imports for icons and utilities; avoid importing full icon or utility libraries when only a fraction is used. Isolate heavy visualization, editor, or charting libraries behind dynamic imports (import()) and load them on demand.
 
 ## Macrostructures and visual genres
-
 Select an intentional macrostructure that matches project content density and narrative role:
 1. Bento grid. Multi-cell asymmetric dashboard or product overview combining stat callouts, interactive previews, and feature callouts.
 2. Split studio. High-contrast two-column arrangement with sticky media preview alongside scrolling explanatory narrative.
@@ -180,29 +186,18 @@ Classify aesthetic direction into one of four visual genres:
 
 ## Component mechanics and interaction states
 
-Implement full lifecycle interaction states and tactile feedback for all components:
-1. Tactile press feedback. Apply tactile physical displacement (-translate-y-[1px] or scale-[0.98]) to active buttons and interactive chips.
-2. Skeleton loaders. Match placeholder skeleton geometries to expected layout dimensions. Avoid generic circular spinners for primary content blocks.
-3. Form validation timing. Delay error messages until input blur, then validate live on subsequent input. Position validation messages directly adjacent to invalid fields.
-4. Concentric card nesting. Ensure nested badges, buttons, and preview containers use mathematically concentric radii to prevent visual pinching.
-5. Hardware-accelerated motion. Animate exclusively via transform and opacity. Restrict spring physics transitions to motion-enabled elements and respect prefers-reduced-motion queries.
-6. Asynchronous network resilience. Handle race conditions with AbortController, retry idempotent requests with exponential backoff, and provide optimistic mutations with rollback. Consult references/api-resilience.md.
-7. Target size minimum and keyboard focus. Guarantee interactive elements meet WCAG 2.2 SC 2.5.8 with a minimum hit area of 24x24px, with recommended 44px touch targets. Configure visible focus indicators on all interactive targets using focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none.
-8. Top layer and discrete transitions. Use native dialog or Popover API for modals, command palettes, and drawer surfaces to activate browser focus trapping and top-layer stacking. Animate entry and exit states using @starting-style with transition-behavior allow-discrete for display, opacity, and transform transitions without JavaScript animation libraries.
-9. Relational container focus. Configure parent card boundaries to reflect keyboard focus of interior interactive links or buttons using :has(a:focus-visible) and :has(button:focus-visible) without JavaScript event listeners.
-10. Composite hit targets. Expand primary card links via after:absolute after:inset-0, and isolate secondary interactive buttons or menus with relative z-10 to prevent nested click collisions.
+Implement tactile press feedback, skeleton loaders, inline form validation, concentric card nesting, hardware motion, network resilience, WCAG target sizing, native dialog transitions, relational container focus, and composite hit targets. Consult [references/component-mechanics.md](references/component-mechanics.md) for full implementation specifications.
 
 ## Specialized workflow pointers
 
 Route execution to dedicated reference runbooks based on task requirements:
 1. Generating ./DESIGN.md. Follow references/design-template.md to author a canonical specification covering dials, palette tokens, typography rules, component specs, and anti-patterns.
-2. Curated UI primitives and libraries. Consult references/recommended-libraries.md to map functional requirements to verified single-purpose packages like Base UI, cmdk, Sonner, input-otp, NumberFlow, Virtuoso, Zustand, and CVA.
+2. Curated UI primitives and libraries. Consult references/recommended-libraries.md to map functional requirements to verified single-purpose packages like `@base-ui-components/react`, `cmdk`, `sonner`, `input-otp`, `@number-flow/react`, `react-virtuoso`, `zustand`, and `class-variance-authority`.
 3. Kinetic WebGL and GSAP scenes. Consult references/creative-motion-webgl.md when choreographing smooth scroll, GSAP ScrollTrigger timelines, and Three.js canvas lifecycles with offscreen pause constraints.
 4. Pre-built UI components and macrostructures. Browse references/components/ for tested component patterns (navbars, bento cards, hero callouts, footer statements) and references/macrostructures/ for full-page templates.
 5. Micro-interactions and gesture physics. Consult references/ui-patterns.md for button press feedback, bento card mechanics, and cursor interactions. For spring physics, gesture tracking, and frame rate audits, activate the ui-motion skill.
 
 ## Reference index
-
 Consult these runbooks on demand for deep implementation detail:
 - Core disciplines. references/typography.md, references/color.md, references/layout-and-space.md, references/copy.md, references/motion.md, references/interaction-and-states.md, references/microinteractions.md.
 - Media and assets. references/assets.md, references/imagery-kit.md, references/hero-enrichment.md, references/custom-craft.md.
@@ -210,7 +205,6 @@ Consult these runbooks on demand for deep implementation detail:
 - Genre runbooks. references/genres/editorial.md, references/genres/modern-minimal.md, references/genres/atmospheric.md, references/genres/playful.md.
 - Workflow commands. references/verbs/audit.md, references/verbs/redesign.md.
 - Process and output. references/study.md, references/component-scope.md, references/preview-examples.md, references/design-md.md, references/export-formats.md, references/contract.md, references/slop-test.md.
-
 ## Quick audit checklist
 
 Verify all items before declaring frontend implementation complete:

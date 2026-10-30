@@ -7,6 +7,10 @@ description: "Use when auditing and optimizing React/Next.js application perform
 
 Performance optimization and architectural patterns for React and Next.js applications. Profile and optimize React and Next.js applications by eliminating network waterfalls, managing bundle size, and reducing unnecessary re-renders.
 
+<HARD-GATE>
+Write-Target Boundary. In Audit mode, do not modify any source file outside `.agents/state/react/`. In Optimize mode, modify only component files, dynamic import boundaries, Server Action files, and RSC or client boundary declarations. Never modify backend API route contracts, database schemas, business validation, or accessibility attributes. Emit audit reports to `.agents/state/react/audit-report.md` before changing code.
+</HARD-GATE>
+
 ## Modes
 
 Select an execution mode before Step 1:
@@ -37,24 +41,30 @@ Probe the project runtime, compiler configuration, and performance symptoms befo
    ```
 3. Profile component rendering or network waterfalls to isolate the exact bottleneck.
 
-Completion criterion: Command output confirms React version, compiler status, zero baseline TypeScript errors, and an isolated performance metric defect.
+Completion criterion. `.agents/state/react/baseline.json` exists on disk with fields `react_version`, `next_version`, `compiler`, `tsc_errors` (0), `perf_metric_name`, `perf_metric_baseline`, `perf_metric_threshold`, and `perf_metric_source`. `perf_metric_source` is one of `lighthouse-json`, `web-vitals-lib`, `next-bundle-analyzer`, or `manual-profiler`.
+Attach the raw measurement artifact path to `perf_metric_source_path`. A baseline without a source artifact is rejected.
 
 ### Step 2. Rule selection and priority triage
 
-Consult the priority catalog below to match the isolated symptom, evaluating highest-impact categories first. Enforce joint security and serialization invariants: every RSC or Server Action change must verify server authorization and Client boundary DTO safety.
+Filter rules by the React version detected in Step 1:
+- React 19 or later. All categories apply, including `server-` and modern action hooks.
+- React 18. Skip `useActionState` and `useOptimistic` upgrades. Use `useTransition` for pending states. Retain `forwardRef` rather than passing `ref` as standard prop. Skip compiler optimizations when `compiler: false`.
+- React 17 or earlier. Skip all Server Component and Server Action rules. Confine optimizations to `bundle-`, `client-`, and `rerender-` categories.
 
-Completion criterion: A selected rule set from references/rules/ addressing the performance defect alongside server security constraints.
+Record category selection in `.agents/state/react/rule-selection.json`. Enforce joint security and serialization invariants: every RSC or Server Action change must verify server authorization and Client boundary DTO safety.
+
+Completion criterion. `.agents/state/react/rule-selection.json` exists on disk with fields `react_version` and `applied_categories` matching the project runtime.
 
 ### Step 3. Reference consultation
 
 Read the specific rule file in references/rules/<prefix>-<name>.md for concrete code implementations, anti-patterns, and mechanical fixes.
 
-Completion criterion: The rule file is inspected and the canonical fix pattern is established before mutating source files.
+Completion criterion. The rule file is inspected and the canonical fix pattern is established before mutating source files.
 
 ### Step 4. Surgical implementation
 
 Apply minimal code changes to eliminate the bottleneck:
-- Upgrade legacy `useState`/`useEffect` mutation flows to React 19 `useActionState`, `useOptimistic`, and uncontrolled `FormData` with automatic rollback.
+- Upgrade legacy `useState`/`useEffect` mutation flows to React 19 `useActionState`, `useOptimistic`, and uncontrolled `FormData` when on React 19. Before replacing a controlled form, verify that input state survives network failure per `ui-ux-review` INV-7. If uncontrolled migration would drop draft persistence, retain the controlled form and use `useActionState` solely for submit-state tracking.
 - Place Server Actions in dedicated files with `'use server'` at the top (never inside `'use client'` files). Validate session credentials and tenant access inside the action. Return serializable discriminated unions (`ActionState { ok: boolean, error: string | null }`) instead of throwing raw errors that Next.js censors in production.
 - When `compiler: true`, do not add manual `useMemo`, `useCallback`, or `React.memo`. Use immutable derivations (`.toSorted()`) and accept `ref` as a standard React 19 prop.
 - For high-frequency interactive controls like range sliders, separate local thumb position state from transitioned data filtering to preserve responsive input tracking.

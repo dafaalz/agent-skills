@@ -9,10 +9,11 @@ Turn validated design specifications into phased implementation plans before wri
 
 Assume the implementer has no prior context of the codebase and requires explicit technical direction for every change.
 
-Announce the following message at session start:
-`I am using the writing-plans skill to create the implementation plan.`
+<HARD-GATE>
+Write-Target Boundary. Write only to `docs/superpowers/plans/` and `.agents/state/writing-plans/`. Do not modify application source, tests, schemas, or build configuration while drafting or reviewing a plan.
+</HARD-GATE>
 
-Save plans to `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md` as transient scaffolding artifacts unless the user specifies a different path. Implementation plans are transient execution scaffolding. After implementation is complete and verified, the plan file should be purged to keep the repository clean.
+Save plans to `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md` as transient scaffolding artifacts unless the user specifies a different path. Implementation plans are transient execution scaffolding. The purge happens in `executing-plans` after final verification. This skill does not purge the plan file.
 
 ## Modes
 
@@ -23,6 +24,8 @@ Select a planning mode before Step 1:
 ## Boundary isolation
 
 Writing plans produces transient execution scaffolding only (`docs/superpowers/plans/`). Never write production application code, modify existing tests, or alter repository code files while drafting implementation plans.
+
+Precedence. This skill owns task content and plan structure. `agent-planning` owns the evidence seal and audit response.
 
 ## Workflow
 
@@ -37,13 +40,13 @@ Inspect the specification and repository structure before creating tasks:
 - Co-locate related logic. Group files by functional responsibility rather than technical layer. Files that change together belong together.
 - Follow repository conventions. Match existing file and directory patterns. If an existing file is already unwieldy, include a planned split into smaller modules.
 
-Completion criterion. Target files mapped to explicit responsibilities and verified to belong to a single cohesive subsystem.
+Completion criterion. `.agents/state/writing-plans/file-map.json` exists with every target file, its responsibility, and its subsystem.
 
 ### Step 2. Task decomposition and plan drafting
 
 Draft the implementation plan using the templates in the reference section below:
 - Add the required plan document header at the top of the file.
-- Divide the work into bite-sized tasks. Each task must represent a single component or slice that takes 2 to 5 minutes to execute.
+- Divide the work into bite-sized tasks. Each task touches at most 2 production files and 1 test file.
 - Tracer-bullet vertical slices. Build an end-to-end thin slice spanning all required layers first to prove integration before broadening feature breadth.
 - Declare blocking dependencies. Every task must declare its blocking dependencies (`Depends on: Task X`) to form an explicit Directed Acyclic Graph (DAG) for concurrent subagent execution across the ready frontier.
 - Enforce test-driven development order for every task:
@@ -56,7 +59,7 @@ Draft the implementation plan using the templates in the reference section below
 - Specify exact execution commands with expected exit codes or failure messages for every test step.
 - Ensure tasks remain self-contained with explicit inputs, outputs, and behavioral boundaries.
 
-Completion criterion. Plan document drafted with mandatory header, granular test-driven tasks, interface contracts, and exact verification commands.
+Completion criterion. The plan exists at `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md` with the mandatory header, test-first tasks, interface contracts, and exact verification commands.
 
 ### Step 3. Plan self-review and validation
 
@@ -64,16 +67,16 @@ Audit the drafted plan against the source specification:
 - Verify specification coverage. Skim each section of the specification and verify that an explicit task implements it. Add tasks for any missing requirements.
 - Scan for placeholders. Confirm that the plan contains zero instances of TODO, TBD, vague validation rules, or undefined target interfaces.
 - Verify signature consistency. Confirm that function names, argument lists, and types match across all tasks.
-- Optional reviewer subagent. For automated validation, dispatch a subagent using the prompt in `references/plan-document-reviewer-prompt.md`. Fix all identified defects directly in the plan file.
+- Reviewer subagent. Dispatch a subagent with the prompt in `references/plan-document-reviewer-prompt.md` and fix every defect it reports in the plan file.
 
-Completion criterion. Plan document audited to confirm zero placeholders, complete specification coverage, and consistent method signatures throughout.
+Completion criterion. `.agents/state/writing-plans/audit.md` exists with zero placeholders, one task per specification section, and consistent signatures.
 
 ### Step 4. Execution handoff
 
 Save the plan to disk and present execution options to the user:
 - State the saved path clearly.
 - Offer the two execution workflows:
-  1. Subagent-driven execution (recommended). Dispatches a fresh subagent for each task with reviews between tasks. Requires `subagent-driven-development`.
+  1. Subagent-driven execution (recommended). Dispatch a fresh subagent for each task with a review of its diff between tasks. Run every task through the harness subagent tool.
   2. Inline execution. Executes tasks batch-by-batch within the current session with review checkpoints. Requires `executing-plans`.
 - Wait for the user to choose an execution option before executing any tasks.
 
@@ -88,13 +91,15 @@ Every plan must start with this header block:
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers.** REQUIRED SUB-SKILL. Use subagent-driven-development (recommended) or executing-plans to implement this plan task by task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers.** REQUIRED SUB-SKILL. Use `executing-plans` to implement this plan task by task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal.** [One sentence describing what this builds]
 
 **Architecture.** [2 to 3 sentences about approach]
 
 **Tech stack.** [Key technologies and libraries]
+
+**Source spec.** [<absolute-or-repo-relative-path-to-spec-or-none>]
 
 ---
 ```
@@ -136,7 +141,7 @@ def function(input):
 - [ ] **Step 4. Run test to verify it passes**
 
 Run `pytest tests/path/test.py::test_name -v`
-Expected status: 0 errors, all assertions pass.
+Expected status is 0 errors, all assertions pass.
 
 - [ ] **Step 5. Commit**
 
@@ -157,8 +162,18 @@ Every step must provide precise contract specifications without duplicating full
 ### Goal-driven execution standards
 
 Transform abstract requirements into concrete, verifiable test goals:
-- Convert open-ended instructions into testable gates. For example, "add input validation" becomes "write tests asserting failure on invalid inputs, then make them pass".
+- Convert open-ended instructions into testable gates. For example, \"add input validation\" becomes \"write tests asserting failure on invalid inputs, then make them pass\".
 - Pair every multi-step action with an explicit verification check that defines the exact test command and expected outcome.
+
+## Anti-patterns
+
+| ID | Title | Pattern description | Why it fails | Concrete fix |
+|---|---|---|---|---|
+| WPA-1 | Phantom execution skill | Names a skill directory that does not exist | Handoff fails at discovery | Name an existing skill and confirm with `test -d skills/<name>` |
+| WPA-2 | Unanchored task map | Step 1 ends with no file on disk | The next session cannot resume | Write the file map to `.agents/state/writing-plans/file-map.json` |
+| WPA-3 | Clock-based granularity | Bounds task size in minutes no step measures | Agents split work arbitrarily | Bound by production file count and diff size |
+| WPA-4 | Optional verification | Marks the plan audited while the reviewer is optional | Unreviewed plans pass the gate | Make the reviewer mandatory or drop the audit claim |
+| WPA-5 | Narration preamble | Announces the skill in chat before any artifact exists | Wastes reader attention | Delete the announcement |
 
 ## Quick audit checklist
 

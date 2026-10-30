@@ -37,7 +37,7 @@ Complete each phase in order before moving to the next.
 Gather evidence to explain what failed and why before touching production code.
 
 1. **Error inspection.** Read stack traces, error messages, and logs in full. Identify line numbers, file paths, and error codes without skipping warnings.
-   * Completion criterion. Exact error text, file path, failing line number, and initial call site identified in notes.
+   * Completion criterion. Exact error text, file path, failing line number, and initial call site recorded in `.agents/state/debugging/error.txt`.
 
 2. **Reproduction and feedback loop.** Build a tight, red-capable command that triggers the failure before reading source code to form theories.
    * Assert the user's exact symptom rather than an unrelated crash.
@@ -49,18 +49,18 @@ Gather evidence to explain what failed and why before touching production code.
    * Completion criterion. One verified command executed and confirmed red against the user symptom across consecutive runs, or an explicit escalation blocker sent to the user.
 
 3. **Change audit.** Inspect git history and environment changes. Run `git diff` against the last known working commit. Check recent dependency updates and configuration changes.
-   * Completion criterion. List of modified files, dependencies, and settings mapped against the failure symptom.
+   * Completion criterion. List of modified files, dependencies, and settings mapped against the failure symptom recorded in `.agents/state/debugging/change-audit.md`.
 
 4. **Boundary instrumentation.** If the fault spans multiple layers or services such as CI workflows, build scripts, API services, or databases, add diagnostic logging at each boundary. Log inputs, outputs, and environment variables across each boundary before running again.
-   * Completion criterion. Diagnostic output isolates the exact boundary where expected state diverges.
+   * Completion criterion. Diagnostic output recorded in `.agents/state/debugging/boundary-log.txt` isolating the exact boundary where expected state diverges.
 
 5. **Upstream data flow tracing.** If the error originates deep in the call stack, trace bad values backward to their origin. Consult `references/root-cause-tracing.md` for backward tracing instructions.
-   * Completion criterion. Code location that produced the initial invalid value identified.
+   * Completion criterion. Code location that produced the initial invalid value recorded in `.agents/state/debugging/data-flow.md`.
 
 6. **Large-scale scope and context compaction defense.** If the investigation requires surveying massive logs, hundreds of database files, or multi-repository history:
    * Dispatch a dedicated `research` or `self` subagent via `invoke_subagent` to isolate heavy tool outputs and prevent context window compaction in the primary agent session.
    * Persist intermediate findings directly to disk artifacts (`<appDataDir>/brain/<conversation-id>/` or `scratch/`) instead of relying solely on chat memory.
-   * Completion criterion. Heavy data collection delegated to a subagent and key synthesis written to a disk artifact.
+   * Completion criterion. Heavy data collection delegated to a subagent and key synthesis written to `.agents/state/debugging/phase1-synthesis.md`.
 
 Phase 1 exit criterion. The exact line of code, bad input, or environmental discrepancy causing the defect is identified.
 
@@ -139,7 +139,9 @@ When you reach 3 failed fixes:
 
 ## Diagnostic instrumentation
 
-When debugging multi-component systems, log state at each component boundary before proposing changes:
+When debugging multi-component systems, log state at each component boundary before proposing changes. Use commands native to the target platform.
+
+Example for a macOS code-signing pipeline:
 
 ```bash
 # Boundary 1: Workflow environment
@@ -156,7 +158,13 @@ security find-identity -v
 codesign --sign "$IDENTITY" --verbose=4 "$APP"
 ```
 
-This instrumentation identifies the exact layer where data or environment variables fail to propagate.
+Example for a Linux container boundary:
+
+```bash
+docker inspect --format '{{json .Config.Env}}' <container-id>
+```
+
+For non-signing multi-component systems, log inputs, outputs, and environment variables at each boundary using standard echo or platform logging. Do not run macOS-specific commands like `security` or `codesign` on Linux or Windows environments.
 
 ## Boundary isolation
 
@@ -183,4 +191,4 @@ Audit debugging progress against this table before finalizing:
 | Single-variable testing | Formulate ranked falsifiable hypotheses and change one variable at a time |
 | Root-cause confinement | Confine edits strictly to the root cause and add a regression test |
 | Probe cleanup | Grep for debug tags and purge all temporary logging probes |
-| Escalation threshold | Halt after the fourth consecutive failed fix and escalate to a human partner for redesign |
+| Escalation threshold | Halt after the third consecutive failed fix and escalate to a human partner for redesign |

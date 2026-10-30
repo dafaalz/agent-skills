@@ -9,6 +9,10 @@ Explore divergent visual and interaction directions for a single UI component be
 
 This skill builds distinct, production-ready variants for a single UI component and renders them in an isolated picker harness. The user evaluates variants in context and selects a direction to integrate.
 
+<HARD-GATE>
+Write-Target Boundary. In Exploration branch, write only under `.agents/scratch/prototypes/<variant-id>/` and the isolated preview route path declared in `.agents/state/prototype/harness-path.txt`. Never modify production component files, routing tables, or global build configuration. In Promotion branch, migrate only the winning variant into production after user confirmation recorded in `.agents/scratch/prototypes/<variant-id>/PROTOTYPE_LOCK.md`.
+</HARD-GATE>
+
 ## Modes
 
 Select an execution branch based on user invocation:
@@ -40,12 +44,13 @@ Follow these six steps in sequence:
 
 ### Step 1. Scope and brief definition
 
-Isolate the target UI component from the user request.
+If `.agents/scratch/prototypes/<variant-id>/spike-brief.md` exists, read it as the authoritative brief. Extract `target_component`, `target_surface`, and `primary_job` from the file. Skip the remaining Step 1 isolation instructions unless the brief is missing or malformed.
 
+If the file does not exist, isolate the target UI component from the user request as described below.
 - If the request targets a complex screen or multi-component flow, select the component that carries the highest interaction risk or design ambiguity.
 - State the brief in one declarative sentence defining the component, its target surface, and its primary job.
 
-Completion criterion. The written one-sentence brief defines the target component and its operational context.
+Completion criterion. `.agents/scratch/prototypes/<variant-id>/brief.md` exists on disk with a single `# Brief` heading and one sentence under it. If `spike-brief.md` was read, the brief content matches the values in that file.
 
 ### Step 2. Technical and visual recon
 
@@ -56,7 +61,7 @@ Inspect the active codebase to identify design constraints and styling tokens.
 - Context. Inspect the container dimensions, background surfaces, and sibling components where the target piece mounts.
 - Standalone fallback. If no existing codebase exists, default to semantic HTML, standard system fonts, neutral slate tones, and one accent color.
 
-Completion criterion. The inventory records the target stack, design tokens, and surrounding DOM constraints.
+Completion criterion. `.agents/scratch/prototypes/<variant-id>/inventory.json` exists on disk recording target stack, design tokens, and surrounding DOM constraints.
 
 ### Step 3. Direction and axis selection
 
@@ -66,7 +71,7 @@ Define three distinct directions before writing code. Expand to five only when t
 - Pair each direction with an explicit axis of variation, such as density, spatial hierarchy, interaction cadence, or feedback mechanism.
 - Verify that no two variants occupy the same point on a chosen axis.
 
-Completion criterion. The variant list specifies 3 to 5 named directions with mutually exclusive variation axes.
+Completion criterion. `.agents/scratch/prototypes/<variant-id>/directions.json` exists on disk specifying 3 to 5 named directions with mutually exclusive variation axes.
 
 ### Step 4. Harness construction
 
@@ -98,13 +103,17 @@ Completion criterion. The harness executes cleanly without console warnings, and
 
 ### Step 6. Variant promotion and cleanup
 
-Integrate the chosen variant and remove temporary exploration artifacts.
+1. When the user selects a winner, write `.agents/scratch/prototypes/<variant-id>/PROTOTYPE_LOCK.md` containing:
+   - `variant_id`
+   - `selected_direction` (the direction name from Step 3)
+   - `selection_timestamp` (ISO 8601)
+   - `harness_path` (from `.agents/state/prototype/harness-path.txt`)
+   - `files_to_promote`
+2. Copy the lock file to `.agents/state/prototype/locks/<variant-id>.md` for durable record.
+3. Migrate the winning component into production paths following codebase file structure and token conventions.
+4. Delete the prototype route, variant files, and harness unless the user explicitly requests retention. Do not delete `PROTOTYPE_LOCK.md` or its archived copy.
 
-- When the user selects a winner, migrate the winning component into production paths following codebase file structure and token conventions.
-- Delete the prototype route, variant files, and harness unless the user explicitly requests retention.
-- If the user requests further exploration, retain the harness and repeat Step 3 focusing on sub-variants of the favored direction.
-
-Completion criterion. The chosen component is integrated into the destination codebase and all prototype scratch files are removed.
+Completion criterion. `.agents/scratch/prototypes/<variant-id>/PROTOTYPE_LOCK.md` exists on disk with all five fields. `.agents/state/prototype/locks/<variant-id>.md` exists with matching content. `ls /prototypes/` (or the framework equivalent path from `harness-path.txt`) returns zero prototype files unless the user requested retention.
 
 ## Boundary isolation
 

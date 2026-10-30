@@ -8,18 +8,21 @@ description: Use when writing or reviewing human-facing documentation, RFCs, REA
 Write clear technical documentation that an engineer understands on the first read. Combine the four Diátaxis documentation modes with ASD-STE100 Simplified Technical English (STE) precision standards.
 
 Follow three universal rules across every layer:
-
 - Cut every word that does no work. If the sentence survives without a word, remove it.
 - Use the short everyday word. Write "use" instead of "utilize", "help" instead of "facilitate", and "run" instead of "execute".
 - Preserve sentence quality above rigid rule compliance. If a rule makes a sentence sound artificial, rewrite the sentence or keep the plain phrasing.
 
-Use codebase truth for naming. Always write the exact symbol, file path, flag, or command name instead of synonyms or descriptive approximations. Code identifiers, endpoints, flags, and types function as Technical Names. Apply STE rules strictly to the surrounding prose. Consult `references/asd-ste100-rules.md` for detailed writing rules and vocabulary tables.
+Use codebase truth for naming. Always write the exact symbol, file path, flag, or command name instead of synonyms or descriptive approximations. Code identifiers, endpoints, flags, and types function as Technical Names. Apply STE rules strictly to surrounding prose. Consult `references/asd-ste100-rules.md` for writing rules and vocabulary tables.
+
+<HARD-GATE>
+Write-Target Boundary. Write only to `.agents/state/technical-writing/` and documentation files explicitly targeted by the user or task. Do not modify application source code, API endpoint signatures, database schemas, or build configurations.
+</HARD-GATE>
 
 ## Modes
 
-Select an execution mode before Step 1:
-- Author mode (default). Draft new technical documentation, guides, or RFCs following established project conventions.
-- Review mode. Audit existing documentation for clarity, precision, and adherence to anti-slop guidelines without altering meaning.
+Declare the active operating mode before executing any steps:
+- Author mode (default): Draft new technical documentation, guides, or RFCs following established project conventions. Run Steps 1 through 4 sequentially.
+- Review mode: Audit existing documentation for clarity, precision, and adherence to anti-slop guidelines without altering meaning. Run Step 1, Step 3, and Step 4. Step 2 is skipped because the existing document already provides the structural outline. Step 3 audits that outline against precision bounds. Emit `.agents/state/technical-writing/audit-report.md` and halt without modifying target files.
 
 ## Workflow
 
@@ -28,7 +31,6 @@ Follow these four steps in sequence:
 ### Step 1. Mode selection
 
 Classify the document into exactly one Diátaxis mode before writing. Answer two questions regarding whether the document serves action or understanding, and whether it addresses learning or work:
-
 - Action and learning yields a tutorial.
 - Action and work yields a how-to guide.
 - Understanding and work yields reference.
@@ -36,12 +38,11 @@ Classify the document into exactly one Diátaxis mode before writing. Answer two
 
 Never blend multiple modes in a single document. Link out to related modes instead of nesting them.
 
-Completion criterion. The document maps to one confirmed Diátaxis mode with explicit external links for out-of-scope material.
+Completion criterion. `.agents/state/technical-writing/scope.json` exists on disk with `target_file`, `diataxis_mode`, and `operating_mode`.
 
 ### Step 2. Outline and structure calibration
 
-Draft the document structure using Google Developer Style guidelines and ASD-STE100 paragraph bounds.
-
+Draft the document structure using Google Developer Style guidelines and ASD-STE100 paragraph bounds:
 - Address the reader directly as "you" in the present tense.
 - State who performs each action. Prefer active voice. Use passive voice only when the actor is unknown or irrelevant.
 - Order procedural steps in strict chronological sequence.
@@ -52,48 +53,55 @@ Draft the document structure using Google Developer Style guidelines and ASD-STE
 - Cut pre-announcements that promise future features.
 - In tutorials, describe the exact visible result for every action, including prompt changes, expected stdout, or log lines.
 
-Completion criterion. An outline and initial draft written in second-person imperative style with descriptive paragraphs under seven sentences.
+Completion criterion. `.agents/state/technical-writing/outline.md` exists in second-person imperative style with descriptive paragraphs under seven sentences.
 
 ### Step 3. Precision bounds and syntactic disambiguation
 
-Refine draft sentences using ASD-STE100 and Global English principles. Consult `references/asd-ste100-rules.md` for complete substitution tables.
-
+Refine draft sentences using ASD-STE100 and Global English principles. Consult `references/asd-ste100-rules.md` for complete substitution tables:
 - Limit procedural sentences to a maximum of 20 words.
 - Limit descriptive sentences to a maximum of 25 words.
 - Give exactly one instruction per sentence. Do not chain multiple actions with "and".
 - Limit noun clusters to a maximum of three nouns. Unpack clusters containing four or more nouns with prepositions.
 - Use only approved verb forms, which are simple present, simple past, simple future with "will", imperative, and past participles as adjectives.
-- Prohibit progressive tenses ending in "-ing" and gerunds acting as nouns. Write "The worker processes jobs", never "The worker is processing jobs".
+- Prohibit progressive tenses ending in "-ing" and gerunds acting as nouns.
 - Restrict modal auxiliary verbs to "can" for capability, "will" for future certainty, and "must" for mandatory requirements. Ban "should", "could", "would", and "may".
 - Replace unapproved verbs and synonyms. Replace "check" or "verify" with "make sure" or "examine". Replace "ensure" with "make sure". Replace "terminate" with "stop".
 - Place modifiers such as "only" and "not" immediately adjacent to the words they modify.
-- Anchor every pronoun. Ensure every instance of "it", "this", and "they" points to one obvious noun. Repeat the noun when any ambiguity exists.
+- Anchor every pronoun. Make sure every instance of "it", "this", and "they" points to one obvious noun. Repeat the noun when any ambiguity exists.
 - Remove trailing "-ing" clauses. Replace them with independent clauses or distinct sentences.
 - Prohibit slashes. Replace "and/or" with "a, b, or both".
 - Never form plurals using parentheses like "file(s)". Write the singular or plural noun directly.
-- Make text inside parentheses a complete grammatical unit or an independent sentence.
-- Ensure every directory tree claim or count matches repository state at the landing commit, and provide the command that regenerates it.
+- Make sure every directory tree claim or count matches repository state at the landing commit, and provide the command that regenerates it.
 
-Completion criterion. Sentences comply with word count bounds, contain zero progressive verbs, zero ambiguous modals, zero noun clusters exceeding three words, and zero unanchored pronouns.
+Completion criterion. `.agents/state/technical-writing/precision-check.json` exists with one boolean per rule in this step, and every value is true.
 
 ### Step 4. Final verification pass
 
-Run the completed draft against the review checklist and codebase truth.
-
+Run the completed draft against the review checklist and codebase truth:
 - Confirm that every code symbol, file path, and command flag exists in the repository.
 - Verify that code formatting matches project conventions.
-- Audit the prose against the quick reference checklist below.
+- Audit prose against the quick reference checklist below.
 
-Completion criterion. The document passes every check on the review checklist with zero defects.
+Completion criterion. `.agents/state/technical-writing/verification.json` exists with `linter_exit_code` or `linter_status: uninstalled`, plus `checklist_status: passed`.
 
 ## Diátaxis modes
 
 Pick one mode for each document:
-
 - **Tutorial**. Teach through practical action. Guide the learner to build a working artifact from start to finish. Produce visible progress at every step. State the exact expected output after each command. Keep background explanations minimal and link out for deep context.
 - **How-to guide**. Solve a specific real-world problem for an experienced reader. Focus entirely on steps to the goal. Omit basic concept explanations. Allow forks and decisions based on the user setup.
 - **Reference**. Provide dry, systematic facts for lookup. Describe system capabilities, flags, configuration options, and error codes without opinion or persuasion. Mirror the underlying code architecture.
 - **Explanation**. Deliver understanding and architectural context. Explore design decisions, trade-offs, constraints, and alternative approaches. Discuss opinions and technical rationale here.
+
+## Anti-patterns
+
+| ID | Title | Pattern description | Why it fails | Concrete fix |
+|---|---|---|---|---|
+| TW-1 | Blended modes | Mixes tutorial steps with deep architectural explanation | Confuses learners and frustrates reference lookups | Restrict document to one Diátaxis mode and link out |
+| TW-2 | Noun stacks | Chains four or more nouns like "system data input pipe" | Creates parsing ambiguity for international readers | Unpack noun clusters with explicit prepositions |
+| TW-3 | Loose pronouns | Uses "it" or "this" without an immediate noun referent | Forces reader guesswork and causes execution errors | Restate the specific noun directly |
+| TW-4 | Missing prerequisites | Omits required tokens, CLI tools, or credentials | User commands fail mid-workflow | State exact preconditions before the first action |
+| TW-5 | Patronizing adverbs | Inserts "simply run" or "obviously execute" | Antagonizes users encountering unexpected errors | Remove condescending adverbs entirely |
+| TW-6 | Codebase drift | References outdated function names or phantom flags | Breaks user trust with non-reproducible snippets | Verify snippets against current repository state |
 
 ## Style and syntax standards
 
@@ -107,16 +115,17 @@ Pick one mode for each document:
 ### Safety instructions and notices
 
 Place safety notices immediately before the procedural step to which they apply:
-
 - **WARNING**. Use strictly for hazards that cause irreversible data loss, production outages, or security breaches. Open with an imperative command or condition stating the hazard, then state consequence and prevention.
 - **CAUTION**. Use for risks of service degradation, invalid runtime states, or build failures.
-- **NOTE**. Use for non-hazardous technical clarifications and prerequisites. Frame notes using descriptive statements; notes must never contain commands or imperative verbs.
+- **NOTE**. Use for non-hazardous technical clarifications and prerequisites. Frame notes using descriptive statements. Notes must never contain commands or imperative verbs.
+
+WARNING, CAUTION, and NOTE are structural safety tiers. The unslop pseudo-label ban applies to prose connectors, not to these headings.
 
 ### Punctuation rules
 
 - Prohibit semicolons. Split coordinate clauses into separate sentences.
-- Restrict colons. Introduce lists, tables, and code blocks with colons; never use colons as connectors in running text.
-- Restrict hyphens. Join approved compound words or Technical Names with hyphens; never use hyphens as dashes to connect thoughts.
+- Restrict colons. Introduce lists, tables, and code blocks with colons. Never use colons as connectors in running text.
+- Restrict hyphens. Join approved compound words or Technical Names with hyphens. Never use hyphens as dashes to connect thoughts.
 - Prohibit slashes like "a/b" or "and/or". Write "a, b, or both".
 - Keep articles like "the" and "a" before nouns to prevent dual interpretations.
 
@@ -128,16 +137,6 @@ Place safety notices immediately before the procedural step to which they apply:
 ## Boundary isolation
 
 Technical writing governs documentation files only (`*.md`, `docs/`, `RFCs`). Never alter application source code, update build configurations, or modify API endpoint signatures while editing documentation.
-
-## Worked example
-
-### Draft before revision
-
-> Configuration of the proto import ratchet budget script parameters is performed via budget.json. Note that it is important to remember that running with --write, which updates the committed budget to reflect the current count, should only be done when lowering it. If exceeded, CI fails.
-
-### Revision after applying standards
-
-> `budget.mjs` reads the committed budget from `budget.json` and counts files that import protos. If the count exceeds the budget, the CI test fails. Run `budget.mjs --write` only when you must lower the budget count.
 
 ## Quick audit checklist
 

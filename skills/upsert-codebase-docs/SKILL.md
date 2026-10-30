@@ -8,145 +8,123 @@ allowed-tools: Read Write Edit Glob Grep Bash
 
 Create and maintain concise operational documentation files for AI coding agents and developers. This skill governs the generation and incremental synchronization of `AGENTS.md`, `CODEBASE.md`, and project domain definitions in `GLOSSARY.md`.
 
-## Boundary isolation
+<HARD-GATE>
+Write-Target Boundary. Modify only `AGENTS.md`, `CLAUDE.md`, `CODEBASE.md`, and `GLOSSARY.md`. Never modify application source code, configuration files, test suites, or database migrations while updating documentation.
 
-Confine updates strictly to documentation files (`AGENTS.md`, `CODEBASE.md`, `GLOSSARY.md`). Never modify project source code, configuration files, or database migrations while updating documentation.
+Before modifying an existing `AGENTS.md`, write a timestamped backup to `.agents/state/upsert-codebase-docs/backups/AGENTS.md.<timestamp>.bak` and generate a diff. Require user confirmation before overwriting any existing documentation file. Never truncate an existing `AGENTS.md` without explicit user confirmation.
+</HARD-GATE>
+
+## Modes
+
+Declare the active operating mode before executing any steps:
+- Mode 1: Greenfield bootstrap (applies when target documentation files do not exist). Run Steps 1 through 6 sequentially.
+- Mode 2: Incremental drift synchronization (applies when target documentation files exist). Run Steps 1 through 6 sequentially with backup creation and preservation of custom developer rules.
+- Mode 3: Dry-run drift audit. Run Steps 1, 2, and 6 only. Emit `.agents/state/upsert-codebase-docs/drift-report.md` without modifying documentation files on disk.
 
 ## Principles and constraints
 
 1. Budget limits. Keep `AGENTS.md` within 150 lines, and keep `CODEBASE.md` within 250 lines.
 2. Progressive disclosure. Move subsystem specifications exceeding 30 lines to `.agents/references/` rather than cluttering root files.
-3. Ubiquitous language and domain glossary. Maintain core business terms in `GLOSSARY.md` to prevent synonym cycling across agent sessions.
-4. Unslop and punctuation rules. Zero em dashes, zero en dashes, and zero hyphens acting as dashes. Restrict colons to introducing lists, tables, or code blocks. Never use mid-sentence colons or pseudo-labels.
+3. Ubiquitous language. Maintain core business terms in `GLOSSARY.md` to prevent synonym cycling across agent sessions.
+4. Anti-slop and punctuation. Zero em dashes, zero en dashes, and zero hyphens acting as dashes. Restrict colons to introducing lists, tables, or code blocks. Never use mid-sentence colons or pseudo-labels.
 5. Positive operational framing. Pair every negative constraint immediately with a concrete positive action.
 6. Single source of truth. Rely on environment files and live terminal commands rather than copying static code into documentation.
 
 ## Workflow
 
-Follow these six steps in sequence.
+Follow these six steps in sequence:
 
 ### Step 1. Workspace topology and stack profiling
 
-Inspect the target repository to determine structure and technology stack before creating or editing files.
-
+Inspect the target repository to determine structure and technology stack before creating or editing files:
 1. Execute the topology detection script to profile manifests:
    ```bash
    bash scripts/scan-topology.sh .
    ```
-2. Classify repository topology using `references/topology-detection.md`:
-   * Single-root application. One primary manifest at root (`composer.json`, `package.json`, or `Cargo.toml`). Generates root `AGENTS.md` and `CODEBASE.md`.
-   * Multi-tier decoupled architecture. Distinct manifests inside subdirectories like `backend/` and `frontend/`. Generates root orchestrator `AGENTS.md` alongside dedicated `AGENTS.md` and `CODEBASE.md` pairs inside each active subsystem.
-   * Monorepo workspace. Monorepo tools managing multiple packages under `packages/` or `apps/``.
-3. Inspect stack manifests and environment files using `references/stack-profilers.md` to identify:
-   * Language and runtime version.
-   * Core framework and active database driver (prioritizing `.env` over `.env.example`, verified via runtime CLI commands where available).
-   * Test runners, linters, and build tooling.
-   * Primary packages and third-party integrations.
+2. Classify repository topology using `references/topology-detection.md`: single-root application, multi-tier decoupled architecture, or monorepo workspace.
+3. Inspect stack manifests and environment files using `references/stack-profilers.md` to identify runtime versions, framework, database driver, test runners, and linters.
 
-Completion criterion. A verified inventory of repository topology, active runtime versions, and manifests recorded on disk with zero unverified assumptions.
+Completion criterion. `.agents/state/upsert-codebase-docs/topology.json` exists on disk with detected topology, runtime versions, and identified manifests.
 
 ### Step 2. Operational mode selection and ambiguity resolution
 
-Determine whether to run greenfield generation or incremental drift synchronization, and resolve manifest anomalies.
+Determine whether to run greenfield generation, incremental drift synchronization, or dry-run audit:
+1. Inspect target directories for existing documentation files to confirm active mode.
+2. If Mode 2 is selected, check for drift indicators: new migrations, modified routes, added dependencies, or verification staleness exceeding 4 weeks. Consult `references/drift-heuristics.md`.
+3. If Mode 3 is selected, compile drift findings into `.agents/state/upsert-codebase-docs/drift-report.md` and halt.
+4. Resolve profile ambiguities through clarifying questions with concrete options.
 
-1. Inspect target directories for existing documentation files:
-   * Mode A (Greenfield bootstrap). Target files do not exist. Extract the full project profile and generate initial files using standard templates.
-   * Mode B (Incremental drift sync). Target files exist. Audit current code against documentation using `references/drift-heuristics.md` to update stale sections without overwriting manual developer rules.
-2. If Mode B is selected, check for drift indicators:
-   * Migration files added after the last verified date in `CODEBASE.md`.
-   * New routes, controllers, or services introduced in git diff.
-   * Dependency additions in package manifests.
-   * Database engine or connection mismatches between active `.env` or runtime CLI and the documented stack.
-   * Staleness rule expiry exceeding 4 weeks since the recorded verification date.
-3. Resolve profile ambiguities:
-   * If conflicting manifests exist, such as both npm and bun lockfiles, formulate a clarifying question with concrete options and a clear recommended choice.
-   * Confirm active branch conventions and staging rules before drafting instructions.
+Completion criterion. Target mode confirmed and logged in `.agents/state/upsert-codebase-docs/mode-plan.json` with exact target file paths.
 
-Completion criterion. Target mode confirmed and logged with exact file paths targeted for creation or patching.
+### Step 3. User alignment and backup gate
 
-### Step 3. User alignment gate
+Present discovery summary to the user, take backups of existing files, and secure confirmation before modifying files on disk:
+1. When existing files are present, write timestamped backups to `.agents/state/upsert-codebase-docs/backups/`.
+2. Present discovery brief: detected stack, target files, proposed commands, and core architectural patterns.
+3. Pause for explicit user confirmation before writing changes to disk.
 
-Present the discovery summary to the user and secure confirmation before modifying or generating files on disk.
-
-1. Present the structured discovery brief:
-   * Detected stack and topology.
-   * Target documentation files to generate or patch.
-   * Proposed commands for dependencies, dev server, tests, and linting.
-   * Core architectural patterns and proposed rules.
-2. Pause for explicit user confirmation before writing changes to disk.
-
-Completion criterion. User confirms the discovery brief and approves the target file paths.
+Completion criterion. User confirms discovery brief, and backup files exist in `.agents/state/upsert-codebase-docs/backups/` for all pre-existing documentation targets.
 
 ### Step 4. Drafting AGENTS.md
 
-Assemble operational instructions in `AGENTS.md` strictly within the 150-line limit. Consult `references/agents-standard.md` for exact section anatomy.
-
-1. In Mode A, write the document with these mandatory sections:
-   * Heading stating repository identity and role.
-   * Project Context covering runtime, framework, database, and timezone.
-   * Documentation Map pointing to `CODEBASE.md` and any deep files in `.agents/references/`.
-   * Commands Cheatsheet with verified shell commands for dependencies, dev server, tests, and linting.
-   * Critical Rules stating absolute boundaries. Pair every prohibition with an explicit allowed action. Include environment security, dependency directory locks, and migration preservation.
-   * Non-Default Conventions listing framework gotchas and patterns AI models typically violate.
-   * Git Workflow and Definition of Done requiring terminal test verification before completion.
-2. In Mode B, preserve existing custom guidelines:
-   * Retain all manual developer instructions and custom rules.
-   * Update only commands or conventions that changed based on manifest or script updates.
-   * If an existing file exceeds 150 lines, extract secondary domain notes into `.agents/references/` rather than deleting developer guidance.
-   * Maintain total file length within 150 lines.
+Assemble operational instructions in `AGENTS.md` strictly within the 150-line limit. Consult `references/agents-standard.md` for section anatomy:
+1. In Mode 1, write mandatory sections: heading, project context, documentation map, commands cheatsheet, critical rules, non-default conventions, and definition of done.
+2. In Mode 2, preserve existing custom guidelines:
+   - Retain all manual developer instructions and custom rules.
+   - Update only commands or conventions that changed based on manifest updates.
+   - If an existing file exceeds 150 lines, extract secondary domain notes into `.agents/references/` rather than deleting developer guidance.
+   - Maintain total file length within 150 lines.
 
 Completion criterion. `AGENTS.md` written to disk with verified commands, zero dangling negative rules, and total line count within 150 lines.
 
 ### Step 5. Drafting CODEBASE.md and GLOSSARY.md
 
-Assemble technical architectural reference in `CODEBASE.md` strictly within the 250-line limit. Consult `references/codebase-standard.md` for notation rules.
+Assemble technical architectural reference in `CODEBASE.md` strictly within the 250-line limit. Consult `references/codebase-standard.md` for notation rules:
+1. Write or update core sections: verification metadata, technology stack table, ASCII architecture data flow diagram, annotated directory layout, and domain model pointers.
+2. In Mode 2, refresh content bounded by `<!-- BEGIN AUTO GENERATED: <SECTION> -->` and `<!-- END AUTO GENERATED: <SECTION> -->` delimiters while preserving manual prose. Update verification timestamp to current date.
+3. Manage subsystem sprawl: move domain descriptions exceeding 30 lines into `.agents/references/<domain>.md` and leave context pointers in `CODEBASE.md`. Update `GLOSSARY.md` with core entity definitions.
 
-1. Write or update core sections:
-   * Verification metadata and staleness rule with current ISO date (`Last verified: YYYY-MM-DD`).
-   * Technology Stack table listing layer, technology, and operational boundaries.
-   * Architecture Data Flow diagram using clean ASCII text showing request-to-response paths.
-   * Annotated Directory Layout showing key feature directories and functional ownership.
-   * Domain Model and Ubiquitous Language pointing to `GLOSSARY.md` for entity definitions.
-   * Schema source of truth pointers and CLI introspection commands for database entities.
-   * Routing entrypoints and CLI discovery commands for HTTP endpoints.
-2. In Mode B, execute delimited synchronization:
-   * Locate auto-generated blocks bounded by `<!-- BEGIN AUTO GENERATED: <SECTION> -->` and `<!-- END AUTO GENERATED: <SECTION> -->`.
-   * Refresh content inside the delimiters with latest code state while leaving surrounding narrative untouched.
-   * Update the verification timestamp to the current date.
-3. Manage subsystem sprawl:
-   * Ensure directory `.agents/references/` exists by running `mkdir -p .agents/references`.
-   * If a single domain requires more than 30 lines of technical description, move it into `.agents/references/<domain>.md` and leave a context pointer in `CODEBASE.md`.
-
-Completion criterion. `CODEBASE.md` written to disk with updated staleness date, source of truth pointers, delimited blocks, and total line count within 250 lines.
+Completion criterion. `CODEBASE.md` written to disk with updated staleness date, delimited blocks, and total line count within 250 lines.
 
 ### Step 6. Verification and unslop audit
 
-Audit generated files against technical standards before concluding the task.
-
+Audit generated files against technical standards before concluding task:
 1. Run deterministic line count validation:
    ```bash
    wc -l AGENTS.md CODEBASE.md
    ```
    Confirm `AGENTS.md` is 150 or fewer lines, and `CODEBASE.md` is 250 or fewer lines.
-2. Run the formatting and style audit:
-   * Verify zero occurrences of em dashes, en dashes, or hyphens acting as dashes.
-   * Verify colons appear only before explicit lists, tables, or code blocks.
-   * Verify sentence case headings without decorative emojis.
-   * Search for and eliminate banned AI vocabulary using substitution tables in `references/agents-standard.md`.
-3. Run link and path verification:
-   * Verify every file path and command mentioned exists and functions on disk.
+2. Run formatting and style audit: zero em dashes, zero en dashes, colons only before lists or code blocks, and zero banned vocabulary words.
+3. Verify all documented file paths, scripts, and commands exist and execute on disk.
 
-Completion criterion. Both files satisfy all audit criteria with zero violations recorded.
+Completion criterion. Both files satisfy line budgets, `wc -l` output recorded in `.agents/state/upsert-codebase-docs/verification.txt`, and all paths verified on disk.
+
+## Anti-patterns
+
+| ID | Title | Pattern description | Why it fails | Concrete fix |
+|---|---|---|---|---|
+| UCD-1 | Bloated AGENTS.md | Allows AGENTS.md to sprawl past 150 lines | Context budget exhaustion on every agent session | Cap at 150 lines; delegate detail to `CODEBASE.md` |
+| UCD-2 | Transient docs | Documents sprint tasks or temporary bug workarounds | Docs rot the moment the task is completed | Document only stable architecture and persistent patterns |
+| UCD-3 | Rotting links | Uses relative links to files that get relocated | Breaks context navigation pointers on future sessions | Use root-relative paths and verify with `test -f` |
+| UCD-4 | README cloning | Duplicates human marketing copy into AGENTS.md | Dilutes machine-executable signal with promotional fluff | Keep AGENTS.md focused strictly on commands and rules |
+| UCD-5 | Silent overwrite | Replaces AGENTS.md without taking a backup or diff | Erases hard-won custom developer rules and invariants | Create timestamped backup and obtain user confirmation |
+| UCD-6 | Codebase mutation | Modifies application source code during doc updates | Leaks documentation updates into functional systems | Restrict file modifications strictly to doc paths |
+
+## Boundary isolation
+
+Confine updates strictly to documentation files (`AGENTS.md`, `CODEBASE.md`, `GLOSSARY.md`). Never modify project source code, configuration files, or database migrations while updating documentation.
 
 ## Quick audit checklist
 
 | Check | Passing condition |
 |---|---|
 | User alignment gate | Findings and target files presented to user and approved before editing files |
+| Backup protection | Timestamped backups created in `.agents/state/` before modifying existing files |
 | Line budget | `AGENTS.md` <= 150 lines, `CODEBASE.md` <= 250 lines verified with `wc -l` |
 | Progressive disclosure | Subsystems exceeding 30 lines placed in `.agents/references/` |
 | Domain terminology | Core entities mapped to `GLOSSARY.md` to prevent synonym cycling |
 | Delimiters | Auto-generated sections in `CODEBASE.md` wrapped in HTML comment bounds |
+| Anti-patterns | Anti-pattern table adheres to 5-column schema with stable IDs |
 | Style and punctuation | Zero em dashes, zero mid-sentence colons, sentence case headings |
 | Concrete rules | Every negative constraint paired with an immediate positive action |
 | Truth grounding | All paths, commands, and pointers match repository reality |

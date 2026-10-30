@@ -36,10 +36,11 @@ Examine requirements, identify system boundaries, and isolate the first subsyste
 3. Identify unfamiliar technical terms in the user request. Present concept explanations using this format:
 
 ```markdown
-Concept: <name of technology or pattern>
+### Concept
+`<name of technology or pattern>`
 <Direct factual explanation in 2 to 4 sentences.>
 
-Why this matters:
+### Why this matters
 <Concrete operational impact on the current system.>
 ```
 
@@ -53,7 +54,8 @@ Probe the user's design thinking using interactive checkpoints. Consult `referen
 2. Format the checkpoint using this syntax:
 
 ```markdown
-Build checkpoint: <topic>
+### Build checkpoint
+`<topic>`
 
 <One clear question asking how the user would structure data, handle failure, or define module boundaries.>
 ```
@@ -71,20 +73,21 @@ Summarize the agreed technical architecture and present necessary implementation
 1. Format the Design checkpoint:
 
 ```markdown
-Design checkpoint: <topic>
+### Design checkpoint
+`<topic>`
 
-Proposed approach:
+### Proposed approach
 <Factual summary of the user's selected design.>
 
-Trade-offs:
+### Trade-offs
 <Direct statements of accepted trade-offs.>
 
-Proposed additions:
+### Proposed additions
 | Detail | Proposal | Why it matters |
 |---|---|---|
 | <Area> | <Technical addition> | <Direct operational reason> |
 
-Next actions:
+### Next actions
 1. Confirm and continue. Proceed to implementation scope.
 2. Discuss. Ask questions or adjust the design before deciding.
 ```
@@ -104,15 +107,17 @@ Break implementation into small, verifiable units. Never implement or guide an e
 1. Format the Implementation checkpoint:
 
 ```markdown
-Implementation checkpoint: <topic>
+### Implementation checkpoint
+`<topic>`
 
-Authoring mode: <Learner-authored | Agent-authored>
+### Authoring mode
+`<Learner-authored | Agent-authored>`
 
-Target changes:
+### Target changes
 - <Exact file path and operation to perform>
 - <Exact test file to add or update>
 
-Next actions:
+### Next actions
 1. Proceed with this step.
 2. Discuss. Clarify or adjust the scope before moving forward.
 ```
@@ -124,7 +129,7 @@ Next actions:
 3. In Agent-authored mode:
    * Modify only the scoped files explicitly approved by the user.
 
-Completion criterion. The scoped unit passes syntax validation and adheres to repository conventions before opening the next unit.
+Completion criterion. The scoped unit passes the exact syntax command recorded in the Implementation checkpoint with exit code 0, and `git diff --check` exits 0. Record both commands and exit codes in the Implementation report.
 
 ### Step 5. Verification and consolidation gate
 
@@ -134,16 +139,17 @@ Verify changes, summarize facts, and pause for user reflection before starting a
 2. Format the Implementation report:
 
 ```markdown
-Implementation report: <topic>
+### Implementation report
+`<topic>`
 
-Summary of changes:
+### Summary of changes
 - <File modified and functional change made>
 
-Verification:
+### Verification
 - Command run: `<exact shell command>`
 - Result: <factual test output summary>
 
-Architecture alignment:
+### Architecture alignment
 <One sentence connecting the written code to the user's architectural choice.>
 ```
 

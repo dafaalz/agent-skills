@@ -7,6 +7,17 @@ description: "Use when implementing internationalization, localization, locale n
 
 Make a codebase correct outside a single locale. This skill audits and implements internationalization across nine domains documented in reference modules under `references/`.
 
+<HARD-GATE>
+Write-Target Boundary. Apply internationalization changes strictly to user-facing copy, translation catalogs, formatting helpers, and layout styles.
+Do not modify database column names, internal event payloads, API route identifiers, system configuration keys, test assertions, or shell scripts.
+</HARD-GATE>
+
+## Modes
+
+Declare the active operating mode before executing any steps:
+- Implementation mode (default): Ingest scope, load domain references, audit patterns, and implement localization changes. Run Steps 1 through 5 sequentially.
+- Audit mode (`/i18n audit only`): Scan codebase for unlocalized copy, date formatters, and physical CSS rules. Run Steps 1 through 3 only, emit `.agents/state/i18n/audit-report.md`, and halt without modifying files.
+
 ## Scope contract
 
 The user may narrow the work by naming aspects, languages, or both. Parse the request before modifying files:
@@ -21,8 +32,8 @@ The user may narrow the work by naming aspects, languages, or both. Parse the re
 
 Rules for narrowed requests:
 1. A narrowed language set narrows configuration, not code correctness. If only `en` and `es` are requested, use logical CSS properties, locale-aware formatting APIs, and ICU messages so future locales require only configuration changes.
-2. A narrowed domain set does not excuse breaking sibling domains. Note out-of-scope defects in findings without fixing them unless the user expands the scope.
-3. When the target language set is ambiguous, ask the user before implementing.
+2. A narrowed domain set does not excuse breaking sibling domains. Note out-of-scope defects in findings without fixing them unless user expands scope.
+3. When target language set is ambiguous, ask user before implementing.
 
 ## Reference quick routing
 
@@ -46,7 +57,6 @@ Rules for narrowed requests:
 Audit the repository to detect existing i18n tooling before adding dependencies:
 
 ```bash
-ls -la
 head -n 60 package.json pyproject.toml composer.json Gemfile go.mod 2>/dev/null
 grep -rIl --exclude-dir={node_modules,.git,dist,build,vendor} -E "i18next|react-intl|vue-i18n|next-intl|formatjs|gettext|babel|lingui|MessageFormat" . | head -n 30
 find . -path ./node_modules -prune -o \( -name "*.po" -o -name "*.xliff" -o -name "*.arb" -o -name "*.ftl" -o -name "messages*.json" -o -name "locales" -o -name "i18n" \) -print 2>/dev/null | head -n 30
@@ -54,11 +64,11 @@ find . -path ./node_modules -prune -o \( -name "*.po" -o -name "*.xliff" -o -nam
 
 Record runtime capabilities, existing catalog locations, translation formats, and user locale persistence sources. Extend existing libraries instead of introducing competing frameworks.
 
-Completion criterion. The inventory records the runtime, active i18n libraries, catalog paths, and locale storage strategy.
+Completion criterion. `.agents/state/i18n/scope.json` exists on disk with `detected_libraries`, `catalog_paths`, `in_scope_languages`, and `mode`.
 
 ### Step 2. Progressive disclosure and domain module loading
 
-Consult only the reference modules relevant to the scoped domains:
+Consult only reference modules relevant to scoped domains:
 
 | Domain | Reference module | Load condition |
 |---|---|---|
@@ -72,18 +82,18 @@ Consult only the reference modules relevant to the scoped domains:
 | Content, catalogs, assets | [references/intl-content-and-assets.md](references/intl-content-and-assets.md) | Always loaded. Governs catalog layouts and expansion. |
 | Localization testing and QA | [references/intl-testing-and-qa.md](references/intl-testing-and-qa.md) | Always loaded. Verifies pseudolocales and gates. |
 
-Completion criterion. The session context contains all relevant domain reference files based on user scope.
+Completion criterion. Session context contains all relevant domain reference files based on user scope.
 
 ### Step 3. Audit and severity classification
 
 Scan for locale-hardcoded patterns and catalog findings:
 
 ```bash
-grep -rn --exclude-dir={node_modules,.git,dist,build,vendor} -E "toLocaleDateString\(\)|toLocaleString\(\)|new Date\(.*\)\.getDate\(\)" . | head -n 30
-grep -rn --exclude-dir={node_modules,.git,dist,build,vendor} -E "\.toUpperCase\(\)|\.toLowerCase\(\)" . | head -n 30
-grep -rn --exclude-dir={node_modules,.git,dist,build,vendor} -E "=== *1|=== *0|count *[<>=]+ *1|\$\{count\}" . | head -n 30
-grep -rn --exclude-dir={node_modules,.git,dist,build,vendor} -E "margin-left|margin-right|padding-left|padding-right|text-align:\s*(left|right)|left:|right:" . | head -n 30
-grep -rn --exclude-dir={node_modules,.git,dist,build,vendor} -E "\.sort\(\)|ORDER BY" . | head -n 30
+grep -rn --exclude-dir={node_modules,.git,dist,build,vendor} -E "toLocaleDateString\(\)|toLocaleString\(\)|new Date\(.*\)\.getDate\(\)" . | head -n 100
+grep -rn --exclude-dir={node_modules,.git,dist,build,vendor} -E "\.toUpperCase\(\)|\.toLowerCase\(\)" . | head -n 100
+grep -rn --exclude-dir={node_modules,.git,dist,build,vendor} -E "=== *1|=== *0|count *[<>=]+ *1|\$\{count\}" . | head -n 100
+grep -rn --exclude-dir={node_modules,.git,dist,build,vendor} -E "margin-left|margin-right|padding-left|padding-right|text-align:\s*(left|right)|left:|right:" . | head -n 100
+grep -rn --exclude-dir={node_modules,.git,dist,build,vendor} -E "\.sort\(\)|ORDER BY" . | head -n 100
 ```
 
 Classify each finding by impact:
@@ -95,9 +105,9 @@ Classify each finding by impact:
 | Medium | Prevents subsequent locale onboarding | Physical CSS margins and padding, concatenated sentence fragments, fixed date format strings |
 | Low | Completeness and polish gaps | Missing inline `lang` tags, absent pseudolocale testing builds in CI |
 
-Completion criterion. A written findings table records file locations, line numbers, defect categories, and planned remediation.
+Completion criterion. `.agents/state/i18n/audit-report.md` exists on disk with file locations, line numbers, defect categories, and planned remediation.
 
-When operating in `/i18n audit only` mode, output the severity-classified findings table from Step 3 and halt. Do not proceed to Step 4.
+When operating in Audit mode, output findings table and halt. Do not proceed to Step 4.
 
 ### Step 4. Ordered implementation
 
@@ -116,29 +126,42 @@ Completion criterion. Code modifications apply in sequence matching repository c
 ### Step 5. Verification
 
 Verify work against concrete criteria:
-- App builds and automated tests pass.
-- Audited views render all in-scope locales without falling back to default language keys.
-- User-facing paths contain zero raw `toLocaleDateString()` or `new Date().toString()` calls without explicit locale options.
-- Numeric conditionals like `count === 1` are replaced with ICU plural syntax.
-- String comparisons use `Intl.Collator` or case folding rather than raw `toLowerCase()`.
-- Layouts employ CSS logical properties (`margin-inline-start`, `padding-inline-end`).
-- Pseudolocale tests show zero unextracted raw strings and zero truncated containers.
+1. Run project build and automated test commands. Detect package manager and test runner from lockfiles:
 
-Completion criterion. Fresh command output confirms clean test runs and zero unresolved audit items.
-
-## Common pitfalls
-
-| Mistake | Failure mode | Correct pattern |
+| Lockfile | Build command | Test command |
 |---|---|---|
-| Adding libraries before checking repo | Colliding i18n architectures and duplicate keys | Audit dependencies first, extend existing tools |
-| `count === 1` conditional | Breaks in Polish, Arabic, and Russian plural rules | ICU `plural` with standard CLDR categories |
-| `parseFloat(localizedNumber)` | German `1.234,56` parses as `1.234` | Locale-aware numeric parsing or raw numeric storage |
-| Unspecified locale in formatters | Falls back to server OS locale in production | Pass explicit resolved locale to formatter |
-| Local time stored as instant | Daylight saving shifts shift timestamps by an hour | Store UTC instant with separate IANA timezone identifier |
-| Physical CSS properties | Layout fails to mirror in RTL locales | Use `margin-inline-start` and logical properties |
-| Code-unit `.sort()` | Sorts `Å`, `é`, and `Z` incorrectly | Use `Intl.Collator(locale).compare` |
-| Fragment concatenation | Breaks under differing language word orders | Single message templates with named placeholders |
-| `.substring()` slicing | Corrupts surrogate pairs, emoji, and Indic scripts | Use `Intl.Segmenter` with grapheme granularity |
+| `pnpm-lock.yaml` | `pnpm run build` | `pnpm test` |
+| `yarn.lock` | `yarn build` | `yarn test` |
+| `bun.lockb` | `bun run build` | `bun test` |
+| `package-lock.json` | `npm run build` | `npm test` |
+| `poetry.lock` | (n/a) | `poetry run pytest` |
+| `uv.lock` | (n/a) | `uv run pytest` |
+| `Pipfile.lock` | (n/a) | `pipenv run pytest` |
+| `composer.lock` | `composer build` (or project script) | `vendor/bin/phpunit` |
+
+Record the resolved command in `.agents/state/i18n/verification-commands.txt` before running.
+2. Audited views render all in-scope locales without falling back to default language keys.
+3. User-facing paths contain zero raw `toLocaleDateString()` or `new Date().toString()` calls without explicit locale options.
+4. Numeric conditionals like `count === 1` are replaced with ICU plural syntax.
+5. String comparisons use `Intl.Collator` or case folding rather than raw `toLowerCase()`.
+6. Layouts employ CSS logical properties (`margin-inline-start`, `padding-inline-end`).
+7. Pseudolocale tests show zero unextracted raw strings and zero truncated containers.
+
+Completion criterion. Project build and test commands exit with code 0 and raw output is recorded in `.agents/state/i18n/verification.txt` with zero unresolved audit items.
+
+## Anti-patterns
+
+| ID | Title | Pattern description | Why it fails | Concrete fix |
+|---|---|---|---|---|
+| I18N-1 | Duplicate stack | Adds a new i18n library without checking repo | Colliding i18n architectures and duplicate keys | Audit dependencies first; extend existing tools |
+| I18N-2 | Hardcoded plural | Writes `count === 1 ? 'item' : 'items'` | Fails in languages with multiple plural forms | Use ICU `plural` with standard CLDR categories |
+| I18N-3 | Naive number parse | Uses `parseFloat(localizedNumber)` | German `1.234,56` parses as `1.234` | Use locale-aware numeric parsing or raw numeric storage |
+| I18N-4 | Unspecified locale | Calls formatters without passing resolved locale | Falls back to server OS locale in production | Pass explicit resolved locale to formatter |
+| I18N-5 | Floating instant | Stores local wall-clock time as a UTC instant | Daylight saving shifts alter timestamps by an hour | Store UTC instant with separate IANA timezone ID |
+| I18N-6 | Physical styles | Uses `margin-left` or `right: 0` for layouts | Layout fails to mirror in RTL locales | Use `margin-inline-start` and logical properties |
+| I18N-7 | Code-unit sort | Uses default `.sort()` on user-facing lists | Sorts accented and non-ASCII characters incorrectly | Use `Intl.Collator(locale).compare` |
+| I18N-8 | Sentence stitching | Concatenates phrases with `+` into sentences | Breaks under varying grammatical word orders | Use single message templates with named placeholders |
+| I18N-9 | Grapheme slicing | Uses `.substring()` across Unicode text | Corrupts surrogate pairs, emoji, and Indic scripts | Use `Intl.Segmenter` with grapheme granularity |
 
 ## Boundary isolation
 
@@ -156,4 +179,5 @@ Review this table before completing internationalization changes:
 | Locale formatting | Date and number formatters pass explicit locale and time zone |
 | Plurals | Pluralization logic uses ICU syntax with CLDR categories |
 | Bidirectional layout | Layout uses CSS logical properties and root dir attributes |
+| Anti-patterns | Anti-pattern table adheres to 5-column schema with stable IDs |
 | Boundary isolation | System keys, column names, and APIs remain in canonical format |

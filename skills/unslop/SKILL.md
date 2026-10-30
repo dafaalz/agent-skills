@@ -1,42 +1,51 @@
 ---
 name: unslop
-description: Use when drafting prose, reviewing text for AI patterns, editing documentation, rewriting generic AI output, or cutting LLM writing habits in English or Indonesian. Don't use for functional code refactoring (use codebase-design), schema migrations (use schema-migration), or terminal command optimization.
+description: Use when drafting prose, reviewing text for AI patterns, editing documentation, rewriting generic AI output, or cutting LLM writing habits in English or Indonesian. Don't use for functional code refactoring (use codebase-design), schema migrations (use schema-migration), or terminal command optimization (edit shell commands directly and verify with `command -v`).
 ---
 
 # Unslop
 
 Strip AI patterns and filler from prose and documentation. Write plain active sentences.
 
+<HARD-GATE>
+Write-Target Boundary. Write only to `.agents/state/unslop/`, prose files, documentation, and draft buffers explicitly targeted by the user. Do not modify application source code, database schemas, test fixtures, package manifests, or terminal scripts.
+</HARD-GATE>
+
+## Modes
+
+Declare the active operating mode before executing any steps:
+- Detect mode (default): Scan text for AI patterns, list line numbers, quoted phrases, and proposed fixes. Write findings to `.agents/state/unslop/findings.md` and halt without modifying files.
+- Edit mode: Rewrite flagged sections in place upon explicit user edit request. Run Steps 1 through 4 sequentially.
+
 ## Workflow
 
-Run the four steps in sequence.
+Run the operational steps in sequence.
 
 ### Step 1. Pick a mode and scan for patterns
 
-Default to Detect unless the user asks for edits:
-- Detect mode. List every match with its line number, the quoted phrase, and the fix. Never guess an AI authorship score. Present the findings and stop.
-- Edit mode. Run only on an explicit edit request. Sort matches into four groups:
+Default to Detect unless user requests edits:
+- Sort matches into four groups:
   1. Banned words, empty adverbs, and marketing fluff in English and Indonesian.
   2. Structural puffery, faux-insight setups, colon reveals, and fake-profound kickers.
   3. Chatbot filler, process narration, and inanimate agency.
   4. Punctuation and syntax defects such as decorative em dashes, mid-sentence colons, and relative "di mana".
 - Weight indicators before editing. Primary tells (formulaic contrasts, staged run-ups, forced triads, decorative dashes, repetitive closers) justify an edit on first sighting. Secondary tells (stacked qualifiers, hyphenated pairs) need supporting indicators in the same passage.
-- Respect writing samples. Match the sample sentence length, word choice, and punctuation. The sample overrides default style restrictions while meaning stays clear.
+- Respect writing samples. Match sample sentence length, word choice, and punctuation. The sample overrides default style restrictions while meaning stays clear.
 
-For English text, read references/slop-patterns.md for word swaps, metaphor translations, empty adverbs, filler phrases, and structural patterns. For Indonesian text, read references/indonesian-patterns.md for calque swaps, pleonasm cuts, and chatbot filler patterns. Read both for mixed tasks.
+For English text, read `references/slop-patterns.md` for word swaps, metaphor translations, empty adverbs, filler phrases, and structural patterns. For Indonesian text, read `references/indonesian-patterns.md` for calque swaps, pleonasm cuts, and chatbot filler patterns. Read both for mixed tasks.
 
-Completion criterion: A catalog of every matched pattern with its line number and group, or a completed detect mode report.
+Completion criterion. `.agents/state/unslop/findings.md` exists on disk with detected matches, line numbers, and pattern groups.
 
 ### Step 2. Rewrite the flagged text
 
 Rewrite flagged sections with plain words, active voice, and verifiable facts:
-- Preserve the original tone, jokes, and technical facts.
+- Preserve original tone, jokes, and technical facts.
 - Delete promotional claims that apply unchanged to any product. Preserve architectural invariants, protocol rules, and conceptual trade-offs even when no empirical metric is provided. Do not invent metrics.
 - Replace vague labels like "important" or "surprising" with verifiable metrics.
 - Cut filler clauses instead of rewording them.
 - Replace banned words with plain words.
 
-Completion criterion: Rewritten text with zero cataloged patterns, original tone intact, and every technical fact preserved.
+Completion criterion. The target draft contains zero cataloged patterns, keeps the original tone, preserves every technical fact, and `.agents/state/unslop/findings.md` marks each item resolved.
 
 ### Step 3. Vary the sentence rhythm
 
@@ -45,25 +54,32 @@ Alternate short and long sentences to keep prose brisk:
 - For narrative prose, mix sentence lengths across paragraphs and state claims directly.
 - For technical documentation, keep causal preconditions attached to commands so execution order remains unambiguous.
 
-Completion criterion: Sentence lengths vary naturally without sacrificing syntactic clarity or causal order.
+Completion criterion. No three consecutive sentences in the target draft fall within 3 words of the same length, and every causal precondition stays attached to its command.
 
 ### Step 4. Run the final check
 
-Check the draft against the quick audit checklist at the end of this document. For an edit request, output the full rewritten draft and a short list of what changed.
+Check the draft against the quick audit checklist at the end of this document. Edit mode leaves the rewrite in the target file. Detect mode writes the report to `.agents/state/unslop/findings.md`. Do not emit a parallel draft.
 
-Completion criterion: Full rewritten draft and itemized change summary delivered, passing every checklist row.
+Completion criterion. Edit mode leaves the rewrite in the target file. Detect mode leaves `.agents/state/unslop/findings.md` on disk. One artifact per run, and every checklist row passes.
+
+## Anti-patterns
+
+| ID | Title | Pattern description | Why it fails | Concrete fix |
+|---|---|---|---|---|
+| UNS-1 | Decorative dashes | Uses em dashes or en dashes for parenthetical pauses | Creates AI cadence and dramatic breathlessness | Replace with commas, parentheses, or periods |
+| UNS-2 | Mid-sentence colon | Places colons mid-sentence for dramatic reveals | Rhetorical gimmick that stalls sentence flow | Rewrite as standard declarative statement |
+| UNS-3 | Conversational filler | Opens with "Certainly!", "Great question!", or recaps | Wastes reader tokens and buries signal | Open directly with substantive action or fact |
+| UNS-4 | Compulsive summary | Appends "In conclusion" or "Overall" recap paragraph | Adds zero informational value to technical docs | End on final command, status code, or next step |
+| UNS-5 | Boundary breach | Applies prose rewrites to code symbols or CLI flags | Breaks functional syntax, builds, and test suites | Leave backticked code, schemas, and flags intact |
+| UNS-6 | Metric fabrication | Invents percentages or benchmark numbers to sound precise | Misleads readers with false empirical claims | State literal architectural mechanism directly |
 
 ## Boundary isolation
 
-These rules cover human-facing prose, documentation, walkthroughs, and chat explanations only.
-
-Keep code syntax, code blocks, database schemas, API parameters, variable names, terminal commands, and git commits neutral and idiomatic. Never inject voice quirks, slang, or arbitrary renames into functional code.
-
-Never alter backticked text, including symbols (`symbol`), CLI flags (`--flag`), schema keys, and variable names (`variable_name`).
-
-Literal technical domain terms in prose stay as written. "Vector database", "test harness", "silicon substrate", "programming paradigm", and "API surface" name precise technical concepts, not marketing metaphors.
-
-Indonesian prose keeps standard technical loan terms unchanged, including "payload", "token JWT", "endpoint", "middleware", "controller", "pipeline CI", and "cluster Kubernetes".
+These rules cover human-facing prose, documentation, walkthroughs, and chat explanations only:
+- Keep code syntax, code blocks, database schemas, API parameters, variable names, terminal commands, and git commits neutral and idiomatic. Never inject voice quirks, slang, or arbitrary renames into functional code.
+- Never alter backticked text, including symbols (`symbol`), CLI flags (`--flag`), schema keys, and variable names (`variable_name`).
+- Literal technical domain terms in prose stay as written. "Vector database", "test harness", "silicon substrate", "programming paradigm", and "API surface" name precise technical concepts, not marketing metaphors.
+- Indonesian prose keeps standard technical loan terms unchanged, including "payload", "token JWT", "endpoint", "middleware", "controller", "pipeline CI", and "cluster Kubernetes".
 
 ## Core rules
 
@@ -124,7 +140,7 @@ Remove conversational filler, meta-announcements, process narration, and artific
 
 ## Research and editorial sources
 
-The evidence base for these rules, with a citation and the finding it supports per source, is in references/slop-patterns.md and references/indonesian-patterns.md.
+The evidence base for these rules, with a citation and the finding it supports per source, is in `references/slop-patterns.md` and `references/indonesian-patterns.md`.
 
 ## Quick audit checklist
 

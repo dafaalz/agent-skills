@@ -7,6 +7,10 @@ description: "Use when auditing user interfaces, conducting UX heuristic critiqu
 
 Audit user interfaces and user experiences with empirical rigor.
 
+<HARD-GATE>
+Write-Target Boundary. In Audit mode, do not modify any file outside `.agents/state/ui-ux-review/`. In Remediation mode, modify only CSS, HTML markup, and microcopy approved by the user. Never modify backend business logic, API routes, database schemas, or non-UI assets. Emit findings and patches to `.agents/state/ui-ux-review/` before applying.
+</HARD-GATE>
+
 ## Modes
 
 Select an execution mode before Step 1:
@@ -48,14 +52,14 @@ Identify user intent and route execution immediately:
 
 Enforce these foundational invariants across all audits:
 
-1. **Enforce visible focus rings.** Never accept `outline: none` or `outline: 0` without a verified replacement. Require `:focus-visible` rings with at least a 3:1 contrast ratio, 2px solid thickness, and 2px offset.
-2. **Apply concentric border radii geometry.** Enforce the concentric corner formula on nested containers `R_inner = max(0, R_outer-(padding + border))` to eliminate pinched corners. Never permit identical inner and outer radii on nested containers.
-3. **Use discrete surface tokens for elevation.** Demand semantic surface tokens based on lightness steps instead of semi-transparent white overlays.
-4. **Audit interaction friction over styling.** Focus on task completion time, cognitive load, error rates, and mental model mismatches before fine-tuning aesthetics.
-5. **Enforce exact cognitive thresholds.** Apply Nelson Cowan 4-chunk limits, Doherty 400ms feedback bounds, and Fitts's Law 48px touch targets without inventing arbitrary thresholds.
-6. **Use undo for reversible actions.** Prescribe instant execution paired with a 5 to 10 second undo toast. Avoid modal confirmation dialogs because habituation renders repeated confirmation prompts ineffective against slips.
-7. **Prevent unrecoverable data loss.** Flag any form or workflow that wipes user input on network drops, session expiries, or back navigation as an automatic blocker.
-8. **Enforce CSS logical properties.** Require logical properties such as `margin-inline-start` and `padding-inline` on shared components. Reject hardcoded physical properties like `margin-left` or `padding-right`.
+1. **INV-1. Visible focus rings.** Never accept `outline: none` or `outline: 0` without a verified replacement. Require `:focus-visible` rings with at least a 3:1 contrast ratio, 2px solid thickness, and 2px offset.
+2. **INV-2. Concentric border radii.** Enforce the concentric corner formula on nested containers `R_inner = max(0, R_outer-(padding + border))` to eliminate pinched corners. Never permit identical inner and outer radii on nested containers.
+3. **INV-3. Discrete surface tokens.** Demand semantic surface tokens based on lightness steps instead of semi-transparent white overlays.
+4. **INV-4. Interaction friction over styling.** Focus on task completion time, cognitive load, error rates, and mental model mismatches before fine-tuning aesthetics.
+5. **INV-5. Cognitive thresholds.** Apply Nelson Cowan 4-chunk limits, Doherty 400ms feedback bounds, and Fitts's Law 48px touch targets without inventing arbitrary thresholds.
+6. **INV-6. Undo for reversible actions.** Prescribe instant execution paired with a 5 to 10 second undo toast. Avoid modal confirmation dialogs because habituation renders repeated confirmation prompts ineffective against slips.
+7. **INV-7. Unrecoverable data loss.** Flag any form or workflow that wipes user input on network drops, session expiries, or back navigation as an automatic blocker.
+8. **INV-8. CSS logical properties.** Require logical properties such as `margin-inline-start` and `padding-inline` on shared components. Reject hardcoded physical properties like `margin-left` or `padding-right`.
 
 ## Section 1. UI mechanics and technical compliance
 
@@ -97,7 +101,7 @@ Establish review boundaries, blast radius, and user intent before inspecting cod
 4. Check for existing design guidelines (`AGENTS.md`, `DESIGN.md`, Storybook rules).
 5. Identify primary user goals, baseline mental models, and optimal step counts.
 6. Record excluded files, third-party redirects, and out-of-scope backend processes.
-7. Write or load `references/operate-brief.md` for operate and read routes before inspecting code.
+7. Write or load `.agents/state/ui-ux-review/operate-brief.md` for operate and read routes before inspecting code. Do not write to `references/`.
 
 Completion criterion. Target surfaces, active styling engines, guidelines, user goals, and operate brief confirmed and recorded in a scope checklist.
 
@@ -140,7 +144,7 @@ Consolidate findings into a structured report using `references/report-format.md
 7. Assign an `Approve` or `Changes Requested` final verdict.
 8. Run finish review in fresh context with request, answers, artifact path, screenshots, direction contract, and hook findings as inputs. Inherit no transcript.
 
-Completion criterion. Formatted report delivered containing categorized findings, Before-After-Why evidence tables, concrete code diffs, final verdict, and isolated review inputs.
+Completion criterion. The report is written to `.agents/state/ui-ux-review/report.md` with headings `## Verdict`, `## Findings`, `## Scope`, and `## Evidence`. The `## Verdict` section contains exactly one line matching `verdict: (Approve|Changes Requested)`. Screenshots are stored under `.agents/state/ui-ux-review/screenshots/`.
 
 ## Five-dimension design critique scorecard
 
@@ -156,41 +160,41 @@ When evaluating visual polish and aesthetics beyond mechanical accessibility, ap
 
 Audit implementations against this checklist. Every item represents an automatic rejection:
 
-| Never | Instead |
-| --- | --- |
-| `outline: none` or `outline: 0` without a visible replacement | `:focus-visible` with minimum 2px solid outline and 2px offset |
-| Nested child container sharing identical `border-radius` with parent | Concentric radius formula `R_inner = max(0, R_outer-(padding + border))` |
-| Pure black `#000000` applied to large dark mode canvas surfaces | Dark neutral tones with OKLCH lightness 0.16 to 0.20 such as `#121212` |
-| Stacking white opacity overlays for dark mode surface elevations | Discrete semantic container tokens with stepped lightness values |
-| Hover styling triggered unconditionally on touchscreen devices | Wrap hover rules in `@media (hover: hover) and (pointer: fine)` |
-| Line height declared with fixed units such as `line-height: 24px` | Unitless proportional values such as `line-height: 1.5;` |
-| Unbounded body paragraphs exceeding 80 characters per line | Restrict reading width using `max-inline-size: 65ch;` |
-| Numbers in tables or counters rendered with proportional glyphs | Enforce uniform width via `font-variant-numeric: tabular-nums;` |
-| Animating layout properties like width, height, margin, or top | Animate GPU-accelerated `transform` and `opacity` exclusively |
-| Responsive components bound solely to global window media queries | Use CSS Container Queries (`@container`) for modular portability |
-| Images rendered without explicit dimensions or aspect ratios | Declare explicit dimensions and `aspect-ratio` to prevent CLS |
-| Generic clickable `div` elements representing buttons or links | Semantic native `<button type="button">` or `<a href="...">` |
-| Placeholder attribute used as form field label | Persistent `<label>` element above the input field |
-| Border and text turning red while the user is actively typing | Delay error validation until `onBlur`, then live revalidate on `onInput` |
-| Disabled submit button with no explanation | Keep submit button enabled, show inline errors and jump to first invalid field |
-| Multi-column form layouts with zig-zagging fields | Single-column linear vertical layout |
-| Modal confirmation popup on reversible actions | Instant execution with 5 to 10 second undo toast notification |
-| Destructive permanent deletion executed via single regular button | Deliberate friction requiring resource name confirmation or typed prompt |
-| Form fields wiped clean on server validation error or network timeout | Preserve all input state locally and flag only the invalid field |
-| Silent operation with no feedback during 400ms to 1000ms latency | Subtle inline spinner or button loading state |
-| Generic or apologetic error copy like "Sorry, an error occurred" | Specific statement of what failed followed by concrete recovery steps |
-| Generic passive CTA label like "Submit" or "Click here" | Specific outcome verb matching intent like "Save changes" or "Create project" |
-| Lexical drift between trigger button and status notification | Exact lexical pairing across flow ("Publish" button triggers "Published" toast) |
-| System architecture terminology exposed in user copy | User mental model terms ("Manage notifications" instead of "Webhook settings") |
-| Entire screen replaced by a single spinner on initial page load | Skeleton screens matching destination layout structure |
-| Primary mobile action placed in top corners (Ow Zone) | Sticky bottom button or bottom bar in Natural Thumb Zone |
-| Rejection of telephone or card numbers because of spaces or hyphens | Permit flexible input formatting per Postel's Law and sanitize on submission |
-| Wall of 10+ inputs presented in a single unstructured page | Multi-step flow chunked into 3 to 4 logical fields per step with progress |
-| Empty state rendered as blank white space | Instructive empty state explaining zero data and primary action to populate |
-| Dropdown containing 15+ unranked options without search | Searchable combobox or progressive selection hierarchy |
-| Dead scroll zones where scrolling changes nothing on screen | Continuous feedback or eliminate redundant pinning |
-| Text rendered over dynamic video or canvas without multi-frame contrast check | Localized scrim or contrast-adaptive text fill passing WCAG AA across all frames |
-| Numbered markers (01 / 02 / 03) applied to non-sequential content | Omit numbers; use semantic headings or topic cards unless step order is strictly required |
+| ID | Title | Pattern description | Why it fails | Concrete fix |
+|---|---|---|---|---|
+| AA-1 | Focus ring removal | `outline: none` or `outline: 0` without a visible replacement | Keyboard users lose navigation position; fails WCAG 2.4.7 | `:focus-visible` with minimum 2px solid outline and 2px offset |
+| AA-2 | Concentric radius violation | Nested child container sharing identical `border-radius` with parent | Corners pinch visually and hierarchy reads flat | Concentric radius formula `R_inner = max(0, R_outer-(padding + border))` |
+| AA-3 | Pure black canvas | Pure black `#000000` applied to large dark mode canvas surfaces | OLED smearing and harsh contrast eye fatigue | Dark neutral tones with OKLCH lightness 0.16 to 0.20 such as `#121212` |
+| AA-4 | White opacity layering | Stacking white opacity overlays for dark mode surface elevations | Creates muddy contrast and indeterminate lightness steps | Discrete semantic container tokens with stepped lightness values |
+| AA-5 | Unconditional hover styling | Hover styling triggered unconditionally on touchscreen devices | Causes sticky hover states on mobile touch tap | Wrap hover rules in `@media (hover: hover) and (pointer: fine)` |
+| AA-6 | Fixed unit line-height | Line height declared with fixed units such as `line-height: 24px` | Causes text collision when users scale font sizes | Unitless proportional values such as `line-height: 1.5;` |
+| AA-7 | Unbounded line length | Unbounded body paragraphs exceeding 80 characters per line | Degrades reading tracking and increases cognitive strain | Restrict reading width using `max-inline-size: 65ch;` |
+| AA-8 | Proportional numbers in data | Numbers in tables or counters rendered with proportional glyphs | Columns jitter and alignment drifts across updates | Enforce uniform width via `font-variant-numeric: tabular-nums;` |
+| AA-9 | Layout property animation | Animating layout properties like width, height, margin, or top | Triggers main-thread layout recalculations and dropped frames | Animate GPU-accelerated `transform` and `opacity` exclusively |
+| AA-10 | Window-bound media queries | Responsive components bound solely to global window media queries | Breaks component portability across different column widths | Use CSS Container Queries (`@container`) for modular portability |
+| AA-11 | Missing image dimensions | Images rendered without explicit dimensions or aspect ratios | Triggers Cumulative Layout Shift when asset loads | Declare explicit dimensions and `aspect-ratio` to prevent CLS |
+| AA-12 | Clickable div elements | Generic clickable `div` elements representing buttons or links | Inaccessible to screen readers and keyboard navigation | Semantic native `<button type="button">` or `<a href="...">` |
+| AA-13 | Placeholder as label | Placeholder attribute used as form field label | Disappears upon user input and fails cognitive recall | Persistent `<label>` element above the input field |
+| AA-14 | Premature validation errors | Border and text turning red while the user is actively typing | Punishes the user before they finish data entry | Delay error validation until `onBlur`, then live revalidate on `onInput` |
+| AA-15 | Disabled submit button | Disabled submit button with no explanation | Users cannot discover what input requirements are missing | Keep submit button enabled, show inline errors and jump to first invalid field |
+| AA-16 | Zig-zagging form fields | Multi-column form layouts with zig-zagging fields | Increases eye travel and form completion abandonment | Single-column linear vertical layout |
+| AA-17 | Modal popup on reversible action | Modal confirmation popup on reversible actions | Interrupts flow; repeated prompts cause habituated clicks | Instant execution with 5 to 10 second undo toast notification |
+| AA-18 | Single-click destructive deletion | Destructive permanent deletion executed via single regular button | Invites catastrophic accidental data loss from misclicks | Deliberate friction requiring resource name confirmation or typed prompt |
+| AA-19 | Form wipe on network error | Form fields wiped clean on server validation error or network timeout | Destroys user effort and forces complete re-entry | Preserve all input state locally and flag only the invalid field |
+| AA-20 | Unfeedbacked operation latency | Silent operation with no feedback during 400ms to 1000ms latency | Leaves user uncertain whether click registered | Subtle inline spinner or button loading state |
+| AA-21 | Apologetic error copy | Generic or apologetic error copy like "Sorry, an error occurred" | Provides zero actionable path forward | Specific statement of what failed followed by concrete recovery steps |
+| AA-22 | Generic CTA verbs | Generic passive CTA label like "Submit" or "Click here" | Ambiguous outcome verb creates decision hesitation | Specific outcome verb matching intent like "Save changes" or "Create project" |
+| AA-23 | Lexical state drift | Lexical drift between trigger button and status notification | Breaks mental model continuity across task execution | Exact lexical pairing across flow ("Publish" button triggers "Published" toast) |
+| AA-24 | System jargon in UI copy | System architecture terminology exposed in user copy | Exposes implementation mechanics instead of user goals | User mental model terms ("Manage notifications" instead of "Webhook settings") |
+| AA-25 | Full screen spinner replacement | Entire screen replaced by a single spinner on initial page load | Creates jarring visual pop-in when content arrives | Skeleton screens matching destination layout structure |
+| AA-26 | Mobile action in Ow Zone | Primary mobile action placed in top corners (Ow Zone) | Forces uncomfortable one-handed reach gymnastics | Sticky bottom button or bottom bar in Natural Thumb Zone |
+| AA-27 | Punitive input formatting | Rejection of telephone or card numbers because of spaces or hyphens | Fails Postel principle by punishing human input habits | Permit flexible input formatting per Postel law and sanitize on submission |
+| AA-28 | Wall of unchunked inputs | Wall of 10+ inputs presented in a single unstructured page | Overwhelms cognitive working memory capacity | Multi-step flow chunked into 3 to 4 logical fields per step with progress |
+| AA-29 | Blank white empty state | Empty state rendered as blank white space | Leaves user stranded without onboarding guidance | Instructive empty state explaining zero data and primary action to populate |
+| AA-30 | Unranked flat dropdown | Dropdown containing 15+ unranked options without search | Forces tedious linear scrolling through long menus | Searchable combobox or progressive selection hierarchy |
+| AA-31 | Dead scroll zones | Dead scroll zones where scrolling changes nothing on screen | Misleads user into believing page has frozen | Continuous feedback or eliminate redundant pinning |
+| AA-32 | Dynamic canvas text contrast | Text rendered over dynamic video or canvas without multi-frame contrast check | Becomes illegible when background video brightness shifts | Localized scrim or contrast-adaptive text fill passing WCAG AA across all frames |
+| AA-33 | False sequence numbering | Numbered markers (01 / 02 / 03) applied to non-sequential content | Falsely implies rigid chronological order where none exists | Omit numbers; use semantic headings or topic cards unless step order is strictly required |
 
 ## Quick verification checklist
 

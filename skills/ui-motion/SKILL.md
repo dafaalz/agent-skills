@@ -11,6 +11,10 @@ Design, build, audit, and optimize hardware-accelerated user interface motion.
 
 UI motion engineering delivers hardware-accelerated, physically grounded interface motion that preserves utility, improves spatial orientation, and avoids decorative bloat. Motion copies nature to establish spatial consistency (an internal map of where intangible things live in software). Because physical nature is slow, high-frequency actions demand restraint: keyboard shortcuts execute in 0ms, ease-out curves front-load velocity, gestures remain interruptible mid-flight, and state feedback persists even when motion is disabled. Consult deep reference documents in `references/` for recipes, gesture physics, platform standards, and audit playbooks.
 
+<HARD-GATE>
+Write-Target Boundary. In Author mode, write only to component files containing motion, transition, or animation styling. In Audit mode, write only to `docs/superpowers/plans/` for audit plans and `.agents/state/ui-motion/` for findings. Never modify application state logic, backend calls, or accessibility roles. Any change to `prefers-reduced-motion` handlers requires explicit user approval.
+</HARD-GATE>
+
 ## Modes
 
 Select an execution mode before Step 1:
@@ -25,7 +29,7 @@ Identify user intent and route execution immediately:
 2. **Mental models, time perception, and personality.** Consult [references/mental-models-and-perception.md](references/mental-models-and-perception.md) for spatial continuity, the Wise artificial delay paradox, Android touch prediction, personality calibration, and the Pokémon state feedback invariant.
 3. **Refining tactile micro-interactions.** Add active press feedback, anchor popovers to trigger coordinates, eliminate secondary tooltip delays, apply context menu blink exits, and format reviews using the Before, After, Why table.
 4. **Fluid gestures and spring physics.** Consult [references/physics-and-gestures.md](references/physics-and-gestures.md) for Apple momentum decay projection, rubber band boundaries, pointer capture, mid-flight retargeting, and velocity handoffs.
-5. **Codebase audits and refactor planning.** When called with an audit request (e.g. `/ui-motion audit <target>`), follow [references/audit-and-plans.md](references/audit-and-plans.md) to inspect the repository against motion failure modes and generate structured refactor plans under `plans/` without mutating source files.
+5. **Codebase audits and refactor planning.** When called with an audit request (e.g. `/ui-motion audit <target>`), follow [references/audit-and-plans.md](references/audit-and-plans.md) to inspect the repository against motion failure modes and generate structured refactor plans under `docs/superpowers/plans/` without mutating source files.
 6. **Mobile web and native platform motion.** Consult [references/mobile-web-and-native.md](references/mobile-web-and-native.md) for mobile Safari viewport sizing (`100dvh`), 300ms tap delay elimination, 16px input auto-zoom prevention, touch overscroll boundaries, and React Native Reanimated worklet UI thread isolation.
 7. **Translating informal animation vocabulary.** Consult [references/vocabulary.md](references/vocabulary.md) when the user describes an animation informally or by sensation rather than technical names.
 8. **Browser compositor and Google rendering standards.** Consult [references/google-standards.md](references/google-standards.md) when diagnosing Chromium layer explosion, auditing Core Web Vitals (INP and CLS) frame budgets, adopting Material Design 3 motion tokens, or implementing Android physics-based fling and spring animations.
@@ -57,12 +61,12 @@ Avoid these core failure modes:
 
 1. **Animating elements that must stay static.** The frequency gate below intentionally produces zero lines of code when motion degrades utility. Deliver an instant state toggle instead.
 2. **Animating keyboard-initiated actions.** Never animate actions triggered by keyboard shortcuts (`Cmd+Space`, `Esc`, `Tab`). Users know the outcome; animation forces waiting. Deliver an instant 0ms state change.
-3. **Dropping state feedback when motion is disabled (The Pokémon principle).** Never eliminate state registration when animations are turned off. Preserve instant tactile or visual cues (selection blinks, high-contrast flashes; never use shake as shake is a vestibular trigger).
+3. **Preserve state feedback when motion is disabled.** Never eliminate state registration when animations are turned off. Preserve instant tactile or visual cues such as selection blinks or high-contrast flashes; never use shake as shake is a vestibular trigger.
 4. **Locking user input during animation.** Transitions must remain interruptible and retargetable mid-flight. Never apply `pointer-events: none` to transforming elements.
 5. **Using instant transitions on high-stakes operations (The Wise paradox).** Completing financial or irreversible actions in 0ms induces user distrust. Use an artificial 350ms to 450ms confirmation animation to close the perception delta.
 6. **Using incorrect motion properties.** Avoid `ease-in` on interactive entrances, `scale(0)` on mounting elements, keyframes on rapidly triggered elements, or sluggish durations above 300ms.
 7. **Approximating motion values.** Take every curve, duration, and spring parameter from the reference tables. Never invent arbitrary cubic-bezier coordinates.
-8. **Altering source code during audits.** When auditing repositories, generate structured plans under `plans/` without mutating source files.
+8. **Altering source code during audits.** When auditing repositories, generate structured plans under `docs/superpowers/plans/` without mutating source files.
 9. **Animating bulk historical data during initial load.** Never bind entrance animations to message histories or bulk collection renders. Render historical logs instantly without motion, and gate animations behind reactive flags (`isNew: boolean`) for live events.
 10. **Tearing down ephemeral elements without exit choreography.** Never call `element.remove()` synchronously on live activity indicators. Apply an exit transition (`opacity: 0`, `scale(0.95)`) over 120ms before removing nodes from the DOM.
 
@@ -206,30 +210,30 @@ When reviewing or proposing UI micro-interaction changes, format findings using 
 | Missing active press feedback | `transform: scale(0.97)` on active press | Pressable targets must provide immediate tactile feedback |
 | `transform-origin: center` on popover | `var(--transform-origin, center)` | Popovers scale from trigger origin, while dialog modals remain centered |
 | 400ms enter on keyboard shortcut | Instant 0ms toggle | Keyboard actions reflect deliberate user intent and require zero waiting |
-| Removing state feedback on reduced motion | Instant border flash or selection blink | Retain state impact proof when motion is disabled (The Pokémon principle) |
+| Removing state feedback on reduced motion | Instant border flash or selection blink | Retain state impact proof when motion is disabled via instant border flash or selection blink |
 
 ## Quick audit checklist
 
 Verify code against this checklist before delivering. Every item represents an automatic rejection:
 
-| Never | Instead |
-| --- | --- |
-| `transition: all` | Name the exact properties (`transform`, `opacity`) |
-| `transform: scale(0)` entrance | `scale(0.95)` with zero opacity |
-| `ease-in` on interactive entrances | `ease-out` token (exits may use `ease-in`) |
-| Built-in `ease-out` on deliberate UI | `cubic-bezier(0.23, 1, 0.32, 1)` |
-| Animation on keyboard actions or shortcuts | Instant 0ms state toggle |
-| Context menu entrance animation | Instant 0ms entry, selection blink, 120ms exit fade |
-| Eliminating state feedback when motion is off | Retain instant blink, border pulse, or color flash; never shake |
-| Non-interruptible animation or blocked pointer events | Retarget live presentation transforms mid-flight |
-| 0ms transition on high-stakes operations | 350ms to 450ms confirmation to close perception delta |
-| Functional UI duration over 300ms | 150 to 250ms |
-| `transform-origin` without fallback | `var(--transform-origin, center)` |
-| Keyframes on rapidly triggered elements | CSS transitions or springs |
-| Animating `width`, `height`, `margin`, `padding`, `top`, or `left` | `transform` and `opacity` (accordions use grid rows or interpolate-size) |
-| Non-accelerated JS transform loops | WAAPI compositor execution or CSS transitions |
-| Ungated hover motion | `@media (hover: hover) and (pointer: fine)` |
-| Global `transform: none !important` under reduced motion | Collapse durations to 0.01ms; preserve structural centering transforms |
-| Unmounting without transitionend guard or fallback | Filter `e.target === e.currentTarget`, listen to `transitioncancel`, watchdog timer |
-| Unclamped delta-time in RAF physics loops | Clamp `dt <= 0.032s` with 4ms internal sub-stepping |
-| Duplicate `view-transition-name` tokens | Scope tokens dynamically during active transition and clean up on finish |
+| Title | Pattern description | Why it fails | Concrete fix |
+|---|---|---|---|
+| Transition all | `transition: all` shorthand in stylesheet | Animates expensive layout and paint properties causing jank | Name the exact properties (`transform`, `opacity`) |
+| Scale-zero entrance | `transform: scale(0)` used as entrance mount state | Objects cannot physically emerge from a dimensionless point | Use `scale(0.95)` paired with zero opacity |
+| Ease-in entrance | `ease-in` applied to interactive entrances | Slow initial acceleration feels unresponsive and sluggish | Use `ease-out` token (reserve `ease-in` strictly for exits) |
+| Generic ease-out | Browser default `ease-out` on deliberate UI | Lacks distinct personality and natural deceleration | Use custom curve `cubic-bezier(0.23, 1, 0.32, 1)` |
+| Keyboard animation | Animation on keyboard actions or shortcuts | User already anticipates outcome; motion forces idle waiting | Apply instant 0ms state toggle |
+| Context menu animation | Sliding or expanding context menu entrance animation | Blocks instant command execution | Use instant 0ms entry, selection blink, and 120ms exit fade |
+| Motionless feedback drop | Eliminating state feedback when motion is disabled | Leaves user uncertain whether action registered | Retain instant blink, border pulse, or color flash; never shake |
+| Input lock during motion | Non-interruptible animation or blocked pointer events | Traps user interaction mid-flight | Retarget live presentation transforms mid-flight |
+| Instant high-stakes action | 0ms transition on irreversible or high-stakes operations | Induces user distrust from lack of perceptible processing | Use 350ms to 450ms confirmation to close perception delta |
+| Excessive duration | Functional UI animation duration over 300ms | Drags interactive rhythm and wastes user time | Bound duration strictly between 150ms and 250ms |
+| Unguarded transform-origin | `transform-origin` declared without dynamic fallback | Scales popovers from arbitrary viewport locations | Declare `var(--transform-origin, center)` |
+| Rapid element keyframes | CSS keyframes on rapidly triggered elements | Keyframe animations cannot be interrupted cleanly | Use CSS transitions or spring physics |
+| Layout property animation | Animating `width`, `height`, `margin`, `padding`, `top`, or `left` | Triggers expensive layout recalculations on main thread | Animate `transform` and `opacity` (accordions use grid rows) |
+| Main-thread script loops | Non-accelerated JS transform loops | Stalls main thread during concurrent script execution | Use WAAPI compositor execution or CSS transitions |
+| Ungated hover motion | Hover animation triggered on touch devices | Creates sticky persistent hover states on mobile | Wrap in `@media (hover: hover) and (pointer: fine)` |
+| Destructive reduced-motion | Global `transform: none !important` under reduced motion | Breaks layout positioning transforms like centering | Collapse durations to 0.01ms; preserve structural transforms |
+| Unguarded unmount | Unmounting without transitionend guard or fallback | Leaves orphaned DOM nodes when transitions cancel | Filter `e.target === e.currentTarget`, listen to `transitioncancel` |
+| Unclamped physics step | Unclamped delta-time in RAF physics loops | Causes spring physics explosion on background tab wake | Clamp `dt <= 0.032s` with 4ms internal sub-stepping |
+| Duplicate view-transition | Duplicate `view-transition-name` tokens in DOM | Invalidates entire document view transition | Scope tokens dynamically during active transition |

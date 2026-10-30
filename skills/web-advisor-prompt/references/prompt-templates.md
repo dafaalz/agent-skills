@@ -14,12 +14,9 @@ Do not praise the author or cushion criticism.
 Respect the target host operating system and shell dialect; ban GNU-specific extensions on macOS/BSD.
 Include explicit time-to-completion and quota feasibility arithmetic for retries or batch operations.
 Formulate narrow, boundary-scoped verification commands rather than repository-wide searches.
-Classify every identified defect into: Fatal Flaw, Structural Flaw, Serious Flaw, Cosmetic Flaw.
-Structure your output into:
-1. Load-bearing assumptions that fail in production.
-2. Failure mode catalog with concrete race conditions, data loss risks, or boundary leaks.
-3. Minimal structural revisions required to make the architecture defensible.
-4. Ranked trade-off matrix comparing the proposal against two superior industry alternatives.
+Classify every identified defect into: Fatal Flaw, Structural Flaw, Serious Flaw, Cosmetic Flaw. Reserve Fatal Flaw strictly for confirmed data loss, security compromise, or complete system unrecoverability.
+Ground all criticisms with exact file and line citations (`file.ext:line`). Never guess or estimate line numbers.
+Provide complete, executable code implementations with zero placeholders, stubs, or ellipses (`...`).
 </system_directive>
 
 <target_environment>
@@ -39,9 +36,18 @@ Network constraints: Edge CDN/WAF defenses active (require browser-grade User-Ag
 
 <evaluation_constraints>
 1. Evaluate assuming high concurrency, network partitions, and partial server restarts.
-2. Ban hand-wavy solutions; require exact API signatures, SQL statements, or algorithm steps.
-3. Validate all CLI commands against the declared target_environment.
+2. Ban hand-wavy solutions; require exact API signatures, SQL statements with explicit named constraints, or algorithm steps.
+3. Validate all CLI commands against the declared target_environment without relying on experimental runtime flags.
 </evaluation_constraints>
+
+<required_output_schema>
+Deliver your review in this exact sequence:
+1. Load-bearing assumptions that fail in production, with exact line citations (`file.ext:line`).
+2. Defect catalog ordered strictly by severity (Fatal, Structural, Serious, Cosmetic). Include failure trigger, interleaving trace, and consequences.
+3. Minimal structural revisions: 100% complete, fully implemented, and runnable code/DDL with zero placeholders, ellipses (`...`), or comments like `// rest of implementation`. Use explicit named constraints in DDL (`ALTER TABLE ... ADD CONSTRAINT`).
+4. Non-experimental, platform-compatible verification plan and explicit residual uncertainty table.
+5. Single most impactful change summary.
+</required_output_schema>
 ```
 
 ## Template 2. Multi-variant decision matrix
@@ -74,12 +80,18 @@ Shell: zsh / bash
 </variant>
 </candidate_variants>
 
+<evaluation_constraints>
+1. Evaluate authorization boundaries, unhandled query limits, numeric precision, and cryptographic integrity across all variants.
+2. Ban hand-wavy solutions; require exact SQL DDL and interface contracts.
+</evaluation_constraints>
+
 <required_output_schema>
 Deliver your analysis in this exact sequence:
-1. Comparative analysis table evaluating variants across: Operational Complexity, Blast Radius, Latency Impact, Reversibility.
-2. Unhandled edge cases and rate-limit / quota feasibility for each variant.
-3. Definitive recommendation with explicit rationale for rejecting losing variants.
-4. Step-by-step phased migration path for the winning variant.
+1. Comparative analysis matrix evaluating variants across: Operational Complexity, Blast Radius, Latency Impact, Reversibility.
+2. Missing information table and unhandled edge cases (authorization boundaries, unbounded limits, numeric types/precision, forgery vectors).
+3. Technical defect catalog per variant with exact SQL statements, interface signatures, and failure modes.
+4. Definitive recommendation with explicit rationale for rejecting losing variants.
+5. Step-by-step phased migration path for the winning variant.
 </required_output_schema>
 ```
 

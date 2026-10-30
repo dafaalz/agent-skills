@@ -1,11 +1,15 @@
 ---
 name: laravel
-description: Use when building, modifying, reviewing, testing, or debugging Laravel applications, Eloquent queries, Artisan commands, Blade or Livewire components, Inertia adapters, Form Requests, migrations, or queue jobs. Don't use for non-PHP stacks, static sites (use frontend-design), or plain WordPress themes.
+description: Use when building, modifying, reviewing, testing, or debugging Laravel applications, Eloquent queries, Artisan commands, Blade or Livewire components, Inertia adapters, Form Requests, migrations, or queue jobs. Don't use for non-PHP stacks (author stack-specific code directly), static sites (use frontend-design), or plain WordPress themes (author WordPress theme code directly).
 ---
 
 # Laravel
 
 Deterministic, test-driven workflows for Laravel applications.
+
+<HARD-GATE>
+Write-Target Boundary. Write only inside the Laravel application tree (`app/`, `routes/`, `resources/`, `database/`, `tests/`, `config/`). Never modify `vendor/`, `composer.lock`, generated migration timestamps, or framework core files. Never run `php artisan migrate` against non-local databases without explicit user approval recorded in `.agents/state/laravel/migrate-approval.md`.
+</HARD-GATE>
 
 ## Overview
 
@@ -52,7 +56,7 @@ Audit sibling controllers, models, migrations, and test files for established pr
 | Pest and PHPUnit tests, HTTP assertions, service fakes | `references/testing-patterns.md` |
 | Authorization policies, SQL injection safety, mass assignment | `references/security-and-hardening.md` |
 
-Completion criterion. Every planned edit maps to a documented pattern in the selected reference guide and preserves existing sibling class structure.
+Completion criterion. `.agents/state/laravel/edit-plan.md` exists on disk and lists every file to create or modify with its matching reference guide and section anchor.
 
 ### Step 3. Implementation and boundary isolation
 
@@ -64,7 +68,7 @@ Apply minimal, isolated modifications using test-first development:
 4. Extract validation into Form Request classes and pass only `$request->validated()` into models.
 5. Eager load relationships using `with()` or `loadMissing()` to eliminate N+1 queries.
 
-Completion criterion. Implementation passes input validation, eagerly loads database relations, and keeps business logic separated from HTTP controllers.
+Completion criterion. Implementation passes input validation, eagerly loads database relations, keeps business logic separated from HTTP controllers, and records targeted test failure command in `.agents/state/laravel/red-test.txt`.
 
 ### Step 4. Verification pass
 
@@ -78,9 +82,10 @@ Run automated verification commands before finishing work:
    ```bash
    vendor/bin/pint --test
    ```
+   If `vendor/bin/pint` does not exist, record `pint: absent` in `.agents/state/laravel/verification.txt` and skip the style check.
 3. Inspect the git diff of modified files. Confirm that input passes through validation, migrations declare explicit constraints, and queries load relationships eagerly.
 
-Completion criterion. Targeted tests pass with exit code 0 and Pint reports zero code style violations.
+Completion criterion. Targeted tests pass with exit code 0. If Pint is present, Pint reports zero style violations. If Pint is absent, `.agents/state/laravel/verification.txt` contains `pint: absent` and the test exit code.
 
 ## Decision rules
 

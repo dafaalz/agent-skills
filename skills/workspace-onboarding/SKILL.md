@@ -1,12 +1,16 @@
 ---
 name: workspace-onboarding
-description: Use when starting a new conversation, initializing work on a project, or onboarding to an unfamiliar workspace. Don't use for single-file edits in established sessions with known runtime environments, or creating persistent codebase documentation (use upsert-codebase-docs).
+description: Use when starting a new conversation, initializing work on a project, or onboarding to an unfamiliar workspace. Don't use for single-file edits in established sessions with known runtime environments (use systematic-debugging or executing-plans), or creating persistent codebase documentation (use upsert-codebase-docs).
 allowed-tools: Read Bash Glob Grep
 ---
 
 # Workspace onboarding
 
 Inspect repository context, verify environment configurations, and load governing rules before proposing solutions or running modifications.
+
+<HARD-GATE>
+Read-Only Boundary. Do not create, modify, delete, stage, commit, migrate, install, or chmod files during onboarding. Bash is allowed only for read-only inspection. Any mutation requires a separate user-approved skill invocation.
+</HARD-GATE>
 
 ## Modes
 
@@ -45,14 +49,19 @@ Completion criterion. Verify and record the runtime version, framework, database
 
 Locate and read the applicable project guidelines and behavioral constraints.
 
-1. Execute the deterministic rule discovery chain in this order:
-   * First, check `.agents/rules/AGENTS.md` or `.agents/skills/` if present in the workspace.
-   * Second, check `AGENTS.md`, `CODEBASE.md`, or `CLAUDE.md` in the project root.
-   * Third, check global machine rules at `~/.gemini/config/rules/AGENTS.md`.
-2. Bind rule constraints to the current session:
+1. Set `RULE_FILE` to the first existing path in this exact order:
+   * `.agents/rules/AGENTS.md`
+   * `.agents/skills/AGENTS.md`
+   * `AGENTS.md`
+   * `CODEBASE.md`
+   * `CLAUDE.md`
+   * `$HOME/.config/agents/AGENTS.md`
+2. If no path exists, record `Rules: none` and continue.
+3. If multiple paths exist, bind only `RULE_FILE` and report lower-priority files as ignored.
+4. Bind rule constraints to the current session:
    * Adopt the persona, tone, and language defined in the discovered rules immediately from turn 1.
    * Respect boundaries on file manipulation and tool usage.
-3. Resolve conflicts between rule files and runtime facts:
+5. Resolve conflicts between rule files and runtime facts:
    * If assertions in discovered rule files contradict live runtime manifests or database introspection from Step 1, treat live runtime as ground truth.
    * Adopt the live configuration and note the documentation drift in the onboarding synthesis line.
 

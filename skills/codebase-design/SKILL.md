@@ -1,11 +1,15 @@
 ---
 name: codebase-design
-description: Use when designing module interfaces, evaluating abstraction depth, identifying code seams, or turning shallow pass-through wrappers into deep modules. Don't use for syntax styling or minor formatting changes (use s13n), or single-line bug fixes.
+description: Use when designing module interfaces, evaluating abstraction depth, identifying code seams, or turning shallow pass-through wrappers into deep modules. Don't use for syntax styling or minor formatting changes (use s13n), or single-line bug fixes (use systematic-debugging).
 ---
 
 # Codebase design
 
 Design deep modules with substantial behavior behind small interfaces, placed at clean seams, and testable directly through those interfaces.
+
+<HARD-GATE>
+Write-Target Boundary. Do not create, modify, or delete files under `src/`, `app/`, `packages/`, `database/`, `tests/`, or any production source tree. Emit design artifacts only to `.agents/state/codebase-design/` and reference files. Any production write requires a separate `executing-plans` invocation with a user-approved plan.
+</HARD-GATE>
 
 ## Modes
 
@@ -34,14 +38,14 @@ Completion criterion. The agent names modules, methods, and attributes using ver
 
 Offer the user an exploratory multi-agent design pass before committing to a single interface.
 
-Ask the user:
+Ask the user directly.
 
 > "Do you want to run a Design It Twice pass with parallel sub-agents to explore 2 to 3 contrasting interface designs, or proceed directly with a single design?"
 
 - If the user accepts, consult `references/design-it-twice.md` and dispatch sub-agents using `invoke_subagent`.
 - If the user declines, proceed directly to Step 3.
 
-Completion criterion. User preference recorded and the matching design branch initiated.
+Completion criterion. Record user preference in `.agents/state/codebase-design/decision.md` with explicit line `design_it_twice: accepted` or `design_it_twice: declined`.
 
 ### Step 3. Deep module and seam formulation
 
@@ -57,7 +61,7 @@ Formulate the interface and identify module boundaries using deep module princip
 8. Subtract before you add. When evolving or refactoring a system, remove complexity first, then build. Sequence removal before construction. Delete dead code, redundant validation checks, and unused stub references before adding new capabilities. Leave the design simpler and more capable behind the same or smaller surface than you found it.
 9. Migrate callers then delete legacy APIs. When introducing a new internal module interface, migrate all in-tree callers and purge the deprecated API in the same wave. Avoid long-lived compatibility shims, forwarding aliases, or wrapper layers for internal code. Update tests to assert the new contract, and delete tests that only protect pre-refactor implementation details.
 
-Completion criterion. A written interface specification defining inputs, outputs, error states, and concrete seam placement.
+Completion criterion. Interface specification file `.agents/state/codebase-design/interface-spec.md` exists on disk with headings `## Inputs`, `## Outputs`, `## Error states`, and `## Seam placement`.
 
 ### Step 4. User review gate
 
@@ -77,7 +81,15 @@ Completion criterion. Explicit user confirmation approving the interface design.
 
 Invoke the `writing-plans` skill to generate a phased implementation plan.
 
-Completion criterion. The writing-plans skill is invoked with the approved interface design.
+Pass the following envelope:
+
+```yaml
+source_skill: codebase-design
+source_spec_path: .agents/state/codebase-design/interface-spec.md
+mode: Author
+```
+
+Completion criterion. The `writing-plans` invocation returns a plan path, and `.agents/state/codebase-design/handoff.json` exists on disk with `plan_path` matching the returned path and `spec_path` matching `source_spec_path`.
 
 ## Core vocabulary
 

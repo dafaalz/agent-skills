@@ -1,6 +1,6 @@
 ---
 name: testing-patterns
-description: Use when writing automated tests, creating test fixtures, configuring test mocks or testcontainers, implementing contract tests, or refactoring test suites. Don't use for manual QA testing plans, load testing scripts, or visual regression screenshot testing (use ui-ux-review).
+description: Use when writing automated tests, creating test fixtures, configuring test mocks or testcontainers, implementing contract tests, or refactoring test suites. Don't use for manual QA testing plans (author manual QA checklists directly), load testing scripts (author load testing scripts directly), or visual regression screenshot testing (use ui-ux-review).
 ---
 
 # Testing patterns
@@ -15,6 +15,10 @@ Read the reference guides for domain-specific execution details:
 * For seam boundary and mock isolation pitfalls, read `references/tdd-anti-patterns.md`.
 * For pre-commit gates, Husky setup, and lint-staged automation, read `references/pre-commit-hooks.md`.
 * For boundary value analysis, equivalence partitioning, and exploratory test charters, read `references/test-matrix-and-charters.md`.
+
+<HARD-GATE>
+Write-Target Boundary. Write only to `tests/`, `spec/`, `__tests__/`, and `.agents/state/testing-patterns/`. Do not modify production source, database migrations, or CI configuration. `storageState` JSON files and captured credentials must be written to `.agents/state/testing-patterns/secrets/` and gitignored. Never modify production business logic to make a test pass.
+</HARD-GATE>
 
 ## Modes
 
@@ -63,7 +67,7 @@ Construct fixtures through fluent test data builders following Google DAMP (Desc
 3. Chain override methods such as `withStatus()` or `withTier()` to declare only attributes required by the specific test.
 4. Inject sequential counters or random identifiers into emails, primary keys, and tenant identifiers to maintain test isolation during parallel execution.
 
-Completion criterion. Tests construct domain fixtures through fluent builders, declaring only fields required for the test scenario while running deterministically in parallel.
+Completion criterion. `.agents/state/testing-patterns/fixture-strategy.md` exists on disk and records the chosen fixture authoring pattern for the primary language. `grep -rn "INSERT INTO\|JSON.parse.*\.json" tests/ --include='*.test.*' --include='*.spec.*'` returns zero matches in test file bodies. Matches inside shared fixture setup files listed in the state artifact are permitted.
 
 ### Step 4. Network and dependency isolation
 
@@ -74,13 +78,13 @@ Isolate network boundaries and infrastructure dependencies through environment-n
    * Configure lifecycle hooks to start MSW before tests, reset handlers after every test, and close the server on teardown.
    * Set MSW to throw errors on unhandled requests to detect missing mock endpoints.
 2. For backend persistence tests:
-   * Run real database instances in ephemeral containers using Testcontainers instead of using in-memory SQL emulators like SQLite or H2.
-   * Mount database storage directories onto in-memory filesystems (`tmpfs`) to eliminate disk write latency.
+   * Run real database instances in ephemeral containers using Testcontainers instead of in-memory SQL emulators like SQLite or H2.
+   * On Linux hosts, mount database storage onto `tmpfs` to eliminate disk write latency. On macOS Darwin, do not attempt to mount `tmpfs`; the host kernel has no tmpfs. When Docker Desktop or Colima runs Linux containers, the container's own `/dev/shm` is already tmpfs-backed by the Linux VM, so container-internal tmpfs works without host-side mount. Record the resolved filesystem type in `.agents/state/testing-patterns/tmpfs-status.txt` with one of `container-tmpfs`, `host-tmpfs`, or `disk-fallback`.
    * Share a singleton container instance across test files and truncate tables with cascading resets between tests.
 3. For distributed microservice boundaries:
    * Verify schema agreements using consumer-driven contracts with Pact instead of running live downstream services.
 
-Completion criterion. Network calls intercept cleanly through MSW, and backend persistence tests execute against containerized databases on tmpfs mounts.
+Completion criterion. Network calls intercept cleanly through MSW. Backend persistence tests execute against containerized databases. If `.agents/state/testing-patterns/tmpfs-status.txt` contains `container-tmpfs` or `host-tmpfs`, the databases are mounted on tmpfs. If it contains `disk-fallback`, the completion criterion is satisfied without tmpfs and the file records why tmpfs was unavailable.
 
 ### Step 5. Declarative assertion construction
 
@@ -103,8 +107,8 @@ Completion criterion. Assertions verify only public behavior, accessible roles, 
 Verify test execution speed, determinism, and absence of intermittent failures:
 
 1. Meet latency budgets:
-   * Domain unit tests complete within sub-millisecond durations per test case.
-   * Integration tests complete within sub-second durations per test case using tmpfs and connection reuse.
+   * Meet latency budgets recorded in the test tier's configuration file (such as `jest.config.js`, `vitest.config.ts`, `phpunit.xml`, or `pytest.ini`). If a project has no configured budget, record the observed per-tier median in `.agents/state/testing-patterns/latency-baseline.txt` and judge only regressions against the recorded baseline.
+   * Integration tests complete within sub-second durations per test case using connection reuse. Tmpfs mounting improves latency but is not required for the sub-second budget on a warm container runtime. Record the observed p50 per test in `.agents/state/testing-patterns/latency-baseline.txt` and treat that as the baseline.
    * Browser end-to-end journeys complete within 10 to 30 seconds per journey.
 2. Eliminate flakiness sources:
    * Replace arbitrary sleep calls like `sleep()` or `waitForTimeout()` with explicit assertions on visible UI states or resolved network promises.

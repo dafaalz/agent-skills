@@ -1,23 +1,29 @@
 ---
 name: verification-before-completion
-description: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs, requiring fresh verification command output before making assertions. Don't use for initial exploratory brainstorming (use brainstorming) or rough drafting phases.
+description: "Use when about to claim work is complete, fixed, or passing, before committing or creating PRs, requiring fresh verification command output before making assertions. Don't use for initial exploratory brainstorming (use brainstorming) or rough drafting phases (verify only before publishing a claim; exploration is exempt until a completion claim is imminent)."
 ---
 
 # Verification before completion
 
 Execute verification commands and confirm terminal exit codes before asserting completion. Do not assert that code compiles or tests pass without running the relevant command in the active turn.
 
-```
-NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
-```
+<HARD-GATE>
+Write-Target Boundary. Read verification command output and git state only. Write only to `.agents/state/verification-before-completion/`. Never alter test assertion thresholds, delete failing tests, mock passing states, skip failed steps, or claim completion without a fresh exit-code-0 output in the current turn. Do not state a completion claim until Step 5's verification-receipt.json exists with exit_code 0 in the current turn. Never run destructive git restore on files with unstaged modifications.
 
-Never rely on cached assertions, previous turn outputs, or assumptions. Run the verification command in the current turn before stating that the task is finished.
+When reporting file content in the response, run `shasum -a 256 <path>` first, include the hash and the path adjacent to the pasted content, and paste the file content verbatim from `cat <path>`. Regenerated, paraphrased, or summarized file content without the hash and without the literal `cat` output is treated as unverified. The user or a reviewer can rerun `shasum -a 256 <path>` to confirm the paste matches the disk.
+
+Do not modify any file under `skills/review-a-skill/scripts/`, `skills/*/tests/`, or any file whose path matches `*/lint*.py`, `*/validate*.sh`, or `*/test_runner*.py` in the same commit, pull request, or agent turn as a skill patch. Validator changes require: (a) a commit whose subject ends with `[validator]`, (b) three self-test fixtures in `skills/review-a-skill/scripts/fixtures/lint/<pattern>-{positive,negative,edge}.<ext>`, (c) `python3 skills/review-a-skill/scripts/lint_skill.py --self-test` passing, (d) `shasum -a 256` of the previous and new linter recorded in the commit message. If any of (a)-(d) is missing, the commit is treated as a validator-and-skill co-mutation and rejected.
+
+Validator independence requires the pre-commit hook to be wired into git. Before any skill patch, confirm:
+`git config --get core.hooksPath | grep -q 'skills/review-a-skill/scripts'`
+If unconfigured, run `git config core.hooksPath "$(pwd)/skills/review-a-skill/scripts"` before continuing.
+</HARD-GATE>
 
 ## Modes
 
 Select a verification mode before Step 1:
-- Scoped turn verification (default). Verify the specific command output for the current task before responding to the user.
-- Pre-release gate. Execute the entire test suite, linter suite, and git status check before submitting a pull request or merging.
+- Scoped turn verification (default). Run Steps 1 through 6 to verify the specific command output and echo receipt for the current task before responding to the user.
+- Pre-release gate. Run Steps 1 through 10 in full, including adversarial falsification, git safety, scoped linting, and performance gates before committing or submitting a pull request.
 
 ## Boundary isolation
 
@@ -25,7 +31,7 @@ Verification evaluates execution state and test outcomes only. Never alter test 
 
 ## Workflow
 
-Follow these five steps in sequence before claiming completion:
+Follow these steps in sequence:
 
 ### Step 1. Command identification
 
@@ -47,106 +53,115 @@ Completion criterion. Terminal output confirms zero failing assertions, zero typ
 
 ### Step 4. Git diff and repository safety gate
 
-Inspect working tree status and diffs to confirm no core documentation files were inadvertently deleted and untracked artifacts are cleaned up.
+Inspect working tree status and diffs. Confirm no core documentation files were inadvertently deleted and untracked artifacts are cleaned up. If in Pre-release gate mode for a pull request, verify that `.agents/state/pull-request/pr-body.md` exists and is consistent with the verified diff.
 
 Completion criterion. `git status --short` confirms all touched files are intentional, with zero unwanted file deletions or orphan scratch files.
 
-### Step 5. Claim with evidence
+### Step 5. Execution-bound receipt recording
 
-State the completion claim citing the exact command run, test counts, and exit status.
+Execute verification commands strictly through the trusted executor wrapper to bind receipts directly to subprocess execution:
 
-Completion criterion. The user receives a factual statement backed by terminal evidence, with zero unverified assumptions.
+```bash
+python3 skills/verification-before-completion/scripts/run_receipt.py \
+  --command "$CMD" \
+  --claim "$CLAIM"
+```
 
-## Adversarial falsification gate (doubt-driven check)
+The executor executes the command, captures raw stdout and stderr to disk, computes cryptographic digests (`stdout_sha256`, `stderr_sha256`), captures git commit and tree SHAs, records ISO8601 timestamps, rejects dummy commands (such as `true` or `:`), and writes `.agents/state/verification-before-completion/verification-receipt.json` and `receipt-hash.txt`.
 
-A confident agent assertion is not proof of correctness. Before asserting completion on non-trivial logic, schema migrations, security boundaries, or multi-file refactoring, execute an adversarial falsification check:
+Completion criterion. `.agents/state/verification-before-completion/verification-receipt.json` exists on disk with fields `claim`, `command`, `argv`, `cwd`, `git_commit`, `git_tree`, `start_time_iso8601`, `end_time_iso8601`, `exit_code` (0), `stdout_sha256`, `stderr_sha256`, `test_count_passed` (integer), and `test_count_failed` (0), with authoritative sha256 recorded in `.agents/state/verification-before-completion/receipt-hash.txt`.
 
-1. Identify the core invariant. State the primary assumption that must hold true for the change to succeed without side effects.
-2. Formulate a disproof hypothesis. Ask: under what specific input, empty state, permission boundary, concurrent access, or error payload will this implementation fail?
-3. Execute the falsification test. Run a targeted negative test case, curl command, or edge query specifically designed to trigger the failure mode:
-   * For APIs: send empty payloads, malformed JSON, unauthorized tokens, or missing boundary parameters.
-   * For database migrations: verify rollback execution (`down` or reverse migration) before accepting forward migration as complete.
-   * For stateful UI: test rapid double-clicks, empty collections, and offline network state.
-4. Reconcile evidence. If the disproof test exposes an unhandled error or silent failure, stop immediately. Do not rationalize or dismiss edge cases as unlikely in production.
+### Step 6. Receipt echo verification
 
-Completion criterion. Core invariant challenged with at least one concrete negative test case, confirming graceful handling and zero silent failures.
+Before emitting any completion claim to the user, verify the claim against disk state:
+1. Run `python3 skills/verification-before-completion/scripts/run_receipt.py --verify`.
+2. Confirm the command exits with code 0, confirming receipt hash matches `receipt-hash.txt`, exit code is 0, stdout digest matches captured stdout, and command is not a dummy no-op.
+3. Read the receipt with `cat .agents/state/verification-before-completion/verification-receipt.json` and quote the `claim`, `command`, `exit_code`, and `stdout_sha256` fields verbatim inside a fenced text code block in the response.
+4. The response text must contain the exact strings from the receipt, character for character. Paraphrase, summary, or restatement in different words fails this step.
+5. If the receipt does not exist on disk, or if `--verify` fails, halt and do not emit the completion claim.
+
+Completion criterion. `python3 skills/verification-before-completion/scripts/run_receipt.py --verify` exits with status code 0, the response contains a fenced text code block with receipt fields verbatim, and the `shasum -a 256` output matches `.agents/state/verification-before-completion/receipt-hash.txt`. In Scoped turn verification mode, stop here.
+
+### Step 7. Adversarial falsification gate
+
+Before asserting completion on non-trivial logic, schema migrations, security boundaries, or multi-file refactoring, execute an adversarial falsification check:
+1. Identify the core invariant that must hold true.
+2. Formulate a disproof hypothesis under boundary inputs or concurrent states.
+3. Run a targeted negative test case or invalid payload.
+4. Record results in `.agents/state/verification-before-completion/falsification.json`.
+
+Completion criterion. `.agents/state/verification-before-completion/falsification.json` exists on disk with fields `invariant`, `disproof_hypothesis`, `test_command`, `test_exit_code`, `observed_result`, and `graceful_failure_confirmed`.
+
+### Step 8. Git state and documentation preservation gate
+
+Run these git checks before completing pre-release verification:
+1. Execute `git status --short` and record output to `.agents/state/verification-before-completion/git-state.txt`.
+2. Inspect deleted files marked with `D`. Core files must never be deleted without an explicit user prompt. Protected files include `CODEBASE.md`, `AGENTS.md`, `CLAUDE.md`, `README.md`, and `.env.example`.
+3. If any protected file was deleted inadvertently, notify the user with recovery options:
+   - `git restore --source=HEAD --staged --worktree -- <file>`
+   - `git show HEAD:<file> > <file>`
+   Do not run any restore command without explicit user selection.
+
+Completion criterion. `.agents/state/verification-before-completion/git-state.txt` exists on disk with git status recorded, protected files preserved, and any recovery plan approved.
+
+### Step 9. Scoped linter gate
+
+Run configured linters strictly against modified files identified via `git diff --name-only`:
+1. Check project manifests (`composer.json`, `package.json`) for configured linters (`pint`, `phpstan`, `eslint`, `biome`, `prettier`).
+2. Run linters against touched files only. If no linter is configured, record status as `none configured`.
+3. Write results to `.agents/state/verification-before-completion/linter.json`.
+
+Completion criterion. `.agents/state/verification-before-completion/linter.json` exists on disk with records for all modified files showing exit code 0 or status `none configured`.
+
+### Step 10. Automated performance gate
+
+Applies conditionally when the repository configures Lighthouse CI or automated benchmarks. Consult `references/lighthouse-ci.md` for execution setup. If unconfigured, record `perf_gate: skipped` in the receipt.
+
+Completion criterion. `.agents/state/verification-before-completion/verification-receipt.json` records `perf_gate: passed` with exit code 0 or `perf_gate: skipped`.
 
 ## Common failures
 
-| Claim | Requires | Not sufficient |
-|---|---|---|
-| Tests pass | Test command output showing 0 failures | Previous run, "should pass" |
-| Linter clean | Linter output showing 0 errors | Partial check, extrapolation |
-| Build succeeds | Build command returning exit 0 | Linter passing, logs look good |
-| Bug fixed | Test verifying original symptom passes | Code changed, assumed fixed |
-| Regression test works | Red-green cycle verified | Test passes once |
-| Agent completed | VCS diff shows changes | Agent reports "success" |
-| Requirements met | Line-by-line checklist | Tests passing |
-| Core invariant holds | Falsification test confirms graceful handling | Assumed safe, tested only happy path |
-
-## Red flags
-
-- Using "should", "probably", or "seems to".
-- Expressing satisfaction before verification ("Great!", "Perfect!", "Done!").
-- Preparing to commit, push, or open a PR without running tests.
-- Trusting agent success reports without inspecting diffs.
-- Relying on partial verification.
-- Any wording implying success without having run verification.
+| ID | Title | Pattern description | Why it fails | Concrete fix |
+|---|---|---|---|---|
+| VC-1 | Assumed test pass | Claiming tests pass without running them this turn | Cached or hallucinated output | Run the test command in the current turn; capture exit code |
+| VC-2 | Extrapolated lint | Assuming linter passes because tests pass | Different tool, different failure surface | Run the linter separately; capture exit code |
+| VC-3 | Lint-as-build | Claiming build success from lint success | Lint does not compile | Run the build; capture exit code 0 |
+| VC-4 | Assumed fix | Claiming a bug is fixed because code changed | Change without test of original symptom | Write and run the failing-then-passing test |
+| VC-5 | Single-pass regression | Claiming regression coverage after one green run | Test may pass for wrong reason | Perform red-green cycle: revert, observe red, restore, observe green |
+| VC-6 | Agent self-report | Forwarding subagent "success" without diff inspection | Subagent may fail silently | Inspect `git diff` and re-run verification yourself |
+| VC-7 | Passing-test completion | Claiming requirements met because tests pass | Tests may not cover the requirement | Re-read the plan or issue; verify each item with evidence |
+| VC-8 | Happy-path falsification | Claiming invariant holds after only positive test | Boundary cases untested | Run the negative test case |
 
 ## Rationalization prevention
 
-| Excuse | Reality |
-|---|---|
-| "Should work now" | Run the verification command directly |
-| "I'm confident" | Confidence is not evidence |
-| "Just this once" | Zero exceptions |
-| "Linter passed" | Linter is not a compiler |
-| "Agent said success" | Verify independently |
-| "I'm tired" | Exhaustion does not excuse verification |
-| "Partial check is enough" | Partial check proves nothing |
-| "Different words so rule does not apply" | Procedural invariants apply to all claims |
-| "Edge case is impossible" | Run negative test case to prove boundary handling |
+| ID | Title | Pattern description | Why it fails | Concrete fix |
+|---|---|---|---|---|
+| RP-1 | Should-work | "Should work now" | Confidence without evidence | Run the verification command directly |
+| RP-2 | Confidence-as-evidence | "I'm confident" | Confidence is not evidence | Run and capture exit code |
+| RP-3 | One-time exception | "Just this once" | Exceptions become the norm | Zero exceptions; always run the command |
+| RP-4 | Lint-as-build | "Linter passed" | Linter is not a compiler | Run build separately |
+| RP-5 | Agent self-report | "Agent said success" | Subagents report optimistically | Inspect `git diff` independently |
+| RP-6 | Fatigue | "I'm tired" | Fatigue does not excuse verification | Run the command |
+| RP-7 | Partial-check | "Partial check is enough" | Partial check proves nothing about the rest | Run the full command |
+| RP-8 | Semantic evasion | "Different words so rule does not apply" | Procedural invariants cover all claims | Apply rule to all completion claims |
+| RP-9 | Impossibility assumption | "Edge case is impossible" | Boundary cases are the bug source | Run the negative test case |
 
-## Key patterns
+## Red flags and key patterns
 
-Enforce paired behavioral contracts across verification targets:
+### Red flags
+- RF-1. Using "should", "probably", or "seems to".
+- RF-2. Expressing satisfaction before verification ("Great!", "Perfect!", "Done!").
+- RF-3. Preparing to commit, push, or open a PR without running tests.
+- RF-4. Trusting agent success reports without inspecting diffs.
+- RF-5. Relying on partial verification.
+- RF-6. Any wording implying success without having run verification.
 
-- **Tests.** Execute the test command and verify clean output (such as 34 of 34 passed) before reporting that tests pass; never assert "should pass now" or "looks correct" without running the test command.
-- **Regression tests (TDD red-green).** Write the test, run it to confirm it passes with the fix, temporarily revert the fix to confirm the test fails, and restore the fix; never claim regression coverage without verifying the failure step.
-- **Build.** Run the build command and verify exit code 0 before asserting compilation success; never claim the build passes based solely on a passing linter.
-- **Requirements.** Re-read the plan or issue, create an itemized checklist, and verify each item with evidence before reporting completion status; never conclude a feature is complete merely because test suites pass.
-- **Agent delegation.** When an agent reports success, inspect the version control diff directly, verify the changes, and report the confirmed state; never forward agent success claims without independent diff verification.
-
-## Git state and documentation preservation gate
-
-Run these git checks before making any completion claim:
-
-1. Execute `git status --short` to verify all touched files.
-2. Inspect deleted files marked with `D`:
-   * Core files must never be deleted without an explicit user prompt. Protected files include `CODEBASE.md`, `AGENTS.md`, `CLAUDE.md`, `README.md`, and `.env.example`.
-   * If any core documentation file was deleted inadvertently, restore it immediately using `git checkout -- <file>`.
-3. Confirm that untracked temporary files, scratch scripts, or dump files are either cleaned up or added to `.gitignore`.
-
-Completion criterion. Git working tree clean with protected files preserved and untracked artifacts removed.
-
-## Scoped linter and code style verification
-
-Run linters against modified files to prevent shipping formatting bugs or breaking pre-commit hooks:
-
-1. Detect configured linters:
-   * For PHP or Laravel, check `composer.json` for `laravel/pint` or `phpstan/phpstan`.
-   * For JavaScript or TypeScript, check `package.json` for `eslint`, `biome`, or `prettier`.
-2. Scope execution to modified files:
-   * Identify touched files using `git diff --name-only`.
-   * Run the linter strictly against those files, such as `vendor/bin/pint --test path/to/File.php` or `npx eslint path/to/File.tsx`.
-   * Do not execute full-repository scans that pull in pre-existing legacy errors outside the active scope.
-3. If no linter is configured in project manifests, record "none configured" under linter status in the verification report without failing the gate.
-
-Completion criterion. Scoped linters confirm zero lint errors on modified files, or status recorded as none configured.
-
-## Automated web performance and accessibility gate
-
-For web applications with automated auditing configured, consult `references/lighthouse-ci.md` to run Lighthouse CI assertions against production builds.
+### Key patterns
+- KP-1. Tests. Execute the test command and verify clean output before reporting passing status.
+- KP-2. Regression tests. Perform red-green TDD cycle verifying failure before fix.
+- KP-3. Build. Verify compiler exit code 0 before asserting build success.
+- KP-4. Requirements. Verify each item against an itemized checklist with command evidence.
+- KP-5. Agent delegation. Inspect git diff directly when subagents report completion.
 
 ## Quick audit checklist
 
@@ -158,3 +173,4 @@ For web applications with automated auditing configured, consult `references/lig
 | Scoped linting | Modified files pass configured linters with zero errors |
 | Factual claims | Completion claim cites exact commands and passing counts |
 | Adversarial check | Negative boundary test confirms invariant holds without silent failure |
+| Receipt echo verified | Response text character-for-character quotes disk receipt |

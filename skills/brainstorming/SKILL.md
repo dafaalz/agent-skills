@@ -13,12 +13,11 @@ Read project files first. If you change existing code, read official standards, 
 Write-Target Boundary. Do not modify files in tracked production directories (`src/`, `app/`, `packages/`, `database/`, `tests/`) or call implementation skills before the user approves the design specification. Ephemeral sandbox exploration is permitted exclusively inside `.agents/scratch/prototypes/<variant-id>/` when delegating visual or state spikes to the `prototype` skill.
 </HARD-GATE>
 
-## Workflow selection
+## Modes
 
-Decide if the task changes existing code or adds new code, then run the matching branch:
-
-- Change existing code. Run Branch 1.
-- Add new code. Run Branch 2.
+Select a branch before Step 1.
+- Branch 1 (change existing code). Verify standards, check code, compare options.
+- Branch 2 (add new code). Bound scope, ask questions, explore approaches.
 
 Both branches feed into Design presentation and documentation before calling writing-plans; never call implementation skills directly from brainstorming.
 
@@ -31,7 +30,12 @@ Run this branch when you update old code, move module boundaries, check if code 
 Read official docs before you suggest changes to existing code.
 
 - When the topic crosses domains or needs more sources than a repo read can reach, call the `recursive-research` skill in Targeted mode. Pass the topic, the affected layers, and the request for a brief that feeds a design spec. It writes evidence to `.agents/research/<slug>/`, tiers every source, and returns the five handoff fields.
-- When the topic spans a few official sources, ask a subagent to read them. This saves context in the main session.
+- When the topic spans a few official sources, delegate source reading with an invariant envelope and zero paraphrase:
+```yaml
+source_urls: ["<url-1>", "<url-2>"]
+required_fields: ["title", "url", "tier", "applicable_rule", "risk", "open_gap"]
+forbidden: ["summary without citation", "paraphrased source claims"]
+```
 - Ask for 3 to 5 trusted sources, and tier each one against the source tiering table in the `recursive-research` skill. Use official framework docs, core contributor posts, official RFCs, and trusted engineering guides.
 - From either path, require:
   1. Full citations with source titles and exact URLs.
@@ -40,7 +44,7 @@ Read official docs before you suggest changes to existing code.
   4. The open gaps from `recursive-research`, with the risk each one carries.
   5. Short output with no filler or small talk.
 
-Completion criterion. You list at least 3 checked sources or a brief at `.agents/research/<slug>/`, plus the rules you will apply for each affected layer.
+Completion criterion. `.agents/research/<slug>/brief.md` exists with at least 3 checked sources and the rules you will apply for each affected layer.
 
 ### Step 2. Check code against standards
 
@@ -54,7 +58,7 @@ Read the code, then sort what you find into three lists:
 
 List file path, class name, and line number for every item.
 
-Completion criterion. You list file paths for each of the three groups and you check every claim in code with zero guesses.
+Completion criterion. For each item in the three groups, record the file path, line number, and the exact file read or command output that supports the claim. Reject any item containing "guess", "likely", or "probably".
 
 ### Step 3. Compare options and suggest one
 
@@ -85,7 +89,7 @@ Read files, docs, and recent commits to learn conventions and dependencies.
 - Check scope first. If the request spans separate subsystems that you can build alone, flag it and split it into sub-projects before you discuss details.
 - Run the first sub-project through the full design flow. Each sub-project gets its own design, plan, and build cycle.
 
-Completion criterion. You bound the scope so it fits one implementation plan.
+Completion criterion. `.agents/state/brainstorming/scope.md` exists with the in-scope subsystems, the excluded subsystems, and one implementation plan worth of work.
 
 ### Step 2. Ask questions and grill
 
@@ -97,16 +101,16 @@ Clear up requirements through direct talk and check assumptions before you desig
 - For tangled requirements, unclear scope, or explicit stress-test requests, follow `references/grilling.md`. Map picks to a design tree, ask frontier questions in rounds, and close every dependency until the frontier empties.
 - Ask about fixed limits, including inputs, outputs, error handling, storage, and user roles.
 
-Completion criterion. The user confirms every open branch in the design tree or requirements checklist with zero open questions remaining.
+Completion criterion. `.agents/state/brainstorming/requirements.md` exists with every open branch confirmed and zero open questions remaining.
 
 ### Step 3. Explore approaches and prototype spikes
 
 Write 2 to 3 approaches with tradeoffs, put your pick first, and get user confirmation before you write the full spec. Check data growth and reload saves against `references/architecture-scalability.md`.
 - Keep domains apart. If a user pitch mixes unrelated domains or breaks lifecycle behavior, call `recursive-research` in Targeted mode to check industry practice, or search the web with `search_web` for a single check, then show a counter-argument with the source and suggest a split alternative.
 - Show opposite visual directions for open UI tasks. When a frontend request lacks visual direction, do not ask open taste questions. Show three distinct directions picked from opposite schools, such as Information Architecture, Editorial Minimalist, Modern Tool, Motion Experimental, Brutalist, or Warm Humanist.
-- Run spikes via prototype. If visual density or state ergonomics requires live verification before locking architecture, emit `.agents/state/spike-brief.md` and invoke the `prototype` skill. Require the selected variant locked in `.agents/scratch/prototypes/<variant-id>/PROTOTYPE_LOCK.md` before proceeding.
+- Run spikes via prototype. If visual density or state ergonomics requires live verification before locking architecture, emit `.agents/scratch/prototypes/<variant-id>/spike-brief.md` and invoke the `prototype` skill. Require the selected variant locked in `.agents/scratch/prototypes/<variant-id>/PROTOTYPE_LOCK.md` before proceeding.
 
-Completion criterion. The user picks one approach or confirms a locked prototype variant.
+Completion criterion. `.agents/state/brainstorming/approach.md` exists with the user-confirmed approach and the prototype lock path when a spike ran.
 
 ## Design presentation and documentation
 
@@ -130,7 +134,7 @@ Evaluate the change against three Architecture Decision Record filters:
 2. Surprising without context.
 3. Real trade-offs across components.
 
-If all three filters evaluate to false, author a compact Component Spec stating inputs, outputs, UI tokens, and verification commands. If any filter evaluates to true, write an Architecture Decision Record (ADR) to `docs/specs/YYYY-MM-DD-<topic>-adr.md`. Read `references/domain-modeling.md` for entity naming.
+If all three filters evaluate to false, write a compact Component Spec to `docs/specs/YYYY-MM-DD-<topic>-spec.md` stating inputs, outputs, UI tokens, and verification commands. Component Specs are transient scaffolding and are purged by `executing-plans` together with the plan file. Prepend `artifact_type: component-spec` in the hand-off header so `executing-plans` recognizes the purge target. If any filter evaluates to true, write an Architecture Decision Record (ADR) to `docs/specs/YYYY-MM-DD-<topic>-adr.md` with `artifact_type: adr`. ADRs are permanent architecture records. Read `references/domain-modeling.md` for entity naming.
 
 Prepend a standardized hand-off header to the spec:
 ```yaml
@@ -139,6 +143,7 @@ artifact_type: adr
 lifecycle_state: spec-approved
 source_skill: brainstorming
 next_skill: writing-plans
+source_spec: <absolute-or-repo-relative-path>
 selected_option: <option-slug>
 in_scope_paths: ["<path-1>"]
 verification_entrypoints: ["<test-command>"]
@@ -171,7 +176,7 @@ Completion criterion. The spec passes all four checks with zero placeholders lef
 
 ### Step 4. User review gate
 
-Ask the user to read the written spec:
+Ask the user to read the written spec.
 
 > "The design specification is written to `<path>`. Please review it and confirm if you want any adjustments before we generate the implementation plan."
 
@@ -191,7 +196,7 @@ A browser tool that shows mockups, diagrams, and visual options during brainstor
 
 ### Offering the companion
 
-When next questions cover visual layouts, mockups, or diagrams, offer the companion once:
+When next questions cover visual layouts, mockups, or diagrams, offer the companion once.
 
 > "Some of what we are working on might be easier to explain if I can show it to you in a web browser. I can put together mockups, diagrams, comparisons, and other visuals as we go. This feature is still new and can be token-intensive. Want to try it? Requires opening a local URL."
 
@@ -204,6 +209,15 @@ After the user says yes, pick the channel for each question:
 - Use the terminal for requirements questions, word-only picks, tradeoff lists, and scope picks.
 
 When the user accepts the browser companion, read `references/visual-companion.md` for server steps and screen templates.
+
+## Anti-patterns
+
+| ID | Title | Pattern description | Why it fails | Concrete fix |
+|---|---|---|---|---|
+| BRA-1 | Disjunctive exit | Ends a step on one of two artifacts | Downstream cannot locate the output | Name one artifact path |
+| BRA-2 | Uncheckable scope | Says the scope fits one plan with no record | Scope creep returns after approval | Write scope to `.agents/state/brainstorming/scope.md` |
+| BRA-3 | Unvalidated handoff | Emits a spec path no consumer reads | Plan purge skips silently | Carry `source_spec` in the handoff header |
+| BRA-4 | Design before evidence | Explores approaches before checking the code | Design contradicts existing patterns | Complete the Branch 1 checks first |
 
 ## Boundary isolation
 

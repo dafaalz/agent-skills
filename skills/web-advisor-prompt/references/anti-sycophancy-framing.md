@@ -25,7 +25,7 @@ Direct the model to bucket all identified defects into four unambiguous tiers:
 
 ## Auditor and external advisor blind spots
 
-Frontier reasoning models acting as external reviewers frequently suffer from five recurring blind spots:
+Frontier reasoning models acting as external reviewers frequently show five recurring blind spots:
 1. **Platform-blind shell commands:** Assuming GNU userland tools on macOS/BSD environments (e.g., BSD `sed` delimiter collision `s|...|...|g` with regex alternation, `sed -i` requiring an empty string argument, `grep -P`, or `echo -e`). Prompts must instruct the advisor to respect the target host OS or default to strict POSIX.
 2. **Quota and rate-limit blindness:** Proposing multi-hour retry loops or batch operations without calculating token quotas, per-minute request limits, or context window saturation. Prompts must require explicit feasibility arithmetic.
 3. **Edge WAF and anti-bot ignorance:** Suggesting raw `curl` commands against protected CDNs (e.g., Cloudflare Error 1010) that block non-browser User-Agents. Prompts must specify network defense constraints.
