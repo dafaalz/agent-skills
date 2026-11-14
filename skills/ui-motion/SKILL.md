@@ -1,48 +1,33 @@
 ---
 name: ui-motion
-description: "Use when designing, implementing, or polishing CSS transitions, FLIP animations, gesture feedback, spring physics, or delight choreography. Don't use for layout styling (use frontend-design), accessibility audits (use ui-ux-review), interactive mockups (use prototype), React render optimization (use react), or multi-task execution plans (use agent-planning)."
+description: Use when designing, implementing, or auditing CSS transitions, FLIP animations, View Transitions, gesture physics, or reduced-motion fallbacks. Don't use for static layout styling (use frontend-design), full WCAG accessibility audits (use ui-ux-review), React render memoization (use react), or prose editing (use unslop).
 ---
 
 # UI motion engineering
 
-Design, build, audit, and optimize hardware-accelerated user interface motion.
-
-## Overview
-
-UI motion engineering delivers hardware-accelerated, physically grounded interface motion that preserves utility, improves spatial orientation, and avoids decorative bloat. Motion copies nature to establish spatial consistency (an internal map of where intangible things live in software). Because physical nature is slow, high-frequency actions demand restraint: keyboard shortcuts execute in 0ms, ease-out curves front-load velocity, gestures remain interruptible mid-flight, and state feedback persists even when motion is disabled. Consult deep reference documents in `references/` for recipes, gesture physics, platform standards, and audit playbooks.
+Design, implement, and audit compositor-accelerated interface motion with deterministic timing, interruptible physics, and reduced-motion state preservation.
 
 <HARD-GATE>
-Write-Target Boundary. In Author mode, write only to component files containing motion, transition, or animation styling. In Audit mode, write only to `docs/superpowers/plans/` for audit plans and `.agents/state/ui-motion/` for findings. Never modify application state logic, backend calls, or accessibility roles. Any change to `prefers-reduced-motion` handlers requires explicit user approval.
+Write-Target Boundary. In Author mode, write only to component stylesheets, motion tokens, and animation hooks explicitly targeted by the user, plus state artifacts under `.agents/state/ui-motion/`. In Audit mode, write only to `.agents/state/ui-motion/audit-findings.md` and `docs/superpowers/plans/ui-motion-plan.md`. Never modify backend calls, state reducers, or ARIA roles. Any change to existing `prefers-reduced-motion` handlers requires explicit user confirmation.
 </HARD-GATE>
 
 ## Modes
 
-Select an execution mode before Step 1:
-- Author mode (default). Implement choreographies, transitions, and gesture physics.
-- Audit mode. Inspect animation performance, check frame drops, and verify reduced-motion compliance without editing styles.
-
-## Workflow router
-
-Identify user intent and route execution immediately:
-
-1. **Authoring animations from scratch.** Follow the build sequence below to gate necessity, select tools, and pick exact tokens. Consult [references/recipes.md](references/recipes.md) for pre-built component patterns.
-2. **Mental models, time perception, and personality.** Consult [references/mental-models-and-perception.md](references/mental-models-and-perception.md) for spatial continuity, the Wise artificial delay paradox, Android touch prediction, personality calibration, and the Pokémon state feedback invariant.
-3. **Refining tactile micro-interactions.** Add active press feedback, anchor popovers to trigger coordinates, eliminate secondary tooltip delays, apply context menu blink exits, and format reviews using the Before, After, Why table.
-4. **Fluid gestures and spring physics.** Consult [references/physics-and-gestures.md](references/physics-and-gestures.md) for Apple momentum decay projection, rubber band boundaries, pointer capture, mid-flight retargeting, and velocity handoffs.
-5. **Codebase audits and refactor planning.** When called with an audit request (e.g. `/ui-motion audit <target>`), follow [references/audit-and-plans.md](references/audit-and-plans.md) to inspect the repository against motion failure modes and generate structured refactor plans under `docs/superpowers/plans/` without mutating source files.
-6. **Mobile web and native platform motion.** Consult [references/mobile-web-and-native.md](references/mobile-web-and-native.md) for mobile Safari viewport sizing (`100dvh`), 300ms tap delay elimination, 16px input auto-zoom prevention, touch overscroll boundaries, and React Native Reanimated worklet UI thread isolation.
-7. **Translating informal animation vocabulary.** Consult [references/vocabulary.md](references/vocabulary.md) when the user describes an animation informally or by sensation rather than technical names.
-8. **Browser compositor and Google rendering standards.** Consult [references/google-standards.md](references/google-standards.md) when diagnosing Chromium layer explosion, auditing Core Web Vitals (INP and CLS) frame budgets, adopting Material Design 3 motion tokens, or implementing Android physics-based fling and spring animations.
-9. **Desktop native and platform motion.** Consult [references/desktop-and-platform.md](references/desktop-and-platform.md) for Windows 11 DWM compositor tokens, Mica backdrop rules, macOS AppKit `NSAnimationContext` atomic batching, Electron and Tauri non-client title bar dragging without IPC loop latency, and Linux Wayland buffer sync.
-10. **Kinetic typography and shimmer.** Consult [references/kinetic-typography-and-shimmer.md](references/kinetic-typography-and-shimmer.md) for character stagger sequences, blur filter boundaries, text-clip gradient shimmer, webfont loading synchronization, and CDP visual test capture timing.
-11. **Creative and editorial storytelling.** Consult [references/creative-and-editorial.md](references/creative-and-editorial.md) for RAF LERP pointer inertia, dynamic spotlight cards, windowed parallax, clip-path curtain wipes, dimensional multi-plane hero layering, and SVG grain.
-12. **Canvas scrubbing and smooth scroll.** Consult [references/canvas-and-scroll-scrubbing.md](references/canvas-and-scroll-scrubbing.md) for Lenis synchronization, 2D canvas frame sequences, dense GOP video scrub encoding, DPR capping, predictive caching, and sliding pill tabs.
+Declare the active operating mode before executing Step 1:
+- `author` (default). Execute Steps 1 through 6 sequentially to produce motion styles and hooks.
+- `audit`. Execute Steps 1, 2, 5, and 6 in read-only inspection mode against target files, write `.agents/state/ui-motion/audit-findings.md` and `docs/superpowers/plans/ui-motion-plan.md`, and halt without mutating source files.
 
 ## Reference quick routing
 
 | Motion domain | Reference module | Scope |
 |---|---|---|
 | Animation & delight | [references/animation-and-delight.md](references/animation-and-delight.md) | Micro-interactions, spring physics, & delight choreography |
+| Spring tokens | [references/springs.md](references/springs.md) | Spring physics tokens & branded compositor target |
+| Concurrency & budget | [references/slots.md](references/slots.md) | Surface registry, React 19 starvation, & budget |
+| Pointer & haptics | [references/pointer.md](references/pointer.md) | Pencil latch, hover suppression, & haptics |
+| 43 transitions catalog | [references/catalog.md](references/catalog.md) | Micro-distances & 43 interaction transitions |
+| Subgrid & skeletons | [references/integration.md](references/integration.md) | Subgrid isolation, portal contracts, & skeletons |
+| Transitions index | [references/transitions-and-micro-distances.md](references/transitions-and-micro-distances.md) | Index mapping to all 5 motion modules |
 | Component recipes | [references/recipes.md](references/recipes.md) | Pre-built component animations & transitions |
 | Physics & gestures | [references/physics-and-gestures.md](references/physics-and-gestures.md) | Apple momentum decay, rubber-banding, & gestures |
 | Mobile & native | [references/mobile-web-and-native.md](references/mobile-web-and-native.md) | Mobile Safari viewport, 100dvh, & touch latency |
@@ -57,183 +42,146 @@ Identify user intent and route execution immediately:
 
 ## Execution invariants
 
-Avoid these core failure modes:
-
-1. **Animating elements that must stay static.** The frequency gate below intentionally produces zero lines of code when motion degrades utility. Deliver an instant state toggle instead.
-2. **Animating keyboard-initiated actions.** Never animate actions triggered by keyboard shortcuts (`Cmd+Space`, `Esc`, `Tab`). Users know the outcome; animation forces waiting. Deliver an instant 0ms state change.
-3. **Preserve state feedback when motion is disabled.** Never eliminate state registration when animations are turned off. Preserve instant tactile or visual cues such as selection blinks or high-contrast flashes; never use shake as shake is a vestibular trigger.
-4. **Locking user input during animation.** Transitions must remain interruptible and retargetable mid-flight. Never apply `pointer-events: none` to transforming elements.
-5. **Using instant transitions on high-stakes operations (The Wise paradox).** Completing financial or irreversible actions in 0ms induces user distrust. Use an artificial 350ms to 450ms confirmation animation to close the perception delta.
-6. **Using incorrect motion properties.** Avoid `ease-in` on interactive entrances, `scale(0)` on mounting elements, keyframes on rapidly triggered elements, or sluggish durations above 300ms.
-7. **Approximating motion values.** Take every curve, duration, and spring parameter from the reference tables. Never invent arbitrary cubic-bezier coordinates.
-8. **Altering source code during audits.** When auditing repositories, generate structured plans under `docs/superpowers/plans/` without mutating source files.
-9. **Animating bulk historical data during initial load.** Never bind entrance animations to message histories or bulk collection renders. Render historical logs instantly without motion, and gate animations behind reactive flags (`isNew: boolean`) for live events.
-10. **Tearing down ephemeral elements without exit choreography.** Never call `element.remove()` synchronously on live activity indicators. Apply an exit transition (`opacity: 0`, `scale(0.95)`) over 120ms before removing nodes from the DOM.
+1. **Zero-latency keyboard execution.** Keyboard shortcuts, command palettes, and focus navigation (`Cmd+K`, `Esc`, `Tab`, `Arrow`) execute in `0ms` without entrance transitions.
+2. **Vestibular safety and preserved state feedback.** Never eliminate state feedback under `prefers-reduced-motion`. Replace spatial motion with a single-shot high-contrast border highlight or background tint (`<= 1` transition, never oscillating). Never use `shake` animations because horizontal oscillation triggers vestibular distress.
+3. **Mid-flight interruptibility.** Never apply `pointer-events: none` to interactive transforming elements. Mutate target coordinates on stateful springs while preserving live velocity `v(t)` and position `x(t)`.
+4. **High-stakes trust calibration.** Irreversible actions (payments, deletions, deployments) require a `350ms` to `450ms` confirmation transition to prevent user distrust from instantaneous state flips.
+5. **Bulk historical data stillness.** Render initial collection loads and message histories in `0ms`. Gate entrance transitions behind reactive flags (`isNew === true`) for newly appended items only.
+6. **SSR hydration parity.** Never branch JSX element tags on `useReducedMotion()` prior to client hydration. Render identical DOM structures using `data-motion` attributes and CSS `@media (prefers-reduced-motion: reduce)` overrides.
 
 ## The build sequence
 
 ### Step 1. Frequency gate
 
-Evaluate interaction frequency before writing motion code:
+Classify the target interaction frequency and record the decision in `.agents/state/ui-motion/gate.json`:
 
-| Frequency | Decision |
+| Interaction tier | Motion budget |
 | --- | --- |
-| 100+ times per day (keyboard shortcuts, command palette, core navigation) | Disqualify motion immediately. Use an instant 0ms state toggle. |
-| Context menus and right-click actions | Open instantly in 0ms; animate selection blink and 120ms fade-out on exit only. |
-| Tens of times per day (hover effects, list navigation, frequent toggles) | Limit to subtle transitions under 160ms or disqualify. |
-| Occasional (modals, drawers, toasts, settings dialogs) | Eligible for standard transitions (150ms to 250ms). |
-| Rare or high-stakes (onboarding, task completion, financial settlement) | Permitted for expressive feedback or artificial trust confirmation (up to 450ms). |
+| High-frequency utility (`100+` daily triggers, keyboard shortcuts, command palettes, data tables) | Disqualified (`0ms` instant state toggle). |
+| Context menus and list selection | `0ms` open; `120ms` opacity exit fade only. |
+| Frequent micro-interactions (`10` to `99` daily triggers, buttons, switches, hover states) | `100ms` to `160ms` compositor transition. |
+| Occasional overlays (modals, drawers, popovers, toasts) | `150ms` to `300ms` compositor transition. |
+| High-stakes or narrative (payments, deletions, onboarding, hero curtain reveals) | `350ms` to `450ms` trust confirmation; `600ms` to `1400ms` editorial reveals. |
 
-If the request fails this gate, state the decision directly and do not write animation code. Deliver the non-motion alternative instead.
+If disqualified, emit the `0ms` non-animated implementation and skip Steps 2 through 5.
 
-Completion criterion. The interaction frequency is classified and confirmed eligible for motion, or disqualified in favor of an instant 0ms state toggle.
+Completion criterion. `.agents/state/ui-motion/gate.json` exists on disk with `"mode"`, `"frequency_tier"`, `"eligible"`, and `"max_duration_ms"`.
 
 ### Step 2. Sanctioned purpose selection
 
-Name exactly one sanctioned purpose before writing code:
+Assign exactly one sanctioned purpose to `.agents/state/ui-motion/gate.json` under `"purpose"` before writing code: `feedback`, `spatial-consistency`, `state-indication`, `jarring-prevention`, `explanation`, `trust-calibration`, or `delight` (permitted only for rare or first-time triggers). If no purpose applies, set `"eligible": false` and emit static markup.
 
-- **Feedback.** Confirm that the interface registered user interaction.
-- **Spatial consistency.** Show element origin and departure points to build an internal map of where controls live.
-- **State indication.** Make a state transition legible.
-- **Preventing a jarring change.** Bridge content that would otherwise jump instantaneously.
-- **Explanation.** Demonstrate how an onboarding or marketing flow operates.
-- **Trust calibration.** Bridge the perception delta during instantaneous high-stakes operations (such as payments or deletions).
-- **Delight.** Permitted only at the rare or first-time tier.
-
-If no purpose applies, halt and do not write animation code. Data tables, financial graphs, and reading content must remain stationary.
-
-Completion criterion. Exactly one sanctioned purpose declared before writing animation code.
+Completion criterion. `.agents/state/ui-motion/gate.json` contains a non-empty `"purpose"` field matching the sanctioned enum and `jq -e '.purpose' .agents/state/ui-motion/gate.json` exits with status `0`.
 
 ### Step 3. Tool selection
 
-Walk down this table in order and select the first matching tool:
+Select the lowest-overhead capable primitive from this ordered table:
 
-| Need | Tool |
+| Mechanism | Primitive |
 | --- | --- |
-| Hover, press, color, class toggle | CSS transition |
-| Mount/exit animation without JS runtime | CSS `@starting-style` + `transition-behavior: allow-discrete` |
-| Shared-element & DOM state morphs | `document.startViewTransition(() => flushSync(fn))` with dynamic `view-transition-name` cleanup |
-| Scroll-tied reveal or progress | CSS Scroll-driven animations (`animation-timeline: view()`) |
-| Predetermined motion off main thread | CSS animation |
-| Programmatic interrupts with CSS performance | WAAPI (`element.animate()`) with `composite: "add"` (commitStyles + cancel on finish; cap at 8 instances) |
-| Springs, layout transitions, exit animations, gestures | Motion (`motion.dev`) |
+| Hover, press, opacity, or transform toggle | CSS `transition` |
+| Mount and exit without JS runtime | CSS `@starting-style` with `transition-behavior: allow-discrete` (with `transitionend` fallback) |
+| Shared-element DOM morphs | `document.startViewTransition()` with dynamic `view-transition-name` cleanup |
+| Scroll-linked reveal or progress | CSS `animation-timeline: view()` |
+| Programmatic interruptible compositor motion | WAAPI `element.animate()` with `composite: "add"`, `commitStyles()`, and `cancel()` on finish (`<= 8` active instances) |
+| Continuous pointer physics or gesture springs | Stateful `requestAnimationFrame` solver or `motion.dev` |
 
-Never run two animation engines on the exact same property simultaneously.
-
-Completion criterion. The cheapest capable tool is selected with compositor CSS transitions prioritized over JavaScript animation libraries.
+Completion criterion. `.agents/state/ui-motion/gate.json` records `"primitive"` matching one table entry and zero dual-engine property conflicts exist in target files.
 
 ### Step 4. Hardware acceleration and property scoping
 
-- **Animate `transform` and `opacity` exclusively; never animate `width`, `height`, `margin`, `padding`, `top`, or `left`.** Transforms and opacity run directly on the compositor thread without layout recalculation. Accordions use `grid-template-rows: 0fr -> 1fr` or `interpolate-size: allow-keywords`. Allow `clip-path: inset()` on creative editorial curtain reveals.
-- **Start entry transitions from `scale(0.95)` with zero opacity; never use `scale(0)`.**
-- **Set `transform-origin` with fallback at the trigger.** Anchor popovers, dropdowns, and tooltips using `var(--transform-origin, center)` with trigger coordinates. Modals remain exempt and stay centered via `margin: auto`.
-- **Provide tactile press feedback on all touch and pointer surfaces.** Gate `:hover` strictly by `@media (hover: hover) and (pointer: fine)`. Apply `:active` `transform: scale(0.97)` with `touch-action: manipulation` directly to pressable targets.
-- **Mount and exit orchestration:** Use `@starting-style` for mount frames. Gate exit unmounting on `transitionend` (verifying `e.target === e.currentTarget`), `transitioncancel`, and a deterministic `(duration + 34ms)` fallback watchdog timer.
-- **View Transitions pseudo-elements:** Set `pointer-events: none` on `::view-transition-group(*)`. Lock `height: 100%` and `object-fit: none` on `::view-transition-old/new` during container aspect-ratio morphs. Scope unique `view-transition-name` tokens dynamically to active elements only and remove on completion.
+- **Compositor-only properties.** Animate `transform` and `opacity` exclusively. Never animate `width`, `height`, `margin`, `padding`, `top`, or `left`. Accordions use `grid-template-rows: 0fr` to `1fr`. Editorial curtain reveals may animate `clip-path: inset()`.
+- **Non-zero entry scale.** Start scale entrances at `scale(0.95)` with `opacity: 0`; never use `scale(0)`.
+- **Trigger-anchored origin.** Anchor popovers and tooltips with `transform-origin: var(--transform-origin, center)`. Keep centered modals on `margin: auto`.
+- **Tactile press and hover gating.** Wrap `:hover` rules in `@media (hover: hover) and (pointer: fine)`. Apply `:active { transform: scale(0.97); }` and `touch-action: manipulation` to pressable controls.
+- **Exit unmount watchdog.** Gate DOM removal on `transitionend` (`e.target === e.currentTarget`), `transitioncancel`, and a `setTimeout` watchdog at `duration + 34ms`.
+- **View Transition isolation.** Set `pointer-events: none` on `::view-transition-group(*)`, lock `height: 100%; object-fit: none` on `::view-transition-old/new`, and delete `view-transition-name` in `transition.finished`.
 
-Completion criterion. Motion styles animate `transform` and `opacity` exclusively with valid trigger-anchored transform origins and orchestrated exit transitions.
+Completion criterion. Target stylesheets pass `grep -En 'transition:\s*all|scale\(0\)|:\s*(width|height|margin|padding|top|left)'` with exit status `1` (zero layout-thrashing animations).
 
 ### Step 5. Easing curves, spring physics, and ProMotion synchronization
 
 ```css
---ease-out: cubic-bezier(0.23, 1, 0.32, 1); /* strong ease-out front-loading velocity for UI entries */
---ease-in: cubic-bezier(0.32, 0, 0.67, 0); /* fast acceleration for UI exits */
---ease-in-out: cubic-bezier(0.77, 0, 0.175, 1); /* on-screen repositioning and curtain wipes */
---ease-drawer: cubic-bezier(0.32, 0.72, 0, 1); /* iOS drawer curve */
---ease-quintic: cubic-bezier(0.22, 1, 0.36, 1); /* weighted editorial presentations, hero entries */
---ease-expo: cubic-bezier(0.16, 1, 0.3, 1); /* kinetic text stagger, high-velocity reveals */
+--ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+--ease-in: cubic-bezier(0.32, 0, 0.67, 0);
+--ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+--ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+--ease-quintic: cubic-bezier(0.22, 1, 0.36, 1);
+--ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
 ```
 
-Apply these easing and personality selection rules:
-- Use `ease-out` for entering elements. Exits may use `ease-in` to accelerate off-screen. Never use `ease-in` on interactive entrances or press feedback.
-- Use `ease-in-out` for elements already on screen changing position or morphing.
-- Use `linear` for scroll timelines (`animation-timeline: view()`) and hold-to-confirm progress indicators.
-- Calibrate springs: UI uses `{ stiffness: 300, damping: 30 }` (critically damped, zero bounce); active press uses `{ stiffness: 400, damping: 17 }`.
-- Mid-flight retargeting mutates the target coordinate on a single stateful solver inheriting live instantaneous velocity `v(t)` and position `x(t)` without resetting state.
-- Gesture flick velocity filtering computes release velocity across samples in a rolling 40ms ring buffer, zeros velocity if idle over 45ms, and clamps release velocity to `[-3500, 3500]` px/s.
-- ProMotion RAF loops integrate physics via timestamp deltas clamped to `dt <= 0.032s` with `4ms` (240Hz) internal sub-stepping to prevent tunneling or explosion after tab throttling.
 
-Follow this duration budget reference:
 
-| Element | Target duration |
-| --- | --- |
-| Button press feedback | 100 to 160ms |
-| Tooltips and small popovers | 125 to 200ms |
-| Dropdowns and selects | 150 to 250ms |
-| Modals and sheet drawers | 200 to 400ms |
-| High-stakes trust confirmation | 350 to 450ms |
-| Creative editorial storytelling | 600 to 1400ms |
+- Apply `--ease-out` or `--ease-expo` to entrances. Reserve `--ease-in` strictly for exits. Use `--ease-in-out` for on-screen morphs and `linear` for scroll timelines.
+- Calibrate UI springs to `{ stiffness: 300, damping: 30 }` and tactile press springs to `{ stiffness: 400, damping: 17 }`.
+- Filter gesture flick velocity over a rolling `40ms` ring buffer, zero velocity after `45ms` idle, and clamp to `[-3500, 3500]` px/s.
+- Clamp `requestAnimationFrame` delta-time to `dt = Math.min((now - prev) / 1000, 0.032)` and integrate physics in `0.004` (`4ms`, `240Hz`) sub-steps so background tab wakes never explode spring energy.
 
-Keep functional UI animations under 300ms. Reserve 600 to 1400ms for creative editorial entrances.
-
-Completion criterion. Custom cubic bezier tokens and duration budgets assigned without using `ease-in` on entrances.
+Completion criterion. Target files define explicit `--ease-*` tokens or `{ stiffness, damping }` constants, zero `ease-in` entrances, and `0.032` delta clamping on every `requestAnimationFrame` loop.
 
 ### Step 6. Accessibility, fallback feedback, and SSR hydration
 
 ```css
 @media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+ *, ::before, ::after {
+   animation-duration: 0.01ms !important;
+   animation-iteration-count: 1 !important;
+   transition-duration: 0.01ms !important;
+   scroll-behavior: auto !important;
+ }
+  [data-motion-feedback="active"] {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
   }
 }
 @media (hover: hover) and (pointer: fine) {
-  .element:hover { transform: scale(1.04); }
+ .interactive-target:hover { transform: scale(1.02); }
 }
+
 ```
 
-Never branch conditionally on `useReducedMotion()` in JSX before initial hydration. Tag swapping triggers React 19 hydration mismatches and traps server-rendered `opacity: 0` in permanent invisibility. Use identical DOM trees with `[data-motion-enter]` attribute contracts and CSS `!important` overrides.
 
-Disable spatial motion deltas without overriding structural layout transforms (`translate3d(x,y,0)` and `translate(-50%, -50%)`). Never apply `transform: none !important` globally under reduced motion because it breaks positioning transforms. Collapse animation durations and replace spatial entrances with opacity fades.
 
-Preserve state feedback under reduced motion (The Pokémon principle). Replace spatial motion with an instant border flash, selection blink, or background tint pulse so users register state changes without motion sickness. Never preserve shake; shake is a vestibular trigger.
 
-Defer mobile focus past transition completion. Delay `.focus({ preventScroll: true })` until the entry transition completes (duration + 10ms). Never auto-focus text inputs on touch viewports (`pointer: coarse` or `< 640px`) to prevent virtual keyboard layout jumps. Focus the container or close button instead.
+- Render identical DOM structures across SSR and client hydration; never swap JSX tags via `useReducedMotion()`.
+- Never declare global `transform: none !important` inside `prefers-reduced-motion`, which breaks structural centering transforms such as `translate(-50%, -50%)`.
+- Preserve non-kinetic state feedback via `[data-motion-feedback]` outline or tint highlights; never emit `shake` keyframes.
+- Defer `.focus({ preventScroll: true })` until `duration + 10ms` after entry completion, and never auto-focus text inputs on `pointer: coarse` viewports.
 
-Completion criterion. Styles include `@media (prefers-reduced-motion: reduce)` overrides with preserved non-motion feedback and zero conditional JSX tag branching.
+Completion criterion. Target files contain `@media (prefers-reduced-motion: reduce)` with `[data-motion-feedback]`, zero global `transform: none !important`, and `python3 skills/review-a-skill/scripts/lint_skill.py skills/ui-motion` exits with status `0`.
 
 ## Boundary isolation
 
-Confine animation rules strictly to motion timing, CSS transforms, and gesture hooks. Never alter core application state logic, backend API calls, or accessibility roles in the name of animation.
+Confine edits strictly to motion tokens, CSS transitions, keyframes, View Transition pseudo-elements, and pointer/RAF hooks. Never alter business logic, API payloads, database queries, or semantic ARIA roles.
 
-## Review format
+## Anti-patterns
 
-When reviewing or proposing UI micro-interaction changes, format findings using an exact table with Before, After, and Why columns:
-
-| Before | After | Why |
-| --- | --- | --- |
-| `transition: all 300ms` | `transition: transform 200ms ease-out` | Specify exact properties to avoid expensive style recalculations |
-| `transform: scale(0)` | `transform: scale(0.95); opacity: 0` | Physical objects never emerge from absolute zero |
-| `ease-in` on dropdown entrance | `ease-out` with custom curve | `ease-in` on entrance delays initial motion and feels sluggish |
-| Missing active press feedback | `transform: scale(0.97)` on active press | Pressable targets must provide immediate tactile feedback |
-| `transform-origin: center` on popover | `var(--transform-origin, center)` | Popovers scale from trigger origin, while dialog modals remain centered |
-| 400ms enter on keyboard shortcut | Instant 0ms toggle | Keyboard actions reflect deliberate user intent and require zero waiting |
-| Removing state feedback on reduced motion | Instant border flash or selection blink | Retain state impact proof when motion is disabled via instant border flash or selection blink |
+| ID | Title | Pattern description | Why it fails | Concrete fix |
+|---|---|---|---|---|
+| UIM-01 | Transition all | Uses `transition: all` shorthand in stylesheets | Animates layout and paint properties and causes frame drops | Name the exact properties (`transform`, `opacity`) |
+| UIM-02 | Scale-zero mount | Starts entrance transitions at `transform: scale(0)` | Collapses element to a dimensionless point and exaggerates travel | Use `scale(0.95)` paired with zero opacity |
+| UIM-03 | Ease-in entrance | Applies `ease-in` to interactive element entrances | Delays initial velocity and makes controls feel unresponsive | Use `ease-out` token (reserve `ease-in` strictly for exits) |
+| UIM-04 | Keyboard motion delay | Animates shortcuts, command palettes, or arrow navigation | Forces deliberate keyboard users to wait on visual choreography | Apply instant 0ms state toggle |
+| UIM-05 | Vestibular shake | Uses horizontal `shake` keyframes for error or reduced motion | Triggers vestibular nausea and violates accessibility safety | Retain instant blink, border pulse, or color flash; never shake |
+| UIM-06 | Feedback erasure | Strips all visual state cues under `prefers-reduced-motion` | Leaves users uncertain whether an action registered | Retain instant blink, border pulse, or color flash; never shake |
+| UIM-07 | Input pointer lock | Sets `pointer-events: none` on active interactive elements | Blocks mid-flight retargeting and traps user input | Retarget live presentation transforms mid-flight |
+| UIM-08 | Zero-ms high stakes | Completes payments or destructive actions in `0ms` | Induces distrust from lack of perceptible system processing | Use 350ms to 450ms confirmation to close perception delta |
+| UIM-09 | Layout property tween | Animates `width`, `height`, `margin`, `padding`, `top`, or `left` | Forces main-thread layout recalculation on every frame | Animate `transform` and `opacity` (accordions use grid rows) |
+| UIM-10 | Unclamped RAF delta | Integrates physics using raw `requestAnimationFrame` timestamp delta | Explodes spring velocity when a background tab wakes up | Clamp `dt <= 0.032s` with 4ms internal sub-stepping |
+| UIM-11 | Ungated touch hover | Applies `:hover` transforms outside pointer media queries | Sticks hover states after tap on touch devices | Wrap in `@media (hover: hover) and (pointer: fine)` |
+| UIM-12 | Global transform reset | Declares `transform: none !important` in reduced-motion media query | Destroys structural positioning transforms like `translate(-50%, -50%)` | Collapse durations to 0.01ms; preserve structural transforms |
+| UIM-13 | Unguarded DOM unmount | Removes exiting nodes without `transitioncancel` or timeout fallback | Leaks orphaned DOM nodes when transitions abort mid-flight | Filter `e.target === e.currentTarget`, listen to `transitioncancel` |
+| UIM-14 | Static view-transition | Hardcodes identical `view-transition-name` across list items | Throws duplicate name error and aborts the entire view transition | Scope tokens dynamically during active transition |
+| UIM-15 | Hydration tag branch | Swaps JSX tags using `useReducedMotion()` during initial render | Causes React hydration mismatches and stuck `opacity: 0` elements | Use identical DOM trees with attribute contracts and CSS overrides |
+| UIM-16 | Bulk history stagger | Animates initial render of historical lists or message logs | Stalls initial paint and delays access to existing data | Render historical logs instantly; gate motion behind `isNew: boolean` |
 
 ## Quick audit checklist
 
-Verify code against this checklist before delivering. Every item represents an automatic rejection:
-
-| Title | Pattern description | Why it fails | Concrete fix |
-|---|---|---|---|
-| Transition all | `transition: all` shorthand in stylesheet | Animates expensive layout and paint properties causing jank | Name the exact properties (`transform`, `opacity`) |
-| Scale-zero entrance | `transform: scale(0)` used as entrance mount state | Objects cannot physically emerge from a dimensionless point | Use `scale(0.95)` paired with zero opacity |
-| Ease-in entrance | `ease-in` applied to interactive entrances | Slow initial acceleration feels unresponsive and sluggish | Use `ease-out` token (reserve `ease-in` strictly for exits) |
-| Generic ease-out | Browser default `ease-out` on deliberate UI | Lacks distinct personality and natural deceleration | Use custom curve `cubic-bezier(0.23, 1, 0.32, 1)` |
-| Keyboard animation | Animation on keyboard actions or shortcuts | User already anticipates outcome; motion forces idle waiting | Apply instant 0ms state toggle |
-| Context menu animation | Sliding or expanding context menu entrance animation | Blocks instant command execution | Use instant 0ms entry, selection blink, and 120ms exit fade |
-| Motionless feedback drop | Eliminating state feedback when motion is disabled | Leaves user uncertain whether action registered | Retain instant blink, border pulse, or color flash; never shake |
-| Input lock during motion | Non-interruptible animation or blocked pointer events | Traps user interaction mid-flight | Retarget live presentation transforms mid-flight |
-| Instant high-stakes action | 0ms transition on irreversible or high-stakes operations | Induces user distrust from lack of perceptible processing | Use 350ms to 450ms confirmation to close perception delta |
-| Excessive duration | Functional UI animation duration over 300ms | Drags interactive rhythm and wastes user time | Bound duration strictly between 150ms and 250ms |
-| Unguarded transform-origin | `transform-origin` declared without dynamic fallback | Scales popovers from arbitrary viewport locations | Declare `var(--transform-origin, center)` |
-| Rapid element keyframes | CSS keyframes on rapidly triggered elements | Keyframe animations cannot be interrupted cleanly | Use CSS transitions or spring physics |
-| Layout property animation | Animating `width`, `height`, `margin`, `padding`, `top`, or `left` | Triggers expensive layout recalculations on main thread | Animate `transform` and `opacity` (accordions use grid rows) |
-| Main-thread script loops | Non-accelerated JS transform loops | Stalls main thread during concurrent script execution | Use WAAPI compositor execution or CSS transitions |
-| Ungated hover motion | Hover animation triggered on touch devices | Creates sticky persistent hover states on mobile | Wrap in `@media (hover: hover) and (pointer: fine)` |
-| Destructive reduced-motion | Global `transform: none !important` under reduced motion | Breaks layout positioning transforms like centering | Collapse durations to 0.01ms; preserve structural transforms |
-| Unguarded unmount | Unmounting without transitionend guard or fallback | Leaves orphaned DOM nodes when transitions cancel | Filter `e.target === e.currentTarget`, listen to `transitioncancel` |
-| Unclamped physics step | Unclamped delta-time in RAF physics loops | Causes spring physics explosion on background tab wake | Clamp `dt <= 0.032s` with 4ms internal sub-stepping |
-| Duplicate view-transition | Duplicate `view-transition-name` tokens in DOM | Invalidates entire document view transition | Scope tokens dynamically during active transition |
+| Check | Passing condition |
+|---|---|
+| Frequency gate | Interaction frequency classified; keyboard/context actions execute in 0ms |
+| Hardware acceleration | Only `transform` and `opacity` animated; zero layout property tweens |
+| Reduced motion | Non-vestibular feedback preserved without `transform: none !important` or JSX branch |
+| Physics stability | RAF timestamp delta clamped to `dt <= 0.032s` with 4ms internal sub-steps |
+| State machine exit | Binary completion criteria verified on designated state and target files |
