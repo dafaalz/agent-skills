@@ -25,10 +25,10 @@ Follow the four steps in sequence.
 
 Identify review scope and intake candidate artifacts:
 1. Load standards source. Read `unslop` and `writing-for-agents` from the first existing path among `.agents/skills/`, `$HOME/.agents/skills/`, `$HOME/.config/agents/skills/`, or the repository `skills/`. If either file is missing, fall back to the embedded rubric in `## Dimensional evaluation rubric` and record `standards_source: embedded`. Do not inspect session history or scratchpad files, and never audit from memory.
-   Before invoking the linter, run `python3 skills/review-a-skill/scripts/lint_skill.py --self-test`. The self-test runs positive, negative, and edge fixtures for each active pattern (R13 anti-pattern tables, R16 evidence formats, R9 completion criteria). If `--self-test` fails, halt the audit and report the fixture name. A passing linter against a stale self-test is not evidence of compliance.
+   Before invoking the linter, run `python3 skills/review-a-skill/scripts/lint_skill.py --self-test`. The self-test runs positive, negative, and edge fixtures for punctuation hygiene, R13 anti-pattern tables, and R9 completion criteria. If `--self-test` fails, halt the audit and report the fixture name. A passing linter against a stale self-test is not evidence of compliance.
 2. Load the target `SKILL.md` plus its `references/`, `scripts/`, `assets/`, and `examples/`. Check three boundary constraints:
    - Directory naming. Confirm directory name matches `name` in YAML frontmatter with 1 to 64 lowercase alphanumeric characters and single hyphens.
-   - Context budget. Confirm main `SKILL.md` line count is strictly under 250 lines. The 250-line target is a hard limit; 250 or more lines fails the audit. Move documentation exceeding 100 lines into `references/`.
+   - Context budget. Confirm main `SKILL.md` line count is at most 250 lines (`<= 250`). More than 250 lines fails the audit. Move documentation exceeding 100 lines into `references/`.
    - Executable integrity. Verify scripts declare explicit error handling, avoid unpinned dependencies, and contain zero unexplained constants.
 
 Completion criterion. `.agents/state/review-a-skill/scope.json` exists on disk with `target_skill`, `mode`, `line_count`, and `standards_source`.
@@ -62,7 +62,7 @@ Synthesize findings into an actionable evaluation report:
 - Comparative evaluation table. In Benchmark mode, render a structured comparison table across the seven rubric dimensions below.
 - Grounded verdict. Deliver a direct, blunt assessment in the opening sentence stating whether the candidate is better, worse, or mixed against baseline.
 - Sharp rule grafting. Extract novel or sharper rules from candidate. Formulate drop-in replacement snippets that preserve existing structure while sealing loopholes.
-- Automated lint verification. Run `python3 skills/review-a-skill/scripts/lint_skill.py <path-to-skill>` to execute AST, frontmatter, punctuation, and reference integrity checks.
+- Automated lint verification. Run `python3 skills/review-a-skill/scripts/lint_skill.py <path-to-skill>` to execute frontmatter, section, punctuation, R9, R13, and reference integrity checks.
 - Final checklist verification. Audit proposed patch against quick audit checklist below.
 
 Completion criterion. The review report is written to `.agents/state/review-a-skill/review.md` (in Audit mode) or `.agents/state/review-a-skill/benchmark-report.md` (in Benchmark mode), and `python3 skills/review-a-skill/scripts/lint_skill.py <path-to-skill>` exit code is recorded in `.agents/state/review-a-skill/review-verification.json`.
@@ -77,7 +77,7 @@ Consult these benchmarks when evaluating skills during Benchmark mode:
 
 | Dimension | Passing standard | Failing tell |
 |---|---|---|
-| 1. Frontmatter and Discovery | Kebab-case name, positive triggers, negative exclusions, sibling disambiguation, description under 1024 characters | Vague summary, missing negative bounds, workflow leaks |
+| 1. Frontmatter and Discovery | Kebab-case name, positive triggers, negative exclusions, sibling disambiguation, description at most 500 characters | Vague summary, missing negative bounds, workflow leaks |
 | 2. Workflow and State Machine | Sequential numbered steps, deterministic mode branch declared before Step 1 | Unordered bullets, missing mode branch, mode handling buried inside a step |
 | 3. Completion Criteria | Binary and exhaustive at the end of every step. Anchored to a file path, an exit code, or a commit hash. Evaluated via `python3 skills/review-a-skill/scripts/lint_skill.py <skill>` (enforcing per-step binary termination and non-fuzzy allowlists across singular and plural forms) returning zero errors. | Fuzzy assertions like "ensure quality", "verify it works", "or equivalent", or criteria with no verifiable artifact. |
 | 4. Language and Context Budget | Main file strictly under 250 lines, one-hop references with trigger conditions, bounded aggregate reference size | Monolithic text exceeding 250 lines, multi-hop reference chains |
@@ -120,7 +120,7 @@ Run this check before delivering any skill review:
 
 | Check | Passing condition |
 |---|---|
-| Prerequisite skills | Standards source loaded via `view_file` or embedded rubric activated |
+| Prerequisite skills | Standards source read from disk or embedded rubric activated |
 | Mode selection | Audit mode or Benchmark mode identified |
 | Frontmatter audit | AgentSkills schema, positive triggers, negative exclusions, sibling disambiguation |
 | Context load | `SKILL.md` strictly under 250 lines, heavy manuals in `references/` |
