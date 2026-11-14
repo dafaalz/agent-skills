@@ -124,3 +124,18 @@ python3 scripts/t3_approval.py verify <session_id> "git push" # -> Exits 0, sing
 
 ### 4. Compaction Context Retention
 During long-running multi-turn sessions (200+ turns), anchor the task constraint block in the message-history stream. If compaction occurs, the supervisor re-injects the manifest ground truth at message slot 1 to eliminate goal drift.
+
+## Boundary isolation
+
+Enforce strict pre-flight authorization before executing shell commands or git mutations. Write session manifests and locks only to `~/Library/Application Support/t3/sessions/` and `.agents/state/t3-operational-guardrail/`. Prohibit direct modifications to `.git`, package manager manifests, or production databases without valid HMAC approval tokens.
+
+## Quick audit checklist
+
+Run this check before running autonomous agent threads:
+
+| Check | Passing condition |
+|---|---|
+| Brief lint | Manifest minted at `~/Library/Application Support/t3/sessions/<session_id>/task-manifest.json` |
+| Semantic lock | Multi-subagent overlapping file edits blocked with Exit 81 |
+| Destructive action | Destructive git commands gated behind single-use HMAC token |
+| Hard budget | Session tool calls bounded to at most 250 iterations |

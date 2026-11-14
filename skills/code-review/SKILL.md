@@ -162,6 +162,10 @@ Execute accepted review changes methodically to avoid compound regressions:
 
 Completion criterion. Accepted fixes implemented one by one, each verified by targeted test runs, followed by a clean full test suite pass.
 
+## Boundary isolation
+
+Execute code reviews in read-only mode during audit phases. Write only to `.agents/state/code-review/` during assessment. Never commit directly to repository branches or modify production database schemas during feedback evaluation. All remediation changes execute against isolated test targets with verified clean test suite passes before branch merging.
+
 ## Adversarial falsification protocol
 
 Reviewers must not evaluate code solely on happy-path execution or cosmetic cleanliness. When auditing diffs touching core business logic, permissions, migrations, or shared utilities:
