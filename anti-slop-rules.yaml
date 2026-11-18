@@ -1,0 +1,76 @@
+version: "1.0.0"
+source: "Adapted from anti-slop by Miqdad Badjuber & Damir Sokolovsky"
+canonical_registry:
+  craftsmanship_standards:
+    - id: C-1
+      title: Intentionality
+      definition: "Every visual and copy decision must trace to an explicit user requirement or brand token. AI default is an automatic failure."
+      owner_skills: ["frontend-design", "ui-ux-review"]
+    - id: C-2
+      title: Functional Completeness
+      definition: "Every interactive control works or is removed. Dead controls are defects."
+      owner_skills: ["frontend-design", "ui-ux-review"]
+    - id: C-3
+      title: Content-Driven Composition
+      definition: "Sections exist because product content requires them, not to populate generic landing page templates."
+      owner_skills: ["frontend-design", "ui-ux-review"]
+    - id: C-4
+      title: Systemic Resilience
+      definition: "UI holds up across six states, light/dark themes, all breakpoints, and keyboard navigation."
+      owner_skills: ["frontend-design", "ui-ux-review"]
+    - id: C-5
+      title: Evidence Over Claims
+      definition: "Any displayed metric, testimonial, or security certification must be backed by real, verifiable data."
+      owner_skills: ["frontend-design", "ui-ux-review"]
+
+  craft_gates:
+    - id: AS-01
+      title: Dead Interactive Control
+      rule: "Button, link, or dropdown that performs zero action. Production: blocking. Scaffold: advisory with data-scaffold='true' and aria-disabled='true'."
+      owner_skills: ["ui-ux-review", "frontend-design"]
+    - id: AS-02
+      title: Ghost Navigation Destination
+      rule: "Navbar link pointing to route missing from ROUTE_MANIFEST.md. Production: blocking. Scaffold: advisory with listing in SCAFFOLD.md."
+      owner_skills: ["ui-ux-review", "frontend-design"]
+    - id: AS-03
+      title: Fabricated Proof Claims
+      rule: "Inventing statistics, testimonials, or certifications without real sources. Placeholders in MISSING_ASSETS.md or [LOGO]/[REAL DATA] exempt."
+      owner_skills: ["ui-ux-review", "frontend-design"]
+    - id: AS-04
+      title: Script-Based CSS Patching
+      rule: "Modifying UI or CSS via external regex or string replacement scripts. Formatters and approved codemods exempt."
+      owner_skills: ["ui-ux-review", "frontend-design"]
+    - id: AS-05
+      title: Unlabeled Directionless Draft
+      rule: "Generating UI without design direction and defaulting silently to sterile generic styling. Inferred draft contract required."
+      owner_skills: ["ui-ux-review", "frontend-design"]
+
+  key_rules:
+    - id: R-19
+      title: Animation Purpose-Gate
+      rule: "Bans simultaneous Fade Up + Floating + Scale + Bounce. Motion dial alignment mandatory. Animations >5s require pause control."
+      owner_skills: ["ui-motion"]
+    - id: R-31
+      title: Keystone Rule
+      rule: "Every major visual decision must be explainable in one sentence stating its exact functional or brand purpose."
+      owner_skills: ["frontend-design", "ui-ux-review"]
+    - id: R-35
+      title: Delivery Gate Click-Through Verification
+      rule: "Recorded interactive verification log required for controls in ROUTE_MANIFEST.md (max 40 entries, grouped, verification-log.json schema)."
+      owner_skills: ["frontend-design"]
+    - id: R-37
+      title: Inferred Direction Contract
+      rule: "Absence of DESIGN.md forces Inferred Direction Contract with [INFERRED]/[UNKNOWN] tags, draft label, and defaults Creativity 4, Density 3, Variance 3, Motion 2."
+      owner_skills: ["frontend-design"]
+    - id: R-38
+      title: Visual Slop Quarantine and Diagnostic Boundary
+      rule: "Visual slop detection (VIS-01..VIS-06) runs in ui-ux-review Audit mode with <untrusted_target_text> copy quarantine and advisory severity."
+      owner_skills: ["ui-ux-review"]
+    - id: R-39
+      title: Nine-Pass Redline Component Firewall
+      rule: "Ordered 9-pass redline restyling executes in frontend-design Audit and restyle mode without mutating component props, hooks, or handlers."
+      owner_skills: ["frontend-design"]
+    - id: R-40
+      title: Isolated Capture Artifact Boundary
+      rule: "Playwright screenshots and ffmpeg before/after videos write exclusively to .agents/state/ui-ux-review/screenshots/ or .agents/state/frontend-design/media/."
+      owner_skills: ["ui-ux-review", "frontend-design"]

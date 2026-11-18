@@ -19,7 +19,7 @@ Write-Target Boundary. Modify only markup, CSS, and design tokens inside the tar
 
 Select an execution mode before Step 1:
 - Greenfield mode (default). Steps 1 through 4 execute in order.
-- Audit and restyle mode. Step 1 executes; Steps 2 and 3 are skipped unless token regeneration is approved in `.agents/state/frontend-design/token-approval.md`; Step 4 executes as verification. Emit `.agents/state/frontend-design/audit-report.md` at Step 4.
+- Audit and restyle mode. Step 1 executes with 3-pass preflight evidence verification and 5-line direction calibration from [references/direction-matrix-and-redline.md](references/direction-matrix-and-redline.md), ingesting `.agents/state/ui-ux-review/report.md` when available. Component-scoped 9-pass redline refactoring executes in Step 3 behind the component-contract firewall; global `DESIGN.md` or root token regeneration requires `.agents/state/frontend-design/token-approval.md`. Step 4 executes verification, stores optional Playwright and `ffmpeg` captures in `.agents/state/frontend-design/media/`, and emits `.agents/state/frontend-design/audit-report.md`.
 
 ## Reference quick routing
 
@@ -47,8 +47,12 @@ Select an execution mode before Step 1:
 | Responsive collapse | [references/responsive.md](references/responsive.md) | Breakpoint collapse, mobile constraints, & viewport handling |
 | Anti-pattern catalog | [references/anti-patterns.md](references/anti-patterns.md) | Banned AI visual tropes and layout defaults |
 | Custom themes & bespoke | [references/custom-theme.md](references/custom-theme.md) | Made-to-measure palettes, bespoke structure, & token forks |
+| Style presets & surfaces | [references/style-presets-and-surfaces.md](references/style-presets-and-surfaces.md) | 6 aesthetic presets, AI agent surfaces, & tactile 3D |
 | Component mechanics | [references/component-mechanics.md](references/component-mechanics.md) | Tactile feedback, hit targets, loaders & focus |
 | Network resilience & API | [references/api-resilience.md](references/api-resilience.md) | Race conditions, retry backoff, & optimistic updates |
+| Direction & redline | [references/direction-matrix-and-redline.md](references/direction-matrix-and-redline.md) | 5-line direction matrix, 3-pass preflight, & redlines |
+| Component firewall | [references/component-contract-firewall.md](references/component-contract-firewall.md) | Component boundary protection & Python lexical linter |
+| Artistic effects | [references/artistic-effects.md](references/artistic-effects.md) | Glyphs, dithering, & halftone treatments with usage gates |
 
 ## Execution workflow
 Follow these four steps in sequence:
@@ -57,7 +61,7 @@ Follow these four steps in sequence:
 
 Inspect package.json and project configuration before drafting UI code:
 - Detect existing design tokens, Tailwind configuration version, and installed packages.
-- Establish numeric ratings for Creativity, Density, Variance, and Motion dials. Override Variance to 2 for uniform catalogues, comparison tables, and pricing grids.
+- Calibrate 5-line direction matrix (Product, Character, World, Moments, Signature) from `references/direction-matrix-and-redline.md` and numeric ratings for Creativity, Density, Variance, and Motion dials. Override Variance to 2 for uniform catalogues, comparison tables, and pricing grids.
 - Sketch a compact spatial ASCII wireframe to lock hierarchy and alignment before writing markup.
 - Isolate interactive components with client hooks into memoized leaf components.
 
@@ -69,6 +73,7 @@ Declare colors, spacing, and typography as structured tokens:
 - Pick a curated theme from references/themes/ or construct an OKLCH scale following references/custom-theme.md.
 - Lock display, body, and monospace font families in Tailwind or CSS custom properties.
 - Establish semantic surface lightness steps for light and dark modes.
+- Enforce cascade layer order `@layer ds-base, ds-preset, ds-utilities;`. Document host contract: import skill CSS before host Tailwind or wrap host styles in an explicit `@layer`. Unlayered host CSS takes precedence over layers; namespace tokens as `--agentfx-sem-*`.
 
 Completion criterion: Complete token inventory defined in CSS custom properties with zero arbitrary color literals.
 
@@ -110,8 +115,7 @@ Calibrate interface constraints across four numerical dials on a 1 to 10 scale b
 Calibrate dial settings with four positioning checks before locking styling rules:
 1. Narrative role. Identify if the section acts as hero, transition, data display, pull-quote, or closing action.
 2. Viewing distance. Optimize typography and density for mobile hand-held use, desktop displays, or wall projectors.
-3. Visual temperature. Align color temperature as quiet, energized, authoritative, warm, or playful.
-4. Capacity check. Ensure content fills the layout naturally without artificial spacers or empty cards.
+3. Visual temperature and capacity. Align color temperature and ensure content fills layout naturally without empty cards.
 
 ## Core disciplines
 
@@ -170,19 +174,7 @@ Apply platform-level performance constraints to eliminate layout shifts, interfa
 - Bundle transfer discipline. Use granular named imports for icons and utilities; avoid importing full icon or utility libraries when only a fraction is used. Isolate heavy visualization, editor, or charting libraries behind dynamic imports (import()) and load them on demand.
 
 ## Macrostructures and visual genres
-Select an intentional macrostructure that matches project content density and narrative role:
-1. Bento grid. Multi-cell asymmetric dashboard or product overview combining stat callouts, interactive previews, and feature callouts.
-2. Split studio. High-contrast two-column arrangement with sticky media preview alongside scrolling explanatory narrative.
-3. Marquee hero. Expansive typographic header paired with flowing preview ribbons or ticker metrics.
-4. Long document. Structured editorial layout with margin notes, fluid typography, and sticky table of contents.
-5. Workbench cockpit. Dense utility layout with collapsible side rails, command bar, and tabular data panes.
-6. Ecosystem index. Categorized directory grid designed for extensibility, plugins, or large asset libraries.
-
-Classify aesthetic direction into one of four visual genres:
-- Editorial. High typographic contrast, generous white space, restrained palettes, and literary discipline.
-- Modern minimal. Precision geometry, crisp monochrome tones, subtle micro-borders, and high functional density.
-- Atmospheric. Deep dark surfaces, diffused backdrops, focused illumination, and tactile depth.
-- Playful. Expressive type, tactile physical feedback, bold accents, and organic rounded forms.
+Select an intentional macrostructure (bento grid, split studio, marquee hero, long document, workbench cockpit, ecosystem index) and visual genre (editorial, modern minimal, atmospheric, playful). Consult [references/macrostructures.md](references/macrostructures.md) and `references/genres/` for blueprints.
 
 ## Component mechanics and interaction states
 
@@ -193,18 +185,19 @@ Implement tactile press feedback, skeleton loaders, inline form validation, conc
 Route execution to dedicated reference runbooks based on task requirements:
 1. Generating ./DESIGN.md. Follow references/design-template.md to author a canonical specification covering dials, palette tokens, typography rules, component specs, and anti-patterns.
 2. Curated UI primitives and libraries. Consult references/recommended-libraries.md to map functional requirements to verified single-purpose packages like `@base-ui-components/react`, `cmdk`, `sonner`, `input-otp`, `@number-flow/react`, `react-virtuoso`, `zustand`, and `class-variance-authority`.
-3. Kinetic WebGL and GSAP scenes. Consult references/creative-motion-webgl.md when choreographing smooth scroll, GSAP ScrollTrigger timelines, and Three.js canvas lifecycles with offscreen pause constraints.
-4. Pre-built UI components and macrostructures. Browse references/components/ for tested component patterns (navbars, bento cards, hero callouts, footer statements) and references/macrostructures/ for full-page templates.
-5. Micro-interactions and gesture physics. Consult references/ui-patterns.md for button press feedback, bento card mechanics, and cursor interactions. For spring physics, gesture tracking, and frame rate audits, activate the ui-motion skill.
+3. Kinetic WebGL and GSAP scenes. Consult references/creative-motion-webgl.md for smooth scroll, GSAP ScrollTrigger timelines, and Three.js canvas lifecycles.
+4. Pre-built UI components and macrostructures. Browse references/components/ for tested component patterns and references/macrostructures/ for templates.
+5. Micro-interactions and gesture physics. Consult references/ui-patterns.md for press feedback; for spring physics and choreography, activate the ui-motion skill.
 
 ## Reference index
 Consult these runbooks on demand for deep implementation detail:
 - Core disciplines. references/typography.md, references/color.md, references/layout-and-space.md, references/copy.md, references/motion.md, references/interaction-and-states.md, references/microinteractions.md.
 - Media and assets. references/assets.md, references/imagery-kit.md, references/hero-enrichment.md, references/custom-craft.md.
-- Composition. references/component-cookbook.md, references/macrostructures.md, references/floating-nav.md.
+- Composition. references/component-cookbook.md, references/macrostructures.md, references/floating-nav.md, references/style-presets-and-surfaces.md.
 - Genre runbooks. references/genres/editorial.md, references/genres/modern-minimal.md, references/genres/atmospheric.md, references/genres/playful.md.
 - Workflow commands. references/verbs/audit.md, references/verbs/redesign.md.
 - Process and output. references/study.md, references/component-scope.md, references/preview-examples.md, references/design-md.md, references/export-formats.md, references/contract.md, references/slop-test.md.
+
 ## Quick audit checklist
 
 Verify all items before declaring frontend implementation complete:
@@ -240,3 +233,6 @@ Verify all items before declaring frontend implementation complete:
 | AI visual clichés | Zero template chrome (ALL-CAPS eyebrows, middle dots, single-word accents, or automatic '→' glyphs) |
 | Hero composition | Hero opens with subject-matter artifact or interactive moment instead of default stat-plus-gradient block |
 | Boldness focus | Exactly one memorable focal element per view, with secondary elements visually disciplined |
+| Purpose gate | Gradients, glassmorphism, glow, and shadows have written justification and respect dose caps |
+| Direction check | Missing DESIGN.md defaults to labeled draft without direction and minimal dials, never silent template |
+| Control & asset sanity | Visual assets confirmed or honest placeholders used; controls work or have TODO; zero ghost links |
