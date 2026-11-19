@@ -11,9 +11,10 @@ Visual feedback must register on contact. Latency degrades directness.
 - **Update transforms synchronously.** During continuous drag interactions, update element coordinates synchronously within `pointermove` or `requestAnimationFrame` handlers rather than deferring to transition completion.
 
 ```css
-.button:active {
+.button:active:not(:disabled):not([aria-disabled="true"]) {
   transform: scale(0.97);
-  transition: transform 100ms ease-out;
+  touch-action: manipulation;
+  transition: transform 100ms var(--ease-out);
 }
 ```
 
@@ -26,18 +27,26 @@ Pointer coordinates and element position must match throughout the gesture.
 - Ignore secondary touches while dragging to prevent coordinate jumps.
 
 ```js
-let isDragging = false;
+let activePointerId = null;
 let grabOffsetY = 0;
-let dragStartTime = 0;
-let lastY = 0;
+const samples = [];
 
 element.addEventListener('pointerdown', (event) => {
-  if (isDragging) return;
-  isDragging = true;
-  dragStartTime = performance.now();
+  if (activePointerId !== null) return;
+  activePointerId = event.pointerId;
+  samples.length = 0;
+  samples.push({ y: event.clientY, t: performance.now() });
   element.setPointerCapture(event.pointerId);
   grabOffsetY = event.clientY - element.getBoundingClientRect().top;
 });
+
+const releaseDrag = (event) => {
+  if (event.pointerId !== activePointerId) return;
+  activePointerId = null;
+};
+element.addEventListener('pointerup', releaseDrag);
+element.addEventListener('pointercancel', releaseDrag);
+element.addEventListener('lostpointercapture', releaseDrag);
 ```
 
 ## 3. Momentum projection and decay
@@ -47,11 +56,17 @@ Do not snap elements purely based on raw release coordinates. Project the restin
 Apple deceleration decay formula:
 
 ```js
-function project(initialVelocity, decelerationRate = 0.998) {
-  return (initialVelocity / 1000) * decelerationRate / (1 - decelerationRate);
+function sampleVelocity(now, ring) {
+  const cutoff = now - 40;
+  while (ring.length > 1 && ring[0].t < cutoff) ring.shift();
+  if (ring.length < 2 || now - ring[ring.length - 1].t > 45) return 0;
+  const dt = Math.max((ring[ring.length - 1].t - ring[0].t) / 1000, 0.001);
+  const raw = (ring[ring.length - 1].y - ring[0].y) / dt;
+  return Math.max(-3500, Math.min(3500, raw));
 }
 
-const projectedEndpoint = currentPosition + project(releaseVelocity);
+const releaseVelocity = sampleVelocity(performance.now(), samples);
+const projectedEndpoint = currentPosition + releaseVelocity * 0.12;
 const target = nearestSnapPoint(projectedEndpoint);
 animateSpringTo(target, { velocity: releaseVelocity });
 ```
@@ -61,10 +76,7 @@ animateSpringTo(target, { velocity: releaseVelocity });
 Never force users to drag past a fixed distance threshold. Check flick velocity upon release:
 
 ```js
-const elapsedTime = performance.now() - dragStartTime;
-const velocity = Math.abs(dragDistance) / elapsedTime;
-
-if (Math.abs(dragDistance) >= SWIPE_DISTANCE_THRESHOLD || velocity > 0.11) {
+if (Math.abs(dragDistance) >= SWIPE_DISTANCE_THRESHOLD || Math.abs(releaseVelocity) > 450) {
   dismissElement();
 }
 ```
@@ -119,14 +131,12 @@ Calling `animation.cancel()` on an active Web Animations API instance resets the
 
 ```js
 function interruptAnimation(animation, element) {
-  // 1. Snapshot live computed styles directly into inline style attributes
-  animation.commitStyles();
-
-  // 2. Cancel the animation player cleanly without visual snapback
+  if (element.isConnected && animation.playState !== 'idle') {
+    animation.commitStyles();
+  }
   animation.cancel();
-
-  // 3. Query the retained transform coordinate for continuous retargeting
   const currentTransform = element.style.transform;
+  return currentTransform;
 }
 ```
 
@@ -216,17 +226,21 @@ Pre-rendered CSS transitions execute off the main thread. When the browser hydra
 The Web Animations API combines the flexibility of JavaScript with the performance of CSS compositor animations:
 
 ```js
-element.animate(
+const anim = element.animate(
   [
     { clipPath: "inset(0 100% 0 0)" },
     { clipPath: "inset(0 0 0 0)" }
   ],
   {
     duration: 300,
-    fill: "forwards",
+    composite: "replace",
     easing: "cubic-bezier(0.23, 1, 0.32, 1)"
   }
 );
+anim.finished.then(() => {
+  if (element.isConnected) element.style.clipPath = "inset(0 0 0 0)";
+  anim.cancel();
+}).catch(() => {});
 ```
 
 WAAPI requires zero external runtime libraries, supports cancellation, and allows dynamic parameter injection.
@@ -239,7 +253,7 @@ Translucent surfaces reveal underlying content while maintaining visual hierarch
 - **Avoid stacking translucent surfaces.** Layering multiple blurs degrades text contrast and increases GPU fill rate.
 - **Scale blur with surface area.** Use stronger blur radii and deeper drop shadows on large modal sheets. Use tighter blurs on compact toolbars.
 - **Dynamic scroll chrome.** Activate borders and blur treatments only when scrollable content passes underneath.
-- **Keep transition blurs under 20px.** Heavy blur filters degrade rendering performance significantly, particularly in Safari.
+- **Keep static blurs at most 16px.** Heavy blur filters degrade rendering performance significantly, particularly in Safari, and never animate blur radius.
 
 ```css
 .toolbar {
@@ -263,7 +277,7 @@ Translucent surfaces reveal underlying content while maintaining visual hierarch
 | Default UI spring | Critically damped, zero overshoot | Damping `1.0`, response `0.3` to `0.4` |
 | Momentum or flick | Under-damped, subtle bounce | Damping `0.8`, response `0.3` to `0.4` |
 | Relative velocity | Normalized speed by displacement | `gestureVelocity / (target - current)` |
-| Flick projection | Exponential decay resting point | `current + (v / 1000) * d / (1 - d)`, `d = 0.998` |
+| Flick projection | `40ms` rolling buffer lookahead | `current + v * 0.12` (clamped `[-3500, 3500]` px/s) |
 | Boundary resistance | Apple rubber band curve | `(x * d * 0.55) / (d + 0.55 * Math.abs(x))` |
 | Interruptible motion | Sample live coordinate on interrupt | Query computed live transform |
 | Direct manipulation | Pointer lock during drag | `element.setPointerCapture(event.pointerId)` |
