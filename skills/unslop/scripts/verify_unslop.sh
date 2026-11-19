@@ -68,7 +68,7 @@ prose_lines = [
 
 errors = []
 id_particle_re = re.compile(
-    r"(?i)(?:^|[\s,(])(nih|deh|dong|kok|kan|sih|nah|lho|yuk)(?:$|[\s,.;!?\)])"
+    r"(?i)(?:^|[\s,(])(nih|deh|dong|kok|kan|sih|nah|lho|yuk)(?:$|[\s,.;:!?\)])"
 )
 trailing_ya_re = re.compile(r"(?i)(?:^|\s)ya[\s.!?]*$")
 en_filler_re = re.compile(
