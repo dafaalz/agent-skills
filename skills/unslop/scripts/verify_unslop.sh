@@ -77,17 +77,42 @@ en_filler_re = re.compile(
 praise_re = re.compile(
     r"(?i)\b(certainly!|great question!|good job|nice work|looks great|tentu saja!|semoga membantu|sudah rapi dan jelas)\b"
 )
+meta_opener_re = re.compile(
+    r"(?i)\b(berikut\s+(?:adalah|ini\s+adalah)|di\s+bawah\s+ini\s+adalah)\b"
+)
+url_re = re.compile(r"https?://[^\s)\]`'\"<>]+|file://[^\s)\]`'\"<>]+", re.I)
+file_line_re = re.compile(r"[\w./\\-]+:\d+(?::\d+)?")
+timestamp_re = re.compile(r"\b\d{1,2}:\d{2}(?::\d{2})?\b")
+ratio_re = re.compile(r"\b\d+:\d+\b")
+math_re = re.compile(r"\$[^$\n]+\$")
+cc_re = re.compile(
+    r"^(?:[-*+]\s+)?(?:feat|fix|refactor|test|docs|chore|style|perf|ci|build)(?:\([^)]+\))?:\s+",
+    re.I,
+)
 
 for lineno, line in prose_lines:
-    prose_line = re.sub(r"^(?:[-*+]|\d+\.)\s+", "", line.lstrip())
+    stripped = line.strip()
+    if not stripped:
+        continue
+    prose_line = re.sub(r"^(?:[-*+]|\d+\.)\s+", "", stripped)
     if "\u2014" in line or "\u2013" in line or " - " in prose_line:
         errors.append(f"{path}:{lineno} UNS-1 decorative dash detected")
     if id_particle_re.search(line) or trailing_ya_re.search(line):
         errors.append(f"{path}:{lineno} UNS-13 banned Indonesian colloquial particle detected")
     if en_filler_re.search(line):
         errors.append(f"{path}:{lineno} UNS-13 banned English filler marker detected")
-    if praise_re.search(line):
-        errors.append(f"{path}:{lineno} UNS-3 chatbot filler or generic praise detected")
+    if praise_re.search(line) or meta_opener_re.search(line):
+        errors.append(f"{path}:{lineno} UNS-3 chatbot filler or meta-opener detected")
+
+    if not (stripped.startswith("|") and stripped.endswith("|")) and not stripped.endswith(":"):
+        cleaned = math_re.sub("", stripped)
+        cleaned = url_re.sub("", cleaned)
+        cleaned = file_line_re.sub("", cleaned)
+        cleaned = timestamp_re.sub("", cleaned)
+        cleaned = ratio_re.sub("", cleaned)
+        cleaned = cc_re.sub("", cleaned)
+        if ":" in cleaned:
+            errors.append(f"{path}:{lineno} UNS-2 mid-sentence colon detected")
 
 if register not in ("conversational", "technical-prose"):
     errors.append(f"Invalid register value: {register}")

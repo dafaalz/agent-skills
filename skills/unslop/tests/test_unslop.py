@@ -561,6 +561,59 @@ class TestVerifyScriptIntegration(unittest.TestCase):
             )
             self.assertEqual(proc.returncode, 0, f"verify_unslop.sh failed: {proc.stderr}")
 
+    @unittest.skipUnless(VERIFY_SH.exists(), "verify_unslop.sh not present in workspace")
+    def test_verify_script_detects_uns2_and_uns3(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="unslop_hygiene_") as tmpdir:
+            td = Path(tmpdir)
+            good_doc = td / "good.md"
+            bad_meta = td / "bad_meta.md"
+            bad_colon = td / "bad_colon.md"
+
+            good_doc.write_text(
+                "# System overview\n\n"
+                "Engine processes audio directly via Web Audio API.\n\n"
+                "Rincian arsitektur:\n"
+                "- Sinyal dialirkan ke https://example.com/stream dan rasio 16:9.\n"
+                "- File main.js:42 memuat audio pada 12:30.\n"
+                "- feat(audio): implement lowpass filter\n"
+                "- **Sintesis nada**. Osilator sinus menghasilkan 432 Hz.\n",
+                encoding="utf-8",
+            )
+            bad_meta.write_text(
+                "Berikut adalah penjelasan lengkap sistem audio.\n",
+                encoding="utf-8",
+            )
+            bad_colon.write_text(
+                "- **Sintesis nada:** Osilator sinus menghasilkan 432 Hz.\n",
+                encoding="utf-8",
+            )
+
+            proc_good = subprocess.run(
+                ["bash", str(VERIFY_SH), "--check-hygiene", str(good_doc), "--register", "conversational"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(proc_good.returncode, 0, f"Expected pass, got error: {proc_good.stderr}")
+
+            proc_bad_meta = subprocess.run(
+                ["bash", str(VERIFY_SH), "--check-hygiene", str(bad_meta), "--register", "conversational"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertNotEqual(proc_bad_meta.returncode, 0)
+            self.assertIn("UNS-3 chatbot filler or meta-opener detected", proc_bad_meta.stderr)
+
+            proc_bad_colon = subprocess.run(
+                ["bash", str(VERIFY_SH), "--check-hygiene", str(bad_colon), "--register", "conversational"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertNotEqual(proc_bad_colon.returncode, 0)
+            self.assertIn("UNS-2 mid-sentence colon detected", proc_bad_colon.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()
