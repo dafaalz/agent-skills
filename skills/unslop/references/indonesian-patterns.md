@@ -2,33 +2,12 @@
 
 Dokumen ini memuat aturan untuk memotong pola AI dan menulis ulang teks bahasa Indonesia agar kembali lugas.
 
-## Sumber rujukan dan analisis
+## Pola utama penyimpangan teks AI bahasa Indonesia
 
-Dokumen ini menyintesis kaidah dari 14 rujukan terverifikasi lintas regulator, studi linguistik akademik, agensi kurasi konten, dan praktisi bahasa:
-
-1. Peraturan Dewan Pers Nomor 1/Peraturan-DP/I/2025 tentang Pedoman Penggunaan Kecerdasan Buatan dalam Karya Jurnalistik (dewanpers.or.id).
-2. Sirlia Sahid, dkk. (2026). Ragam Bahasa Indonesia dalam Prompt AI, Studi Komparatif Gaya Respons ChatGPT. Jurnal Morfologi, 4(3), 21-36.
-3. Ariesta Bagus Pramuwibowo dan Titik Dwi Ramthi Hakim (2026). Evaluasi Komparatif Manusia, ChatGPT, dan Gemini dalam Menganalisis Pola Kalimat pada Teks Akademik. Prosiding SEMDIKJAR UNP Kediri, Vol. 9.
-4. Narabahasa (Ivan Lanin). Analisis interferensi sintaksis asing pada pemakaian frasa di mana dan yang mana.
-5. Narabahasa (Yudhistira). Benarkah Penyunting Tergantikan oleh AI? dan Robot yang Menulis.
-6. Tempo.co Tekno. Alasan Berkomunikasi Menggunakan AI Disebut Tidak Manusiawi.
-7. Jawa Pos Lifestyle. 7 Frasa Ciri Kenali Tulisan Khas ChatGPT yang Jadi Tanda Tulisan Buatan AI.
-8. RadVoice Indonesia (Niken Anggun Nurani). 8 Cara Mendeteksi Tulisan yang Dibuat AI.
-9. ARSA Technology Research (2025). Ketika AI Menulis, Menguak Pola Kalimat Bukan Hanya Ini, Tapi Juga Itu dalam Komunikasi Korporat.
-10. cmlabs Blog (Alivia Ariatna). Apakah ChatGPT Sudah Melek Kaidah Penulisan? Sebuah Studi Deskriptif.
-11. ToffeeDev SEO Blog. Konten AI Anda Bisa Kena Penalti Google di 2025? Ini Cara Menghindarinya!
-12. Sastra Lingua Indonesia. Cara Efektif Mengatasi Naskah yang Terdeteksi AI.
-13. Carolina Ratri. Cara Mengedit Tulisan Hasil AI agar Tidak Terlihat Kaku dan Generik.
-14. Dewi Mahendradita (Medium). 4 Tanda Kaku, Cara Deteksi Tulisan dari AI Generatif.
-
-## Mengapa teks AI bahasa Indonesia terasa kaku
-
-1. Model menerjemahkan calque dan translationese secara harfiah. Model bahasa besar umumnya berlatih dengan korpus bahasa Inggris, lalu memindahkan sintaksis dan ungkapan asing apa adanya ke bahasa Indonesia. Pola ini memicu pemakaian kata hubung rancu seperti "di mana", frasa kaku seperti "memainkan peran penting", dan metafora asing seperti "dalam lanskap".
-2. Perplexity rendah membuat diksi seragam (Mitchell et al. DetectGPT, Stanford 2023, arXiv:2301.11305; Sadasivan et al., 2023). AI memilih kata dengan probabilitas statistik tertinggi, sehingga lonjakan kosakata penanda muncul berulang tanpa variasi diksi alami, sebagaimana dibuktikan oleh Liang et al. (Stanford 2024, arXiv:2404.01268) dan Kobak et al. (Science Advances 2025, arXiv:2406.07016).
-3. Burstiness rendah membuat ritme monoton (Mitchell et al. DetectGPT, Stanford 2023, arXiv:2301.11305). AI menyusun kalimat dengan panjang dan struktur klausa yang seragam dari awal hingga akhir, sehingga tulisan kehilangan dinamika jeda.
-4. Kalimat pasif berlebih menyamarkan pelaku. AI kerap memakai verba pasif berprefiks di- seperti "dapat dipahami bahwa" atau "hal ini dilakukan guna" demi menjaga netralitas semu.
-5. Retorika simetris dan triadik memaksakan keseimbangan (Pangram Labs dan Beutler Ink, 2024, 2025). AI sering menyusun pasangan klausa biner seperti "tidak hanya X, tetapi juga Y" serta deretan tiga kata sifat secara mekanis.
-6. Basa-basi formulaik membuka dan menutup tanpa isi. AI membuka tulisan dengan premis usang seperti "di era digital yang serba cepat ini", lalu menutupnya dengan rangkuman hambar tanpa langkah tindak lanjut.
+1. Interferensi sintaksis Inggris (calque) seperti penghubung klausa `di mana`, `yang mana`, `memainkan peran penting`, dan `dalam lanskap`.
+2. Diksi generik berulang dan kata sifat hiperbolis tanpa metrik terverifikasi.
+3. Kalimat pasif berlebih dan nominalisasi (`melakukan pengecekan terhadap`) yang menyamarkan pelaku.
+4. Simetri mekanis (`tidak hanya X, tetapi juga Y`), triad kata sifat, basa-basi pembuka, dan rangkuman penutup tanpa aksi.
 
 ## Katalog kosakata dan pola terlarang
 
@@ -82,6 +61,9 @@ Jangan susun konjungsi majemuk beruntun di awal kalimat. Putus kalimat menjadi k
 | dari X hingga Y / mulai dari X hingga Y (false range) | Calque span ranging from X to Y yang memaksakan rentang semu | Sebutkan entitas, target, atau cakupan spesifik secara langsung |
 | pada penghujung hari | Calque harfiah dari at the end of the day | akhirnya, pada akhirnya, atau hapus dan sebut intinya langsung |
 | membawa ke tingkat berikutnya | Calque harfiah dari take to the next level | meningkatkan, mempercepat, atau sebut target metrik terukur |
+| meskipun kondisi atau topologi tiap tim berbeda, satu kepastian tetap berlaku | Faux-humility hedge hasil calque Inggris | Hapus klausa konsesi, tulis langsung aturan teknisnya |
+| berangkat dari batasan atau tantangan tersebut | Discourse-pivot scaffold artifisial | Hapus transisi meta, mulai kalimat dengan subjek teknis |
+| membedah ruang keadaan / manifestasi konkret / ekosistem operasional | Calque periphrastic pengganti menyelami, bukti nyata, atau lanskap | menguji transisi state, log reproduksi, lingkungan produksi |
 | pengubah permainan | Calque harfiah dari game changer | pembaruan utama, atau sebut mekanisme teknis baru secara spesifik |
 | dalam hal | Calque pengisi ruang dari in terms of | untuk, pada, mengenai, atau hapus langsung |
 | secara harfiah | Calque penekan kosong dari literally | Hapus total bila tidak mengacu pada makna leksikal harfiah |
@@ -124,9 +106,9 @@ Bersihkan tumpukan kata yang memiliki makna identik atau berlebihan.
 
 Bongkar keseimbangan artifisial.
 
-| Pola terlarang | Masalah | Cara perbaikan |
+| Pola terlarang | Masalah | Pengganti konkret |
 |---|---|---|
-| tidak hanya X, tetapi juga Y / bukan hanya X, melainkan juga Y | Formula kontras korelatif mekanis | Tulis aksi X. Tulis aksi Y secara mandiri tanpa negasi pembuka |
+| tidak hanya X, tetapi juga Y / bukan hanya X, melainkan juga Y | Formula kontras korelatif mekanis (kecuali invarian ganda keamanan atau kebenaran) | Tulis aksi X dan aksi Y secara langsung; pertahankan hanya untuk invarian ganda teknis yang terverifikasi |
 | bukan sekadar X, melainkan Y / bukan cuma X, tetapi Y | Kontras artifisial | Sebut langsung esensi dari Y |
 | cepat, aman, dan terpercaya | Rule-of-three klise | Pilih satu parameter performa terpenting dan tunjukkan buktinya |
 | efisien, efektif, dan inovatif | Triad kata sifat hampa | Sebutkan penghematan waktu, alokasi memori, atau hasil uji |
@@ -166,15 +148,15 @@ Ganti kata kerja bantu dan frasa nominal dengan verba aktif berimbuhan me- atau 
 ## Kaidah sintaksis dan struktur alami
 
 1. Utamakan kalimat aktif. Pasang subjek pelaku di depan kata kerja. Ubah "Konfigurasi ini dimuat oleh runner" menjadi "Runner memuat konfigurasi ini".
-2. Variasikan panjang kalimat untuk menjaga burstiness. Gabungkan kalimat pendek berbobot (3 sampai 6 kata) untuk penegasan dengan kalimat penjelas sedang (10 sampai 15 kata). Jangan susun tiga kalimat berturut-turut dengan jumlah klausa sama.
+2. Sesuaikan panjang kalimat dengan kepadatan mekanisme teknis. Gunakan kalimat pendek untuk keputusan biner dan kalimat lebih panjang untuk rantai sebab akibat. Jangan mengejar kuota jumlah kata atau skor burstiness mekanis, dan jangan memisahkan prasyarat kausal dari perintah eksekusi.
 3. Batasi kalimat majemuk bersarang. Jangan tumpuk anak kalimat dengan konjungsi bertingkat seperti meskipun, sehingga, atau karena. Putus anak kalimat menjadi kalimat tunggal kedua.
 4. Pasangkan batasan negatif dengan tindakan positif. Saat melarang sebuah kata atau pola, berikan padanan kata aktif penggantinya pada kalimat yang sama.
 5. Bersihkan pleonasme preposisi. Hapus bentukan mubazir seperti "guna untuk", "demi untuk", atau "disebabkan karena". Gunakan "untuk" atau "karena".
 6. Disiplin tanda baca. Jangan menggunakan em dash atau en dash. Gunakan koma atau titik. Jangan gunakan tanda titik dua di tengah kalimat sebagai pengganti kata hubung atau sebagai pseudo-label. Gunakan titik dua hanya untuk mengawali daftar poin, tabel, atau blok kode.
-7. Terapkan verifikasi faktual pedoman Dewan Pers 1/2025. Hapus konsensus anonim seperti "para ahli sepakat", "penelitian membuktikan", atau "banyak kalangan menilai". Wajibkan pencantuman sumber primer terverifikasi, seperti nama dokumen regulasi, repositori kode, endpoint API, atau data terukur. Hapus seluruh pernyataan klaim tanpa bukti sumber primer terverifikasi.
+7. Terapkan verifikasi faktual pedoman Dewan Pers 1/2025. Hapus konsensus anonim dan klaim tanpa bukti; wajibkan pencantuman sumber primer terverifikasi atau metrik terukur sebagaimana dirinci pada pedoman operasional di bawah.
 8. Lindungi istilah domain teknis dan penanda kode. Jangan terjemahkan secara paksa istilah pinjaman teknis baku ke padanan kata ganjil. Pertahankan istilah seperti "payload", "token JWT", "endpoint", "middleware", "controller", "pipeline CI", dan "cluster Kubernetes" dalam bentuk teknis aslinya. Jangan ubah teks dalam backtick inline seperti simbol fungsi, flag CLI, variabel, atau key skema.
 
-### Pedoman operasional verifikasi dewan pers
+### Pedoman operasional verifikasi Dewan Pers
 
 Patuhi standar verifikasi Dewan Pers Nomor 1/2025 untuk menjaga akuntabilitas tulisan:
 
@@ -192,7 +174,7 @@ Di era digital yang serba cepat ini, tidak dapat dipungkiri bahwa pengelolaan me
 
 #### Naskah hasil perbaikan
 
-Pengelolaan memori menentukan stabilitas server di bawah beban kerja tinggi. Pembaruan arsitektur ini memangkas overhead alokasi memori sebesar 35 persen. Proses sinkronisasi data antarprosesor kini berjalan tanpa antrean kunci manual. Tim rekayasa juga memisahkan dependensi siklis pada layer basis data. Sistem kini dapat melayani sepuluh ribu kueri bersamaan tanpa penurunan latensi.
+Pengelolaan memori menentukan stabilitas server saat beban kerja meningkat. Pembaruan arsitektur ini mengganti alokator memori lama dan menghilangkan antrean kunci manual pada sinkronisasi antarprosesor. Tim rekayasa memisahkan dependensi siklis pada layer basis data agar pemrosesan kueri berjalan paralel.
 
 ### Contoh 2. Komunikasi teknis dan catatan rilis
 
@@ -213,3 +195,32 @@ Tentu saja! Dalam rangka menavigasi kompleksitas deployment, alat yang ampuh ini
 #### Naskah hasil perbaikan
 
 Runner mengeksekusi pipeline rilis secara otomatis setiap kali ada tag git baru. Skrip memeriksa status kesehatan container sebelum mengalihkan traffic jaringan. Pasang variabel lingkungan pada dashboard CI agar runner dapat mengakses cluster Kubernetes.
+
+## Disiplin register, partikel, dan pronomina
+
+### Partikel percakapan dan pengisi terlarang (`UNS-13`)
+
+Larangan berikut berlaku pada `technical-prose` maupun `conversational`:
+- Partikel sikap kolokial. Hapus total `nih`, `deh`, `dong`, `kok`, `kan`, `sih`, `nah`, `lho`, `yuk`, dan akhiran basa-basi `ya`.
+- Pengecualian leksikal fungsional. Pertahankan `jadi` khusus sebagai konjungsi kausal eksplisit di tengah klausa, pertahankan `coba` khusus sebagai verba imperatif diagnostik literal (`Coba jalankan tes`), dan pertahankan `di mana` khusus sebagai kata tanya lokatif (`Di mana file log disimpan?`).
+- Kalka sintetis. Hindari `dalam lanskap`, `merangkul perubahan`, `memberdayakan solusi`, `mendorong inovasi`, `di era digital`, dan `solusi holistik`.
+- Basa-basi chatbot dan pujian generik. Hapus `Tentu saja!`, `Semoga membantu!`, `Saya siap membantu Anda`, `Sebagai AI`, dan `sudah rapi dan jelas`.
+- Token ragu performatif. Hapus `hmm`, `sebentar`, `tunggu`, `bentar`, dan `izinkan saya`.
+- Adverbia menggurui dan penguat hampa. Hapus `sebenarnya`, `sejujurnya`, `pada dasarnya`, `secara harfiah`, `agak` tanpa metrik, `sangat penting`, dan `secara signifikan` tanpa pengukuran riil.
+- Pleonasme. Hapus `para hadirin`, `naik ke atas`, `turun ke bawah`, dan `saling bekerja sama`.
+
+### Bahasa Indonesia ragam teknis
+
+Pertahankan ketepatan deklaratif, verba akar aktif, dan prasyarat kausal yang menempel pada perintah. Jangan gunakan partikel kolokial atau pencerminan pronomina informal.
+
+### Rujukan tunggal matriks otoritas pronomina (`UNS-11`)
+
+Jangan mendefinisikan tabel pronomina tandingan pada berkas ini. Seluruh aturan otoritas pronomina 9-kondisi (`saya/Anda`, `aku/kamu`, `gue/lu`, dan eskalasi sinyal otoritas) mengikuti spesifikasi kanonikal pada `conversational-patterns.md` setelah pembuangan teks kutipan pengguna.
+
+## Rujukan primer
+
+1. Dewan Pers (2025). Peraturan Dewan Pers Nomor 1/Peraturan-DP/I/2025 tentang Pedoman Penggunaan Kecerdasan Buatan dalam Karya Jurnalistik.
+2. Badan Pengembangan dan Pembinaan Bahasa (2022). Ejaan Bahasa Indonesia yang Disempurnakan (EYD V) dan Kamus Besar Bahasa Indonesia (KBBI VI).
+3. Narabahasa, Ivan Lanin (2024). Analisis interferensi sintaksis asing pada pemakaian penghubung klausa `di mana` dan `yang mana`.
+4. Liang et al. (2024). Mapping the Increasing Use of LLMs in Scientific Papers (arXiv:2404.01268).
+5. Kobak et al. (2025). Delving into LLM-assisted writing in biomedical publications through excess vocabulary (Science Advances, arXiv:2406.07016).

@@ -27,7 +27,7 @@ Placing a dramatic noun phrase after a colon manufactures artificial suspense. L
 
 ### 3. Interpretive metadiscourse
 
-Coaching readers on how to react interrupts technical explanations. Frequent flags include "That last part matters more than it sounds", "The key point is", "This distinction matters", "In other words", and "Let that sink in". Delete the editorial intrusion or provide concrete evidence. "The migration completed with zero downtime. Let that sink in." becomes "The migration completed with zero downtime across 12 shards."
+Coaching readers on how to react interrupts technical explanations. Frequent flags include "That last part matters more than it sounds", "The key point is", "This distinction matters", "In other words", and "Let that sink in". Delete the editorial intrusion or provide concrete evidence. "The migration completed with zero downtime. Let that sink in." becomes "The migration completed with zero downtime across all production database shards."
 
 ### 4. Fake-profound kickers
 
@@ -84,7 +84,7 @@ Burying active verbs inside abstract Latinate nouns combined with weak dummy ver
 
 ### 13. Process narration
 
-Narrating analytical steps wastes reader attention on author workflow instead of findings. Common openings include "After reviewing the codebase", "Upon closer inspection", "Having analyzed the schema", and "In this section we will examine". Delete the workflow recap and state the finding, command, or action directly. "After reviewing the authentication logs, we discovered invalid token signatures" becomes "The authentication logs contained 42 invalid token signatures."
+Narrating analytical steps wastes reader attention on author workflow instead of findings. Common openings include "After reviewing the codebase", "Upon closer inspection", "Having analyzed the schema", and "In this section we will examine". Delete the workflow recap and state the finding, command, or action directly. "After reviewing the authentication logs, we discovered invalid token signatures" becomes "The authentication logs contained invalid token signatures on incoming requests."
 
 ### 14. Inanimate agency
 
@@ -92,15 +92,15 @@ Attributing cognitive intentions or desires to inanimate code confuses mechanica
 
 ### 15. Trailing participial clauses
 
-Tacking loose "-ing" clauses onto finished actions adds vague editorial commentary. Familiar examples include "ensuring seamless integration", "highlighting the importance of testing", "allowing for better performance", and "fostering collaboration". Cut the trailing participial clause outright, or convert it into a separate active sentence with an explicit subject. "The runner caches dependencies, ensuring faster builds" becomes "The runner caches dependencies. Subsequent builds complete in 12 seconds."
+Tacking loose `-ing` commentary onto finished actions adds vague editorial filler. Familiar examples include `"ensuring seamless integration"`, `"highlighting the importance of testing"`, `"allowing for better performance"`, and `"fostering collaboration"`. Cut cosmetic participial tails outright or convert them into a separate active sentence, while retaining participial clauses that specify causal preconditions, concurrent system states, or failure guards (such as `"preventing split-brain writes during network partitions"`). `"The runner caches dependencies, ensuring faster builds"` becomes `"The runner caches dependencies. Subsequent builds complete in 12 seconds."`
 
 ### 16. False ranges
 
-Spurious span prepositions manufacture artificial breadth between arbitrary extremes. Formulations include "ranging from simple scripts to enterprise platforms", "from beginners to seasoned architects", and "from small startups to Fortune 500 companies". State the specific scope or supported targets directly. "The tool handles tasks ranging from simple scripts to complex pipelines" becomes "The tool runs shell scripts and distributed pipelines."
+Spurious span prepositions manufacture artificial breadth between arbitrary extremes. Formulations include `"ranging from simple scripts to enterprise platforms"`, `"from beginners to seasoned architects"`, and `"from small startups to Fortune 500 companies"`. State the specific scope or supported targets directly. `"The tool handles tasks ranging from simple scripts to complex pipelines"` becomes `"The tool runs shell scripts and distributed pipelines."`
 
 ### 17. Formulaic contrasts
 
-Mechanical contrast templates force artificial antithesis onto simple factual conditions. Routine occurrences feature "not just X, but Y", "not only X, but also Y", and "despite challenges, X continues to grow". State the factual condition directly without the rhetorical antithesis. "The update is not just a patch, but a major overhaul" becomes "The update rewrites the query planner."
+Mechanical contrast templates force artificial antithesis onto simple factual conditions. Routine occurrences feature `"not just X, but Y"`, `"not only X, but also Y"`, and `"despite challenges, X continues to grow"`. Rewrite rhetorical antithesis as a direct factual statement (`"The update is not just a patch, but a major overhaul"` becomes `"The update rewrites the query planner"`), while preserving dual-invariant technical guarantees (`"The mutex prevents both concurrent writes and stale reads during failover"`).
 
 ### 18. Formulaic openings and closings
 
@@ -114,17 +114,17 @@ When replying in an active thread or ongoing conversation, language models often
 
 Language models frequently avoid plain verbs like "is", "are", and "has", replacing them with inflated verbs like "serves as", "acts as", "boasts", "features", "functions as", or "stands as". When describing an attribute or condition, use the direct linking verb. "The repository boasts comprehensive test coverage" becomes "The repository has comprehensive test coverage." "The file serves as the configuration entrypoint" becomes "The file is the configuration entrypoint."
 
-## Research and editorial references
+### 21. Staged dialectic paragraphs
 
-- **Liang et al. (Stanford 2024, arXiv:2404.01268).** Documented sharp frequency surges of characteristic marker vocabulary (including "delve", "testament", "intricate", "pivotal", and "showcase") in peer-reviewed scientific papers after LLM release.
-- **Kobak et al. (Science Advances 2025, arXiv:2406.07016).** Analyzed vocabulary tracking and style markers across biomedical abstracts, proving broad-scale adoption of automated generation without human editing.
-- **Mitchell et al. (DetectGPT, Stanford 2023, arXiv:2301.11305) and Sadasivan et al. (2023).** Demonstrated that AI generation exhibits low perplexity (overly predictable token sequences) and low burstiness (flat, uniform sentence rhythm), contrasting with natural human variation.
-- **Pangram Labs and Beutler Ink (2024, 2025).** Documented statistical overrepresentation of negative parallelism ("not only X, but also Y"), rhetorical triad lists ("rule of three"), and spurious span ranges ("from X to Y") in LLM outputs.
-- **Wikipedia WikiProject AI Cleanup (WP:AIC).** Cataloged structural patterns common in synthetic writing, emphasizing process narration ("Upon closer inspection"), inanimate agency (attributing consciousness to code or abstract concepts), and dropped actors in passive constructions.
-- **Paul Graham (2024).** Identified false formality, inflated diction substitutes, and synthetic earnestness as immediate indicators of machine-generated text.
-- **blader/humanizer (2025).** Documented wrong-reader reply recaps, indicator weighting thresholds, voice sample matching overrides, and artificial evasion of basic linking verbs.
-- **Dewan Pers (Peraturan No. 1/2025).** Mandated human verification, primary source attribution, and journalistic accountability while banning synthetic consensus claims.
-- **Narabahasa (Ivan Lanin dan Yudhistira).** Analyzed English syntax interference, translationese calques, and robotic transition chains in modern Indonesian prose.
+Language models evade intra-sentence contrast bans by staging a three-sentence dialectic arc across a paragraph. Cues cluster around "On one hand, X... On the other hand, Y... The sustainable path forward lies in balancing both." Collapse the three sentences into one direct statement of the primary mechanism and the exact engineering trade-off.
+
+### 22. Faux-humility hedges and discourse-pivot scaffolds
+
+Concessive concession-pivot frames manufacture false objectivity before stating a generic claim. Watch for "While workload profiles inevitably diverge across teams, one operational reality remains consistent", "Though no silver bullet exists, teams consistently observe", and transition bridges like "That architectural trade-off brings us to...". Delete the concession shell and state the measured constraint directly.
+
+### 23. Lexical-to-structural calque evasion
+
+When single words are blocked, models substitute inflated multi-word calques. Replace "interrogate the state space" with "test state transitions", "empirical witness" with "reproduction trace" or "benchmark log", "operational terrain" with "production environment", and "braided dependency graph" with "cyclic dependencies".
 
 ## Expanded vocabulary and filler
 
@@ -144,7 +144,7 @@ Language models frequently avoid plain verbs like "is", "are", and "has", replac
 | tapestry / substrate (abstract) | base, foundation, mix |
 | underscore / highlight | stress, show, prove |
 | vibrant / breathtaking | active, dense, or describe exact traits |
-| utilize / leverage / harness | use |
+| utilize / leverage / harness (abstract) | use |
 | facilitate / empower | help, enable |
 | seamless / holistic | direct, unified, integrated |
 | elevate / supercharge | improve, accelerate |
@@ -156,30 +156,33 @@ Language models frequently avoid plain verbs like "is", "are", and "has", replac
 | meticulous / painstaking | detailed, thorough, checked |
 | ever-evolving / dynamic | changing, active, updated |
 | this is huge / changes everything | state the exact measurable benefit |
-| robust / resilient | stable, fault-tolerant, tested |
+| robust / resilient (marketing) | stable, fault-tolerant, tested |
 | cutting-edge / state of the art | recent, modern, or state the release year |
+| unlock / unleash | open, access, enable |
+| revolutionary / next-level / next-generation | modern, updated, or state the exact capability |
 
 ### Technical domain and identifier protection
 
-Never modify inline backticked symbols (`symbol`, `--flag`, `variable_name`), code blocks, API parameters, or database schema keys.
+Leave inline backticked symbols (`symbol`, `--flag`, `variable_name`), unbackticked `camelCase`/`snake_case`/`PascalCase`/`SCREAMING_SNAKE_CASE` identifiers, file paths, URLs, inline math (`$...$`), code blocks, API parameters, and database schema keys intact.
 
-Protect literal technical domain terms in technical prose. Phrases such as "vector database", "test harness", "silicon substrate", "programming paradigm", and "API surface" denote precise engineering concepts. Leave them intact whenever they refer to concrete technical architecture. Only replace them when an author employs them as figurative marketing metaphors in non-technical prose.
+Protect literal engineering domain terms across systems, security, cryptography, hardware, and cloud architecture (`UNS-12`). Preserve `vector` (as in `attack vector`, `interrupt vector`, `feature vector`, `vector database`), `evacuate` (as in `evacuate pods`, `evacuate nodes`, `evacuating collector`), `ratchet` (as in `Double Ratchet`, `coverage ratchet`), `bedrock` (as in `Amazon Bedrock`, `Bedrock Edition`), `substrate` (as in `silicon substrate`, `FR-4 substrate`, `Substrate framework`), `scaffolding` (as in `project scaffolding`), `harness` (`test harness`), `paradigm` (`programming paradigm`), and `API surface` whenever they denote technical mechanisms. Replace terms from the table below only when used as figurative marketing slogans in non-technical copy.
 
 ### Metaphor translations into concrete components
 
-Translate abstract metaphors into concrete system components when used figuratively in non-technical prose, leaving literal technical domain terms intact.
-- "API surface" (when used metaphorically outside concrete architecture specs) becomes "endpoints" or "exported functions"
-- "vector" becomes "method" or "direction"
-- "paradigm" becomes "pattern" or "approach"
-- "scaffolding" becomes "template" or "boilerplate"
-- "substrate" becomes "base" or "foundation"
-- "wedge" becomes "entry point" or "addition"
-- "bedrock" becomes "core platform" or "runtime"
-- "harness" becomes "test suite" or "runner"
-- "ratchet" becomes "tightening limit" or state the exact metric rule
-- "evacuate" becomes "migrate" or "move"
-- "flywheel" or "north star" becomes the specific operational metric or objective
-- "gold-plating" becomes "unneeded scope" or "speculative work"
+| Figurative marketing metaphor | Concrete technical replacement |
+|---|---|
+| `"API surface"` (in sales copy) | endpoints, exported functions |
+| `"vector"` (in business strategy copy) | method, direction |
+| `"paradigm"` (in buzzword copy) | pattern, approach |
+| `"scaffolding"` (in non-code prose) | template, boilerplate |
+| `"substrate"` (in abstract business prose) | base, foundation |
+| `"wedge"` (in GTM/sales copy) | entry point, initial feature |
+| `"bedrock"` (in non-AWS/non-Minecraft prose) | core platform, runtime |
+| `"harness"` (in non-testing prose) | runner, execution wrapper |
+| `"ratchet"` (in non-crypto/non-gate prose) | tightening threshold, metric rule |
+| `"evacuate"` (in non-cluster/non-GC prose) | migrate, drain |
+| `"flywheel"` / `"north star"` | operational metric, target objective |
+| `"gold-plating"` | unneeded scope, speculative work |
 
 ### Often-empty adverbs
 
@@ -196,7 +199,7 @@ Cut these adverbs when they add no factual information:
 - inherently
 - inevitably
 
-Retain them only when they express authentic uncertainty or necessary contrast.
+Never retain patronizing or empty adverbs such as "actually", "honestly", "literally", or "simply". State the direct technical condition without emotional padding or defensive posture.
 
 ### Often-empty filler phrases
 
@@ -211,6 +214,18 @@ Cut these throat-clearing and delay phrases:
 - going forward
 - in this article
 - let us dive in
+
+## Research and editorial references
+
+- **Liang et al. (Stanford 2024, arXiv:2404.01268).** Documented sharp frequency surges of characteristic marker vocabulary (including "delve", "testament", "intricate", "pivotal", and "showcase") in peer-reviewed scientific papers after LLM release.
+- **Kobak et al. (Science Advances 2025, arXiv:2406.07016).** Analyzed vocabulary tracking and style markers across biomedical abstracts, proving broad-scale adoption of automated generation without human editing.
+- **Mitchell et al. (DetectGPT, Stanford 2023, arXiv:2301.11305) and Sadasivan et al. (2023).** Demonstrated that AI generation exhibits low perplexity (overly predictable token sequences) and low burstiness (flat, uniform sentence rhythm), contrasting with natural human variation.
+- **Pangram Labs and Beutler Ink (2024, 2025).** Documented statistical overrepresentation of negative parallelism ("not only X, but also Y"), rhetorical triad lists ("rule of three"), and spurious span ranges ("from X to Y") in LLM outputs.
+- **Wikipedia WikiProject AI Cleanup (WP:AIC).** Cataloged structural patterns common in synthetic writing, emphasizing process narration ("Upon closer inspection"), inanimate agency (attributing consciousness to code or abstract concepts), and dropped actors in passive constructions.
+- **Paul Graham (2024).** Identified false formality, inflated diction substitutes, and synthetic earnestness as immediate indicators of machine-generated text.
+- **blader/humanizer (2025).** Documented wrong-reader reply recaps, indicator weighting thresholds, voice sample matching overrides, and artificial evasion of basic linking verbs.
+- **Dewan Pers (Peraturan No. 1/2025).** Mandated human verification, primary source attribution, and journalistic accountability while banning synthetic consensus claims.
+- **Narabahasa (Ivan Lanin dan Yudhistira).** Analyzed English syntax interference, translationese calques, and robotic transition chains in modern Indonesian prose.
 
 ## Evaluation rubric
 
