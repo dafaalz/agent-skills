@@ -708,6 +708,32 @@ class TestVerifyScriptIntegration(unittest.TestCase):
             self.assertNotEqual(proc.returncode, 0)
             self.assertIn("UNS-13 banned English stance adverb detected", proc.stderr)
 
+    @unittest.skipUnless(VERIFY_SH.exists(), "verify_unslop.sh not present in workspace")
+    def test_verify_script_detects_praise_exclamation(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="unslop_praise_") as tmpdir:
+            td = Path(tmpdir)
+            bad_doc = td / "bad_praise.md"
+            good_doc = td / "good_certainly.md"
+            bad_doc.write_text("Certainly! Here is the fix.\n", encoding="utf-8")
+            good_doc.write_text("The cache certainly invalidates after TTL.\n", encoding="utf-8")
+
+            proc_bad = subprocess.run(
+                ["bash", str(VERIFY_SH), "--check-hygiene", str(bad_doc), "--register", "conversational"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertNotEqual(proc_bad.returncode, 0)
+            self.assertIn("UNS-3 chatbot filler or meta-opener detected", proc_bad.stderr)
+
+            proc_good = subprocess.run(
+                ["bash", str(VERIFY_SH), "--check-hygiene", str(good_doc), "--register", "conversational"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(proc_good.returncode, 0, f"False positive on certainly: {proc_good.stderr}")
+
 
 if __name__ == "__main__":
     unittest.main()

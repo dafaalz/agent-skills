@@ -81,7 +81,7 @@ en_stance_adverb_re = re.compile(
     r"(?i)\b(honestly|actually|literally|simply)\b"
 )
 praise_re = re.compile(
-    r"(?i)\b(certainly!|great question!|good job|nice work|looks great|tentu saja!|semoga membantu|sudah rapi dan jelas)\b"
+    r"(?i)(?:\b(?:certainly|great question|tentu saja)!|\b(?:good job|nice work|looks great|semoga membantu|sudah rapi dan jelas)\b)"
 )
 meta_opener_re = re.compile(
     r"(?i)\b(berikut\s+(?:adalah|ini\s+adalah)|di\s+bawah\s+ini\s+adalah)\b"
