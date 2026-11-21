@@ -48,8 +48,15 @@ def strip_code_and_quotes(text: str) -> str:
 
 
 def strip_user_quotes_for_pronoun_detection(prompt: str) -> str:
-    """Strip quoted spans ('...', "...", inline code, blockquotes) from prompt before pronoun analysis."""
-    no_blockquotes = "\n".join([ln for ln in prompt.splitlines() if not ln.lstrip().startswith(">")])
+    """Strip non-direct-address spans (fences, XML tags, blockquotes, quotes, backticks) before pronoun analysis."""
+    no_fences = re.sub(r"```.*?```", "", prompt, flags=re.DOTALL)
+    no_xml = re.sub(
+        r"<(codebase_context|untrusted_target_text|advisor_payload)\b[^>]*>.*?</\1>",
+        "",
+        no_fences,
+        flags=re.DOTALL,
+    )
+    no_blockquotes = "\n".join([ln for ln in no_xml.splitlines() if not ln.lstrip().startswith(">")])
     no_double_quotes = re.sub(r'"[^"\n]*"', "", no_blockquotes)
     no_single_quotes = re.sub(r"'[^'\n]*'", "", no_double_quotes)
     no_backticks = re.sub(r"`[^`\n]*`", "", no_single_quotes)
@@ -62,11 +69,14 @@ def resolve_indonesian_pronouns(cleaned_prompt: str, is_authority_context: bool 
         return ("agentless/saya/Anda", ["gue", "lu", "aku", "kamu"])
 
     words = set(re.findall(r"\b[A-Za-z]+\b", cleaned_prompt.lower()))
-    has_gue = bool(words & {"gue", "gua"})
-    has_lu = bool(words & {"lu", "loe", "elu"})
+    has_gue = bool(words & {"gue", "gua", "gw"})
+    has_lu = bool(words & {"lu", "loe", "elu", "lo"})
     has_aku = bool(words & {"aku"})
     has_kamu = bool(words & {"kamu"})
 
+    # Asymmetric mixed combinations (aku + lu, gw + kamu) resolve to zero-pronoun
+    if (has_aku and has_lu) or (has_gue and has_kamu):
+        return ("zero-pronoun", ["saya/Anda", "lu", "gue", "kamu"])
     if has_gue and has_lu:
         return ("lu/gue", ["profanity", "nih", "deh", "dong", "kan"])
     if has_aku and has_kamu:
@@ -251,14 +261,22 @@ class TestSkillContracts(unittest.TestCase):
         self.assertEqual(lines[0], "---")
         self.assertIn("name: unslop", lines[:5])
 
-    def test_antipattern_table_has_five_columns_and_uns13(self) -> None:
+    def test_antipattern_table_has_five_columns_and_uns14(self) -> None:
         text = SKILL_MD.read_text(encoding="utf-8")
         self.assertIn(
             "| ID | Title | Pattern description | Why it fails | Concrete fix |",
             text,
         )
-        for idx in range(1, 14):
+        for idx in range(1, 15):
             self.assertRegex(text, rf"\|\s*UNS-{idx}\s*\|")
+
+    def test_respond_mode_contract_and_adv_invariants(self) -> None:
+        """Verify respond mode zero-write contract and ADV-1 through ADV-6 invariants."""
+        skill_text = SKILL_MD.read_text(encoding="utf-8")
+        self.assertIn("`respond` (default for interactive chat", skill_text)
+        self.assertIn("zero writes to `$UNSLOP_RUN_DIR`", skill_text)
+        for i in range(1, 7):
+            self.assertIn(f"[ADV-{i}]", skill_text)
 
     def test_zero_decorative_dashes_in_updated_docs(self) -> None:
         for path in (SKILL_MD, CONV_MD, ID_MD, REG_MD, SLOP_MD):
@@ -428,6 +446,32 @@ class TestPronounAndQuoteStripping(unittest.TestCase):
         self.assertEqual(allowed, "saya/Anda")
         self.assertIn("lu", prohibited)
 
+    def test_fenced_code_and_xml_tags_do_not_unlock_informal_pronouns(self) -> None:
+        prompt_with_code = (
+            "Tolong audit endpoint ini:\n"
+            "```typescript\n"
+            "const lu = user.id;\n"
+            "```\n"
+        )
+        cleaned_code = strip_user_quotes_for_pronoun_detection(prompt_with_code)
+        self.assertNotIn("lu", cleaned_code)
+        allowed, prohibited = resolve_indonesian_pronouns(cleaned_code)
+        self.assertEqual(allowed, "saya/Anda")
+        self.assertIn("lu", prohibited)
+
+        prompt_with_xml = (
+            "Review konteks berikut:\n"
+            "<codebase_context>\n"
+            "Baris ini memuat teks lu dan gue di dalam konteks.\n"
+            "</codebase_context>\n"
+        )
+        cleaned_xml = strip_user_quotes_for_pronoun_detection(prompt_with_xml)
+        self.assertNotIn("lu", cleaned_xml)
+        self.assertNotIn("gue", cleaned_xml)
+        allowed, prohibited = resolve_indonesian_pronouns(cleaned_xml)
+        self.assertEqual(allowed, "saya/Anda")
+        self.assertIn("lu", prohibited)
+
     def test_nine_condition_pronoun_matrix_compliance(self) -> None:
         # 1. Authority signal escalation
         allowed, prohibited = resolve_indonesian_pronouns("Selamat sore Pak, mohon cek arsitektur ini.", is_authority_context=True)
@@ -472,6 +516,16 @@ class TestPronounAndQuoteStripping(unittest.TestCase):
         # 9. Profanity presence forces neutral register
         allowed, prohibited = resolve_indonesian_pronouns("Sialan, sistem ini error terus.", is_authority_context=True)
         self.assertEqual(allowed, "agentless/saya/Anda")
+
+        # 10. Asymmetric mixed pronouns (aku + lu) resolve to zero-pronoun
+        allowed, prohibited = resolve_indonesian_pronouns("Aku mau tanya, lu bisa review skill ini?")
+        self.assertEqual(allowed, "zero-pronoun")
+        self.assertIn("saya/Anda", prohibited)
+
+        # 11. Mutual gw/lo informal variants resolve to lu/gue
+        allowed, prohibited = resolve_indonesian_pronouns("Gw dan lo perlu refactor ini.")
+        self.assertEqual(allowed, "lu/gue")
+        self.assertIn("nih", prohibited)
 
 
 class TestReadOnlyDetectMode(unittest.TestCase):
@@ -613,6 +667,21 @@ class TestVerifyScriptIntegration(unittest.TestCase):
             )
             self.assertNotEqual(proc_bad_colon.returncode, 0)
             self.assertIn("UNS-2 mid-sentence colon detected", proc_bad_colon.stderr)
+
+    @unittest.skipUnless(VERIFY_SH.exists(), "verify_unslop.sh not present in workspace")
+    def test_verify_script_detects_indonesian_stance_adverbs(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="unslop_adverb_") as tmpdir:
+            td = Path(tmpdir)
+            bad_doc = td / "bad_adverb.md"
+            bad_doc.write_text("Sebenarnya arsitektur ini sudah cukup baik.\n", encoding="utf-8")
+            proc = subprocess.run(
+                ["bash", str(VERIFY_SH), "--check-hygiene", str(bad_doc), "--register", "conversational"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertNotEqual(proc.returncode, 0)
+            self.assertIn("UNS-13 banned Indonesian stance adverb detected", proc.stderr)
 
 
 if __name__ == "__main__":

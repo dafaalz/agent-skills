@@ -70,9 +70,12 @@ errors = []
 id_particle_re = re.compile(
     r"(?i)(?:^|[\s,(])(nih|deh|dong|kok|kan|sih|nah|lho|yuk)(?:$|[\s,.;:!?\)])"
 )
+id_stance_adverb_re = re.compile(
+    r"(?i)\b(sebenarnya|sejujurnya|pada dasarnya|secara harfiah)\b"
+)
 trailing_ya_re = re.compile(r"(?i)(?:^|\s)ya[\s.!?]*$")
 en_filler_re = re.compile(
-    r"(?i)(?:^|[.!?]\s+)(okay|alright|so|well|hmm|wait)(?:,|[\s.!?]|$)"
+    r"(?i)(?:^|[.!?]\s+)(okay|alright|so|well|hmm|wait|honestly|actually|literally|simply)(?:,|[\s.!?]|$)"
 )
 praise_re = re.compile(
     r"(?i)\b(certainly!|great question!|good job|nice work|looks great|tentu saja!|semoga membantu|sudah rapi dan jelas)\b"
@@ -99,6 +102,8 @@ for lineno, line in prose_lines:
         errors.append(f"{path}:{lineno} UNS-1 decorative dash detected")
     if id_particle_re.search(line) or trailing_ya_re.search(line):
         errors.append(f"{path}:{lineno} UNS-13 banned Indonesian colloquial particle detected")
+    if id_stance_adverb_re.search(line):
+        errors.append(f"{path}:{lineno} UNS-13 banned Indonesian stance adverb detected")
     if en_filler_re.search(line):
         errors.append(f"{path}:{lineno} UNS-13 banned English filler marker detected")
     if praise_re.search(line) or meta_opener_re.search(line):
