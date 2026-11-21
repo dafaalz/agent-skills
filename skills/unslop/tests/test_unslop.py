@@ -33,6 +33,7 @@ TRAILING_YA = re.compile(r"(?i)(?:^|\s)ya[\s.!?]*$")
 BANNED_EN_FILLERS = re.compile(
     r"(?i)(?:^|[.!?]\s+)(okay|alright|so|well|hmm|wait)(?:,|[\s.!?]|$)"
 )
+BANNED_EN_STANCE_ADVERBS = re.compile(r"(?i)\b(honestly|actually|literally|simply)\b")
 EM_EN_OR_SPACED_DASH = re.compile(r"(\u2014|\u2013|\s-\s)")
 TOOLING_PRAGMA = re.compile(
     r"<!--\s*(prettier-ignore|markdownlint-[a-z-]+|vale\s+(on|off)|eslint-[a-z-]+|TOC)\b[^>]*-->"
@@ -345,6 +346,15 @@ class TestAdvisorVoiceAndPragmatics(unittest.TestCase):
         ]
         for sample in cringe_en:
             self.assertIsNotNone(BANNED_EN_FILLERS.search(sample), f"Missed EN filler: {sample}")
+
+        mid_sentence_samples = [
+            "The script actually deletes rows.",
+            "This literally breaks caching.",
+            "Honestly, we should check memory limits.",
+            "You simply cannot ignore the race condition.",
+        ]
+        for sample in mid_sentence_samples:
+            self.assertIsNotNone(BANNED_EN_STANCE_ADVERBS.search(sample), f"Missed EN stance adverb: {sample}")
 
     def test_metric_integrity_blocks_fabricated_numbers(self) -> None:
         src = "The runner caches dependencies, ensuring faster builds."
@@ -682,6 +692,21 @@ class TestVerifyScriptIntegration(unittest.TestCase):
             )
             self.assertNotEqual(proc.returncode, 0)
             self.assertIn("UNS-13 banned Indonesian stance adverb detected", proc.stderr)
+
+    @unittest.skipUnless(VERIFY_SH.exists(), "verify_unslop.sh not present in workspace")
+    def test_verify_script_detects_english_mid_sentence_stance_adverbs(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="unslop_en_adverb_") as tmpdir:
+            td = Path(tmpdir)
+            bad_doc = td / "bad_en_adverb.md"
+            bad_doc.write_text("The script actually deletes rows.\n", encoding="utf-8")
+            proc = subprocess.run(
+                ["bash", str(VERIFY_SH), "--check-hygiene", str(bad_doc), "--register", "conversational"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertNotEqual(proc.returncode, 0)
+            self.assertIn("UNS-13 banned English stance adverb detected", proc.stderr)
 
 
 if __name__ == "__main__":
