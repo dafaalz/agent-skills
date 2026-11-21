@@ -4,14 +4,14 @@ Reference guide for spotting structural AI patterns and auditing prose for synth
 
 ## Editing principles
 
-- **Preserve the writer's real voice.** Observe vocabulary, cadence, bluntness, humor, uncertainty, and level of polish before editing. Keep traits that belong to the writer. Do not rewrite distinctive human sentences for symmetry or corporate consistency.
-- **Make the minimum effective edit.** Fix AI patterns, factual errors, repetition, and tangled syntax. Leave strong human sentences alone. A draft with personality should still sound like the same author after editing.
-- **Delete generic claims.** If a sentence applies unchanged to another company, project, or product without losing meaning, delete it or anchor it with specific schema fields, response status codes, latency metrics, or test results.
-- **Show, don't tell the reader what to think.** Let facts, mechanisms, and outcomes carry weight. Delete commentary that labels a point as important, surprising, subtle, or obvious. Trust the reader to see the point.
-- **Protect specific facts.** Never dilute concrete details into generic statements. Replace "improved performance" with the measured metric, such as "reduced p99 latency from 250ms to 45ms".
-- **Preserve useful edge and character.** Retain strong stances, developer slang, honest admissions, and self-corrections when they reflect the author's authentic perspective.
-- **Weight indicators before editing.** Primary tells (formulaic contrasts, staged run-ups, forced triads, decorative dashes, repetitive closers) justify an edit on first sighting. Secondary tells (stacked qualifiers, hyphenated pairs) require corroborating patterns in the same passage before you act.
-- **Respect writing samples.** When the user supplies a writing sample, observe and match its sentence length, word choices, punctuation, and transitions. The sample overrides default style preferences, provided meaning remains clear.
+Apply voice-preservation principles strictly when editing external human drafts in `edit` mode. Never invoke voice preservation to preserve RLHF politeness, sycophancy, or colloquial particles in agent-authored `respond` mode:
+- **Preserve external author voice within hard gates.** When editing an existing human draft, observe its vocabulary, bluntness, and sentence cadence without relaxing `<HARD-GATE>`, `UNS-1`, `UNS-2`, or `UNS-13`.
+- **Make the minimum effective edit on human drafts.** Fix AI patterns, factual errors, repetition, and tangled syntax while leaving verified human phrasing intact.
+- **Delete generic claims.** If a sentence applies unchanged to another company, project, or product without losing meaning, delete it or anchor it with metrics or mechanisms already present in source context (`UNS-6`).
+- **Show facts, cut commentary.** Let mechanisms and outcomes carry weight. Delete commentary labeling a point as important, surprising, subtle, or obvious.
+- **Protect verified specifics.** Keep exact schema fields, status codes, latencies, and test results present in the input. Never fabricate replacement metrics when the input lacks them (`UNS-6`).
+- **Weight indicators before editing.** Flag primary tells (formulaic contrasts, staged run-ups, forced triads, decorative dashes, mid-sentence colons, repetitive closers) on first sighting. Flag secondary tells (stacked qualifiers, hyphenated pairs) only with corroborating patterns in the same passage.
+- **Scope writing samples.** When the user supplies a writing sample for `edit` mode, match its sentence length and vocabulary without overriding hard gates, punctuation hygiene, or `UNS-13` particle bans.
 
 ## Structural patterns to eliminate
 
@@ -23,7 +23,7 @@ Posturing as a lone insider reveals false profundity instead of substance. Cues 
 
 ### 2. Colon reveals
 
-Placing a dramatic noun phrase after a colon manufactures artificial suspense. Look for lines like "The best part: it works offline", "The secret: distribution is king", and "The kicker: nobody noticed". Rewrite the sentence as a direct declarative statement and remove the theatrical delay. "The secret: cache invalidation was broken" becomes "Cache invalidation was broken."
+Placing a dramatic noun phrase after a colon manufactures artificial suspense. Look for lines like `"The best part: it works offline"`, `"The secret: distribution is king"`, and `"The kicker: nobody noticed"`. Rewrite the sentence as a direct declarative statement and remove the theatrical delay. `"The secret: cache invalidation was broken"` becomes `"Cache invalidation was broken."`
 
 ### 3. Interpretive metadiscourse
 
@@ -92,7 +92,7 @@ Attributing cognitive intentions or desires to inanimate code confuses mechanica
 
 ### 15. Trailing participial clauses
 
-Tacking loose `-ing` commentary onto finished actions adds vague editorial filler. Familiar examples include `"ensuring seamless integration"`, `"highlighting the importance of testing"`, `"allowing for better performance"`, and `"fostering collaboration"`. Cut cosmetic participial tails outright or convert them into a separate active sentence, while retaining participial clauses that specify causal preconditions, concurrent system states, or failure guards (such as `"preventing split-brain writes during network partitions"`). `"The runner caches dependencies, ensuring faster builds"` becomes `"The runner caches dependencies. Subsequent builds complete in 12 seconds."`
+Tacking loose `-ing` commentary onto finished actions adds vague editorial filler. Familiar examples include `"ensuring seamless integration"`, `"highlighting the importance of testing"`, `"allowing for better performance"`, and `"fostering collaboration"`. Cut cosmetic participial tails outright or convert them into a separate active sentence using only facts present in context, while retaining participial clauses that specify causal preconditions, concurrent system states, or failure guards (such as `"preventing split-brain writes during network partitions"`). `"The runner caches dependencies, ensuring faster builds"` becomes `"The runner caches dependencies so subsequent builds skip package downloads."` (state an exact build duration only when measured in the input).
 
 ### 16. False ranges
 
@@ -141,15 +141,15 @@ When single words are blocked, models substitute inflated multi-word calques. Re
 | interplay / intricate | interaction, complex, detailed |
 | landscape (abstract) | market, system, codebase, context |
 | pivotal / cornerstone | main, key, primary |
-| tapestry / substrate (abstract) | base, foundation, mix |
+| tapestry | base, foundation, mix |
 | underscore / highlight | stress, show, prove |
 | vibrant / breathtaking | active, dense, or describe exact traits |
-| utilize / leverage / harness (abstract) | use |
+| utilize / leverage | use |
 | facilitate / empower | help, enable |
 | seamless / holistic | direct, unified, integrated |
 | elevate / supercharge | improve, accelerate |
 | embark / journey | begin, build, run |
-| paradigm shift / game changer | new pattern, state exact metric |
+| game changer | new pattern, state exact metric |
 | realm / sphere | field, area, domain, codebase |
 | beacon / lighthouse | guide, reference, standard |
 | multifaceted / nuanced | complex, varied, or name the factors |

@@ -48,7 +48,7 @@ Jangan susun konjungsi majemuk beruntun di awal kalimat. Putus kalimat menjadi k
 | membuat keputusan | Calque harfiah dari make a decision | memutuskan, menentukan |
 | alat yang ampuh / senjata ampuh | Calque harfiah dari powerful tool | Sebut nama perkakas, algoritma, atau fitur teknis spesifik |
 | berada di garis depan | Calque harfiah dari at the forefront | memimpin, merintis, berada di barisan awal |
-| membuka jalan bagi | Calque harfiah dari pave the way for | memungkinkan, memfasilitasi, memicu |
+| membuka jalan bagi | Calque harfiah dari pave the way for | memungkinkan, memicu, membuka akses |
 | pedang bermata dua | Calque klise dari double-edged sword | Sebutkan dua risiko atau konsekuensi teknis secara eksplisit |
 | menavigasi kompleksitas | Calque harfiah dari navigate complexity | menangani kerumitan, menyelesaikan masalah, mengelola alur |
 | hadir untuk | Calque harfiah dari here to | berfungsi untuk, dirancang untuk, dibangun untuk |
@@ -134,7 +134,7 @@ Ganti kata kerja bantu dan frasa nominal dengan verba aktif berimbuhan me- atau 
 | melakukan penutupan koneksi | Frasa nominal panjang | menutup koneksi |
 | melakukan tindakan mitigasi | Verba bantu melemahkan aksi | memitigasi |
 | melakukan koordinasi dengan | Diksi birokratis melemahkan aksi | berkoordinasi dengan |
-| mengambil langkah-langkah untuk | Frasa nominal panjang pelemah aksi | mengambil langkah untuk, atau sebut aksinya langsung |
+| mengambil langkah-langkah untuk | Frasa nominal panjang pelemah aksi | sebutkan verba aksi langsungnya (misalnya memvalidasi, memperbarui) |
 | merupakan suatu keharusan | Frasa nominal panjang pelemah imperatif | wajib, harus |
 | melakukan konfigurasi | Verba bantu melemahkan aksi | mengonfigurasi |
 | melakukan penghapusan data | Frasa nominal panjang | menghapus data |
@@ -166,6 +166,8 @@ Patuhi standar verifikasi Dewan Pers Nomor 1/2025 untuk menjaga akuntabilitas tu
 
 ## Contoh perombakan naskah
 
+Setiap contoh di bawah hanya mempertahankan fakta yang benar-benar ada pada draf sumber tanpa mengarang komponen, protokol, atau angka baru (`UNS-6`).
+
 ### Contoh 1. Penjelasan sistem dan arsitektur
 
 #### Draf sebelum perbaikan
@@ -174,7 +176,7 @@ Di era digital yang serba cepat ini, tidak dapat dipungkiri bahwa pengelolaan me
 
 #### Naskah hasil perbaikan
 
-Pengelolaan memori menentukan stabilitas server saat beban kerja meningkat. Pembaruan arsitektur ini mengganti alokator memori lama dan menghilangkan antrean kunci manual pada sinkronisasi antarprosesor. Tim rekayasa memisahkan dependensi siklis pada layer basis data agar pemrosesan kueri berjalan paralel.
+Pengelolaan memori menentukan efisiensi alokasi data pada sistem. Arsitektur baru ini memperbarui mekanisme alokasi data dan menyederhanakan struktur dependensi yang sebelumnya rumit.
 
 ### Contoh 2. Komunikasi teknis dan catatan rilis
 
@@ -184,7 +186,7 @@ Perlu diingat bahwa dalam lanskap integrasi API saat ini, verifikasi payload mer
 
 #### Naskah hasil perbaikan
 
-Sistem wajib memverifikasi payload sebelum mengeksekusi mutasi basis data. Middleware gerbang API memvalidasi token JWT dan menolak request kedaluwarsa sebelum menyentuh controller. Tim operasi memasang konfigurasi kunci publik pada file environment produksi.
+Integrasi API wajib memverifikasi payload sebelum memproses request. Pengembang harus memasang fungsi validasi token sesuai standar keamanan yang berlaku.
 
 ### Contoh 3. Panduan operasional dan instruksi tugas
 
@@ -194,28 +196,17 @@ Tentu saja! Dalam rangka menavigasi kompleksitas deployment, alat yang ampuh ini
 
 #### Naskah hasil perbaikan
 
-Runner mengeksekusi pipeline rilis secara otomatis setiap kali ada tag git baru. Skrip memeriksa status kesehatan container sebelum mengalihkan traffic jaringan. Pasang variabel lingkungan pada dashboard CI agar runner dapat mengakses cluster Kubernetes.
+Alat ini mengotomatisasi pipeline rilis saat deployment. Skrip tersebut memeriksa status container secara langsung. Gunakan fitur ini pada alur integrasi untuk mengurangi langkah manual.
 
 ## Disiplin register, partikel, dan pronomina
 
-### Partikel percakapan dan pengisi terlarang (`UNS-13`)
+### Rujukan tunggal partikel terlarang (`UNS-13`) dan pronomina (`UNS-11`)
 
-Larangan berikut berlaku pada `technical-prose` maupun `conversational`:
-- Partikel sikap kolokial. Hapus total `nih`, `deh`, `dong`, `kok`, `kan`, `sih`, `nah`, `lho`, `yuk`, dan akhiran basa-basi `ya`.
-- Pengecualian leksikal fungsional. Pertahankan `jadi` khusus sebagai konjungsi kausal eksplisit di tengah klausa, pertahankan `coba` khusus sebagai verba imperatif diagnostik literal (`Coba jalankan tes`), dan pertahankan `di mana` khusus sebagai kata tanya lokatif (`Di mana file log disimpan?`).
-- Kalka sintetis. Hindari `dalam lanskap`, `merangkul perubahan`, `memberdayakan solusi`, `mendorong inovasi`, `di era digital`, dan `solusi holistik`.
-- Basa-basi chatbot dan pujian generik. Hapus `Tentu saja!`, `Semoga membantu!`, `Saya siap membantu Anda`, `Sebagai AI`, dan `sudah rapi dan jelas`.
-- Token ragu performatif. Hapus `hmm`, `sebentar`, `tunggu`, `bentar`, dan `izinkan saya`.
-- Adverbia menggurui dan penguat hampa. Hapus `sebenarnya`, `sejujurnya`, `pada dasarnya`, `secara harfiah`, `agak` tanpa metrik, `sangat penting`, dan `secara signifikan` tanpa pengukuran riil.
-- Pleonasme. Hapus `para hadirin`, `naik ke atas`, `turun ke bawah`, dan `saling bekerja sama`.
+Jangan mendefinisikan daftar partikel atau tabel pronomina tandingan pada berkas ini. Seluruh larangan partikel sikap kolokial (`nih`, `deh`, `dong`, `kok`, `kan`, `sih`, `nah`, `lho`, `lo` partikel, `yuk`, akhiran `ya`, `agak` tanpa metrik), adverbia menggurui (`sebenarnya`, `sejujurnya`, `pada dasarnya`, `secara harfiah`), token ragu performatif, pengecualian leksikal fungsional, serta matriks pronomina mengikuti spesifikasi kanonikal pada `conversational-patterns.md`.
 
 ### Bahasa Indonesia ragam teknis
 
-Pertahankan ketepatan deklaratif, verba akar aktif, dan prasyarat kausal yang menempel pada perintah. Jangan gunakan partikel kolokial atau pencerminan pronomina informal.
-
-### Rujukan tunggal matriks otoritas pronomina (`UNS-11`)
-
-Jangan mendefinisikan tabel pronomina tandingan pada berkas ini. Seluruh aturan otoritas pronomina 9-kondisi (`saya/Anda`, `aku/kamu`, `gue/lu`, dan eskalasi sinyal otoritas) mengikuti spesifikasi kanonikal pada `conversational-patterns.md` setelah pembuangan teks kutipan pengguna.
+Pertahankan ketepatan deklaratif, verba akar aktif, dan prasyarat kausal yang menempel pada perintah. Hapus pleonasme (`para hadirin`, `naik ke atas`, `turun ke bawah`, `saling bekerja sama`) serta kalka sintetis (`dalam lanskap`, `merangkul perubahan`, `memberdayakan solusi`, `mendorong inovasi`, `di era digital`, `solusi holistik`).
 
 ## Rujukan primer
 
